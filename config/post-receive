@@ -1,0 +1,2 @@
+#!/bin/sh
+GIT_WORK_TREE=/home/www git checkout -f master -- central_site

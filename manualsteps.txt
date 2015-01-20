@@ -1,0 +1,15 @@
+1. On VM/remote server run these commands:
+
+adduser centralweb
+adduser centralweb sudo
+
+Use password from the fabfile.py file
+
+2. Update fabfile.py to change the env.hosts line to your VM IP address or VPS domain
+
+3. Locally run these commands in your central repo directory:
+
+git remote add development root@[IP address or domain name]:/home/git/central_site.git
+pip install fabric
+fab create
+fab deploy
