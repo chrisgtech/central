@@ -13,6 +13,8 @@ sudo nano /etc/ssh/sshd_conig
 
 * Change 'PermitRootLogin without-password' to 'PermitRootLogin yes' *
 
+sudo service ssh restart
+
 2. Update fabfile.py to change the env.hosts line to your VM IP address or VPS domain
 
 3. Locally run these commands in your central repo directory:
