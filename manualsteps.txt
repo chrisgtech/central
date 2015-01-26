@@ -1,6 +1,6 @@
 1. On VM/remote server run these commands:
 
-* NOTE: Use password from the fabfile.py file when prompted for centralweb *
+* NOTE: Use password from the fabextras.py file when prompted for centralweb *
 
 sudo adduser centralweb
 sudo adduser centralweb sudo
