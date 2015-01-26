@@ -55,3 +55,6 @@ target/
 
 # Local fabric config
 fabfile.py
+
+/*.json
+/*.yaml
