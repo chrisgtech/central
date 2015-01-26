@@ -8,6 +8,7 @@ sudo adduser centralweb sudo
 NOTE: Use any password you want when prompted for root
 
 sudo passwd root
+sudo passwd -u root 
 
 2. Update fabfile.py to change the env.hosts line to your VM IP address or VPS domain
 
