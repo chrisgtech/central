@@ -54,7 +54,7 @@ docs/_build/
 target/
 
 # Local fabric config
-fabfile.py
+fabextras.py
 
 /*.json
 /*.yaml
