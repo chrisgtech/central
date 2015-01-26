@@ -23,3 +23,5 @@ git remote add development root@[IP address or domain name]:/home/git/central_si
 pip install install fabric==1.8.1
 fab create
 fab deploy
+
+4. Point your browser to [IP address or domain name]. You should see "Flask is running!". Point your browser to [IP address or domain name]/static. You should see "Default Content".
