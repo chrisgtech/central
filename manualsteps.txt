@@ -1,15 +1,27 @@
 1. On VM/remote server run these commands:
 
-adduser centralweb
-adduser centralweb sudo
+* NOTE: Use password from the fabfile.py file when prompted for centralweb *
 
-Use password from the fabfile.py file
+sudo adduser centralweb
+sudo adduser centralweb sudo
+
+* NOTE: Use any password you want when prompted for root *
+
+sudo passwd root
+sudo passwd -u root
+sudo nano /etc/ssh/sshd_conig
+
+* Change 'PermitRootLogin without-password' to 'PermitRootLogin yes' *
+
+sudo service ssh restart
 
 2. Update fabfile.py to change the env.hosts line to your VM IP address or VPS domain
 
 3. Locally run these commands in your central repo directory:
 
 git remote add development root@[IP address or domain name]:/home/git/central_site.git
-pip install fabric
+pip install install fabric==1.8.1
 fab create
 fab deploy
+
+4. Point your browser to [IP address or domain name]. You should see "Flask is running!". Point your browser to [IP address or domain name]/static. You should see "Default Content".
