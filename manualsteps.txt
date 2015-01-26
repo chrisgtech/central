@@ -1,14 +1,17 @@
 1. On VM/remote server run these commands:
 
-NOTE: Use password from the fabfile.py file when prompted for centralweb
+* NOTE: Use password from the fabfile.py file when prompted for centralweb *
 
 sudo adduser centralweb
 sudo adduser centralweb sudo
 
-NOTE: Use any password you want when prompted for root
+* NOTE: Use any password you want when prompted for root *
 
 sudo passwd root
-sudo passwd -u root 
+sudo passwd -u root
+sudo nano /etc/ssh/sshd_conig
+
+* Change 'PermitRootLogin without-password' to 'PermitRootLogin yes' *
 
 2. Update fabfile.py to change the env.hosts line to your VM IP address or VPS domain
 
