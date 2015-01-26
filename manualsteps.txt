@@ -9,7 +9,7 @@ sudo adduser centralweb sudo
 
 sudo passwd root
 sudo passwd -u root
-sudo nano /etc/ssh/sshd_conig
+sudo nano /etc/ssh/sshd_conig 
 
 * Change 'PermitRootLogin without-password' to 'PermitRootLogin yes' *
 
