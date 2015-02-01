@@ -65,6 +65,7 @@ def install_libs():
     sudo('pip install Flask==0.10.1')
     sudo('pip install fake-factory')
     sudo('pip install sqlalchemy')
+    sudo('pip install fhir')
 
 def configure_nginx():
     """
