@@ -1,0 +1,4 @@
+Member_ID,Allergen,Drug_Code,Drug_Vocab,Allergy_Type,Onset_Date,Reaction,Severity_Description,Information_Source,Comment
+371008251-01,Yellow Fever,37,CVX,drug,12/10/1962,Skin Rash,critical,patient,
+000424272-01,Cefotaxime,2186,RxNORM,drug,3/12/2012,Diarrhea,moderate,patient,
+224590000-01,Vancomycin,11124,RxNORM,drug,3/31/2000,Dizziness or lightheadedness,critical,patient,

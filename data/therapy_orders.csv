@@ -1,0 +1,222 @@
+Provider_Org,Member_ID,Code,Name,Order_ID,Target_Area,Vocabulary,Encounter_ID
+ExactData Medical Health System,666214171-01,32.29,Bullectomy,050826-23294,right lung,ICD9,Z2919550507173251958
+ExactData Medical Health System,937650000-01,33.51,Lung transplantation,060118-18055,Right lung,ICD9,O1710775612567611867
+ExactData Medical Health System,666214171-01,93.90,Noninvasive positive-pressure ventilation,070130-91954,Lungs,ICD9,I1868888541112864038
+ExactData Medical Health System,918990000-01,33.51,Lung transplantation,071205-86465,Right lung,ICD9,G4150053076326095611
+ExactData Medical Health System,666383984-01,55.69,Kidney transplantation,080729-97679,Kidney,ICD9,L9449643992258159378
+ExactData Medical Health System,666383984-01,77.88,Revisional surgery (ostectomy),090113-62817,Foot,ICD9,H8504773680609433390
+ExactData Medical Health System,666159871-01,33.51,Lung transplantation,090717-46405,Right lung,ICD9,O8876508539825313201
+ExactData Medical Health System,937650000-01,33.51,Lung transplantation,100909-62837,Right lung,ICD9,Q1977320222576351746
+ExactData Medical Health System,666867671-01,80.88,surgical debridement,101124-83638,Foot,ICD9,W0863721173508505397
+ExactData Medical Health System,918990000-01,33.51,Lung transplantation,101207-42976,Right lung,ICD9,Q3836204141988158537
+ExactData Medical Health System,666214171-01,32.52,Lung transplantation,110309-46315,Both lung,ICD9,W3698538461568310814
+ExactData Medical Health System,666643100-01,54.98,Peritoneal dialysis,111117-61108,peritoneum,ICD9,Y2742054896786821257
+ExactData Medical Health System,918990000-01,55.12,drainage,111031-86682,Right kidney,ICD9,T5567373598511896115
+ExactData Medical Health System,918990000-01,87.71,CT-guided,111031-88365,Right kidney,ICD9,T5567373598511896115
+ExactData Medical Health System,666643100-01,54.98,Peritoneal dialysis,121116-46731,peritoneum,ICD9,O5455658259040233237
+ExactData Medical Health System,666643100-01,39.95,hemodialysis,131016-00880,vena cava,ICD9,R3391833896214885719
+ExactData Medical Health System,666476868-01,77.88,Revisional surgery (ostectomy),131028-10459,Foot,ICD9,A8590256320154954434
+ExactData Medical Health System,666214171-01,33.51,Lung transplantation,140916-88417,Right lung,ICD9,R5043041886128227826
+ExactData Medical Health System,090450000-01,77.88,Revisional surgery (ostectomy),050808-84700,Foot,ICD9,H3265925347086139613
+ExactData Medical Health System,052000568-01,93.11,rehabilitation and remedial exercises following disarticulation of right hip,051006-23694,right hip,ICD9,X0746159780075193210
+ExactData Medical Health System,052000568-01,93.11,rehabilitation and remedial exercises following disarticulation of right hip,051102-53043,right hip,ICD9,F3067123797713259788
+ExactData Medical Health System,052000568-01,93.11,rehabilitation and remedial exercises following disarticulation of right hip,051125-10982,right hip,ICD9,S4728681966378348473
+ExactData Medical Health System,052000568-01,93.11,rehabilitation and remedial exercises following disarticulation of right hip,051221-82764,right hip,ICD9,L5294360566380211547
+ExactData Medical Health System,333001307-01,14.24,Panretinal photocoagulation (PRP),050805-41407,eye,ICD9,N5763768788170487418
+ExactData Medical Health System,882003310-01,93.90,Noninvasive positive-pressure ventilation,050829-30925,Lungs,ICD9,K9522467506093422056
+ExactData Medical Health System,666888721-02,93.11,rehabilitation and remedial exercises following disarticulation of right shoulder,050715-51247,right shoulder,ICD9,M8768085520112549803
+ExactData Medical Health System,666888721-02,93.11,rehabilitation and remedial exercises following disarticulation of right shoulder,050722-59029,right shoulder,ICD9,C6124330705700980476
+ExactData Medical Health System,666888721-02,93.11,rehabilitation and remedial exercises following disarticulation of right shoulder,050809-05153,right shoulder,ICD9,S4592748308471338442
+ExactData Medical Health System,666888721-02,93.11,rehabilitation and remedial exercises following disarticulation of right shoulder,050907-97440,right shoulder,ICD9,U1546008186483670733
+ExactData Medical Health System,666888721-01,33.51,Lung transplantation,050628-23811,Right lung,ICD9,D9983061947372605314
+ExactData Medical Health System,666888721-02,93.11,rehabilitation and remedial exercises following disarticulation of right shoulder,051202-35235,right shoulder,ICD9,D8552892298835409762
+ExactData Medical Health System,090450000-01,14.73,Vitrectomy,060522-46407,eye,ICD9,F6453347149128701594
+ExactData Medical Health System,894010000-01,77.88,Revisional surgery (ostectomy),061229-94482,Foot,ICD9,K6383061376843992219
+ExactData Medical Health System,000050471-01,77.88,Revisional surgery (ostectomy),070308-61945,Foot,ICD9,K4801017323535015771
+ExactData Medical Health System,052000568-02,32.52,Lung transplantation,081007-69968,Both lung,ICD9,H9353991688146703568
+ExactData Medical Health System,882003310-01,32.29,Bullectomy,090601-52327,right lung,ICD9,E1301869017076849291
+ExactData Medical Health System,000138144-01,36.11,Coronary artery graft bypass (single),090102-21426,heart,ICD9,H0544303297011046067
+ExactData Medical Health System,090450000-01,55.69,Kidney transplantation,100510-10685,Kidney,ICD9,S2341852223742245273
+ExactData Medical Health System,090450000-01,77.88,Revisional surgery (ostectomy),111227-39672,Foot,ICD9,E1398575257885448879
+ExactData Medical Health System,894010000-01,14.73,Vitrectomy,121231-18871,eye,ICD9,E0872464837526187163
+ExactData Medical Health System,052000568-02,33.51,Lung transplantation,131230-49781,Right lung,ICD9,N2655311455917039074
+ExactData Medical Health System,333001307-01,55.12,drainage,130610-81960,Right kidney,ICD9,N4982124879432735905
+ExactData Medical Health System,333001307-01,87.71,CT-guided,130610-41458,Right kidney,ICD9,N4982124879432735905
+ExactData Medical Health System,333001307-01,44.31,Roux-en-Y gastric bypass,130729-20829,stomach and small intestine,ICD9,E6675996907236529899
+ExactData Medical Health System,666888721-01,36.07,percutaneous coronary intervention with  Implantation of stents,140317-05312,Heart,ICD9,T9003142026641326680
+ExactData Medical Health System,830000095-01,14.73,Vitrectomy,050207-37250,eye,ICD9,E9163805978789440416
+ExactData Medical Health System,596006027-01,32.22,Lung volume reduction surgery,050121-08102,right lung,ICD9,U8467498553647812919
+ExactData Medical Health System,000967726-01,32.29,Bullectomy,081117-50519,right lung,ICD9,J5176680353622920227
+ExactData Medical Health System,666151406-01,37.49,valve repair surgery,101025-20336,heart,ICD9,D3896348348985947707
+ExactData Medical Health System,666151406-01,36.11,Off-pump coronary artery bypass surgery,101025-74879,heart,ICD9,D3896348348985947707
+ExactData Medical Health System,018003376-01,35.24,Mitral valve replacement,100820-61014,heart,ICD9,W3663835690396613285
+ExactData Medical Health System,000367227-01,55.12,drainage,111110-68657,Right kidney,ICD9,V9748225044344057941
+ExactData Medical Health System,000367227-01,87.71,CT-guided,111110-44443,Right kidney,ICD9,V9748225044344057941
+ExactData Medical Health System,666151406-01,36.07,percutaneous coronary intervention with  Implantation of stents,110124-08709,Heart,ICD9,M4040963836981913965
+ExactData Medical Health System,018003376-01,37.80,Cardiac resynchronization therapy,110613-73874,heart,ICD9,M3611157125508742365
+ExactData Medical Health System,018003376-01,80.88,surgical debridement,111202-15878,Foot,ICD9,Q9586586844510160185
+ExactData Medical Health System,000367227-01,55.12,drainage,120210-92311,Right kidney,ICD9,P5962679305570925488
+ExactData Medical Health System,000367227-01,87.71,CT-guided,120210-43390,Right kidney,ICD9,P5962679305570925488
+ExactData Medical Health System,000457683-01,14.74,Panretinal photocoagulation (PRP),120716-89947,eye,ICD9,S9894462653563916961
+ExactData Medical Health System,000457683-01,39.95,hemodialysis,121001-50717,vena cava,ICD9,L3150885788640719951
+ExactData Medical Health System,666317375-01,33.51,Lung transplantation,141231-40505,Right lung,ICD9,O7132258226548642441
+ExactData Medical Health System,018003376-01,35.24,Mitral valve replacement,140219-43132,heart,ICD9,S6636233969676273075
+ExactData Medical Health System,666655553-01,14.73,Vitrectomy,060123-68229,eye,ICD9,Y6885909415808043745
+ExactData Medical Health System,000949115-01,77.88,Revisional surgery (ostectomy),060717-47878,Foot,ICD9,B2362084164354955704
+ExactData Medical Health System,371008251-01,14.74,Laser photocoagulation,060612-35867,retina,ICD9,L9362531341604313639
+ExactData Medical Health System,000949115-01,80.88,surgical debridement,070108-13416,Foot,ICD9,G4323524077971037795
+ExactData Medical Health System,000949115-01,01.39,surgical evacuation,071004-39319,temporal,ICD9,K8291781531168770208
+ExactData Medical Health System,000330124-01,80.88,surgical debridement,080801-90424,Foot,ICD9,R5598759601260390888
+ExactData Medical Health System,000949115-01,38.82,neuroendovascular surgery,080721-86618,subarachnoid,ICD9,Y4733862633926309905
+ExactData Medical Health System,371008251-01,39.50,Percutaneous transluminal angioplasty,080724-00145,kidney,ICD9,J1326635300269810379
+ExactData Medical Health System,666349098-01,00.63,Angioplasty with vasculer stents,080521-74448,carotid artery,ICD9,E2415051626035081551
+ExactData Medical Health System,666655553-01,38.12,Carotid endarterectomy,090506-22857,carotid artery,ICD9,Q5825402450432991185
+ExactData Medical Health System,000949115-01,80.88,surgical debridement,090303-27352,Foot,ICD9,Q8726273372728210457
+ExactData Medical Health System,666522513-01,39.95,hemodialysis,091030-85739,vena cava,ICD9,O8885657084197624022
+ExactData Medical Health System,000330124-01,55.69,Kidney transplantation,111107-87311,Kidney,ICD9,L1733686355088708593
+ExactData Medical Health System,297007842-01,39.95,hemodialysis,110826-08957,vena cava,ICD9,E9210183055441076162
+ExactData Medical Health System,666349098-01,00.63,Angioplasty with vasculer stents,110921-45473,carotid artery,ICD9,G8325682195916224878
+ExactData Medical Health System,297007842-01,39.95,hemodialysis,130207-47183,vena cava,ICD9,L4661785402351573560
+ExactData Medical Health System,000581657-01,14.74,Panretinal photocoagulation (PRP),051230-36018,eye,ICD9,G2743435290140377702
+ExactData Medical Health System,544470000-01,33.51,Lung transplantation,050420-34687,Right lung,ICD9,O1788126415964935265
+ExactData Medical Health System,000424272-01,07.22,laparoscopic adrenalectomy,050406-73457,adrenal medulla,ICD9,J3574225273860110400
+ExactData Medical Health System,544470000-01,33.51,Lung transplantation,060106-51607,Right lung,ICD9,V5508293154243758945
+ExactData Medical Health System,000113209-01,77.88,Revisional surgery (ostectomy),060914-29682,Foot,ICD9,V4694412827721002320
+ExactData Medical Health System,000592301-01,33.51,Lung transplantation,080811-26457,Right lung,ICD9,Z6697692811791185942
+ExactData Medical Health System,544470000-01,32.52,Lung transplantation,080306-28268,Both lung,ICD9,H8746174335681968319
+ExactData Medical Health System,544470000-01,80.88,surgical debridement,100830-69403,Foot,ICD9,H6224486419556034220
+ExactData Medical Health System,941001175-01,80.88,surgical debridement,101202-17491,Foot,ICD9,Y5332987777169165162
+ExactData Medical Health System,666690085-01,55.69,Kidney transplantation,101001-29205,Kidney,ICD9,P2845108424227687229
+ExactData Medical Health System,000581657-01,14.73,Vitrectomy,110715-13220,eye,ICD9,G1067697703455309776
+ExactData Medical Health System,941001175-01,14.73,Vitrectomy,111116-50382,eye,ICD9,B4258769700749209445
+ExactData Medical Health System,000299742-01,14.74,Panretinal photocoagulation (PRP),120518-32792,eye,ICD9,H9070283535893887569
+ExactData Medical Health System,000592301-01,33.51,Lung transplantation,130619-65212,Right lung,ICD9,F0016027289218968034
+ExactData Medical Health System,941001175-01,55.69,Kidney transplantation,130122-07100,Kidney,ICD9,O8309681576487494608
+ExactData Medical Health System,000113209-01,14.73,Vitrectomy,131213-87607,eye,ICD9,D3535738012773465817
+ExactData Medical Health System,140009875-01,01.39,surgical evacuation,050128-01189,temporal,ICD9,R1342532714146984163
+ExactData Medical Health System,666351572-01,32.22,Lung volume reduction surgery,051011-23151,right lung,ICD9,X6895392643462504399
+ExactData Medical Health System,666206785-01,77.88,Revisional surgery (ostectomy),050302-62823,Foot,ICD9,T2432326922852650096
+ExactData Medical Health System,666063881-01,39.95,hemodialysis,061005-12192,vena cava,ICD9,J5424973913383300690
+ExactData Medical Health System,864990000-01,80.88,surgical debridement,071005-68623,Foot,ICD9,O6488459120103082257
+ExactData Medical Health System,666206785-01,80.88,surgical debridement,071121-58067,Foot,ICD9,W3838275032476504374
+ExactData Medical Health System,202002214-01,32.52,Lung transplantation,080222-98867,Both lung,ICD9,E0719157076746299446
+ExactData Medical Health System,666206785-01,80.88,surgical debridement,080222-70870,Foot,ICD9,Q1531447067364519963
+ExactData Medical Health System,202002214-01,33.51,Lung transplantation,090615-63010,Right lung,ICD9,T8206974965498868760
+ExactData Medical Health System,655650000-01,39.95,hemodialysis,090414-08500,vena cava,ICD9,Q3828296525774803530
+ExactData Medical Health System,140009875-01,14.74,Panretinal photocoagulation (PRP),100623-30551,eye,ICD9,A0572420403218289817
+ExactData Medical Health System,202002214-01,33.51,Lung transplantation,100520-04681,Right lung,ICD9,A8029002365483828510
+ExactData Medical Health System,666351572-01,33.51,Lung transplantation,101220-15627,Right lung,ICD9,X5356117502596094280
+ExactData Medical Health System,666206785-01,39.95,hemodialysis,100201-66914,vena cava,ICD9,U4136580930547808743
+ExactData Medical Health System,864990000-01,14.73,Vitrectomy,110127-12687,eye,ICD9,Z3301210371297284163
+ExactData Medical Health System,202002214-01,77.88,Revisional surgery (ostectomy),111219-63803,Foot,ICD9,D3593204860660483195
+ExactData Medical Health System,140009875-01,01.24,burr hole (Trepanation),120416-80064,subdural,ICD9,X7878138950297164401
+ExactData Medical Health System,864990000-01,55.69,Kidney transplantation,130320-21662,Kidney,ICD9,K2209708360355033467
+ExactData Medical Health System,202002214-01,33.51,Lung transplantation,130215-23828,Right lung,ICD9,R4488059070595379603
+ExactData Medical Health System,666206785-01,77.88,Revisional surgery (ostectomy),130624-37460,Foot,ICD9,S7612462982771599272
+ExactData Medical Health System,263009412-01,55.12,drainage,141201-55548,Right kidney,ICD9,X4658239284761547355
+ExactData Medical Health System,263009412-01,87.71,CT-guided,141201-47361,Right kidney,ICD9,X4658239284761547355
+ExactData Medical Health System,666804859-01,55.69,Kidney transplantation,051021-45963,Kidney,ICD9,D5574375967968755004
+ExactData Medical Health System,666104226-01,33.51,Lung transplantation,060214-60010,Right lung,ICD9,Q5567243997822008498
+ExactData Medical Health System,666104226-01,38.12,Carotid endarterectomy,080605-51354,carotid artery,ICD9,K1912668569878592254
+ExactData Medical Health System,560001244-01,14.73,Vitrectomy,080731-95088,eye,ICD9,B0263828328133877237
+ExactData Medical Health System,666441365-01,14.74,Panretinal photocoagulation (PRP),080625-83122,eye,ICD9,N7966046261880435199
+ExactData Medical Health System,412140000-01,14.24,Panretinal photocoagulation (PRP),080609-93077,eye,ICD9,K1283918065382110879
+ExactData Medical Health System,000091957-01,55.01,surgical incision and drainage,081231-00858,Renal cortical,ICD9,K5661363459483190946
+ExactData Medical Health System,666804859-01,80.88,surgical debridement,090331-68821,Foot,ICD9,I3160341859393761043
+ExactData Medical Health System,560001244-01,14.74,Panretinal photocoagulation (PRP),090122-98143,eye,ICD9,G7962621677433762879
+ExactData Medical Health System,666104226-01,32.52,Lung transplantation,100614-65566,Both lung,ICD9,T7861046242241305665
+ExactData Medical Health System,560001244-01,00.63,Angioplasty with vasculer stents,100802-06700,carotid artery,ICD9,H5007201743863628154
+ExactData Medical Health System,666104226-01,33.51,Lung transplantation,110610-48975,Right lung,ICD9,K4601432055513020328
+ExactData Medical Health System,666441365-01,77.88,Revisional surgery (ostectomy),110711-88230,Foot,ICD9,C9357372417466422940
+ExactData Medical Health System,000091957-01,14.73,Vitrectomy,111128-59068,eye,ICD9,T4554140193298030830
+ExactData Medical Health System,666104226-01,38.12,Carotid endarterectomy,121109-13330,carotid artery,ICD9,K0183552517793971627
+ExactData Medical Health System,560001244-01,38.12,Carotid endarterectomy,121015-32396,carotid artery,ICD9,O7237257390394772904
+ExactData Medical Health System,666804859-01,01.24,burr hole (Trepanation),140114-41964,subdural,ICD9,N3153610974838274180
+ExactData Medical Health System,000091957-01,77.88,Revisional surgery (ostectomy),140317-93924,Foot,ICD9,J9983659339960290981
+ExactData Medical Health System,013003589-01,14.73,Vitrectomy,050725-20108,eye,ICD9,J4286636894077517855
+ExactData Medical Health System,955750000-01,36.07,percutaneous coronary intervention with  Implantation of stents,050428-98347,heart,ICD9,V3690262657568313415
+ExactData Medical Health System,335006765-01,77.88,Revisional surgery (ostectomy),060724-91185,Foot,ICD9,Z4064326914354666517
+ExactData Medical Health System,000769867-01,14.74,Panretinal photocoagulation (PRP),061113-67491,eye,ICD9,Q5877254032665924448
+ExactData Medical Health System,666172130-01,39.74,Mechanical thrombolytic devices (Merci Retrieval System),060505-70359,basilar Artery,ICD9,K3067679466883077799
+ExactData Medical Health System,666172130-01,55.69,Kidney transplantation,061207-77592,Kidney,ICD9,V9879741066065553289
+ExactData Medical Health System,000658333-01,14.74,Panretinal photocoagulation (PRP),061218-85006,eye,ICD9,M3127273845837585799
+ExactData Medical Health System,335006765-01,55.69,Kidney transplantation,070216-64833,Kidney,ICD9,B4844460274268465084
+ExactData Medical Health System,013003589-01,80.88,surgical debridement,080908-83363,Foot,ICD9,W0361531558341188385
+ExactData Medical Health System,000769867-01,55.12,drainage,080520-90061,Right kidney,ICD9,C2355783437705985824
+ExactData Medical Health System,000769867-01,87.71,CT-guided,080520-27949,Right kidney,ICD9,C2355783437705985824
+ExactData Medical Health System,000769867-01,55.69,Kidney transplantation,081017-63224,Kidney,ICD9,X6070183671891599644
+ExactData Medical Health System,955750000-01,33.51,Lung transplantation,080227-61420,Right lung,ICD9,V5563611908204580333
+ExactData Medical Health System,666170853-01,14.73,Vitrectomy,081211-58347,eye,ICD9,F7723403966864991785
+ExactData Medical Health System,335006765-01,14.73,Vitrectomy,120409-87656,eye,ICD9,I7778291338887580705
+ExactData Medical Health System,666172130-01,80.88,surgical debridement,120521-31229,Foot,ICD9,J0072709060726939528
+ExactData Medical Health System,666170853-01,80.88,surgical debridement,140821-72990,Foot,ICD9,G2796940876396547914
+ExactData Medical Health System,802001361-01,44.31,Roux-en-Y gastric bypass,050516-50487,stomach and small intestine,ICD9,X7789381648280231988
+ExactData Medical Health System,666849638-01,33.51,Lung transplantation,050722-57139,Right lung,ICD9,B2534079914093576299
+ExactData Medical Health System,714009070-01,93.11,rehabilitation and remedial exercises following amputation of left foot,050428-66444,Left foot,ICD9,Q2155922582098651786
+ExactData Medical Health System,714009070-01,93.11,rehabilitation and remedial exercises following amputation of left foot,050513-91268,Left foot,ICD9,P0523891893365782008
+ExactData Medical Health System,714009070-01,93.11,rehabilitation and remedial exercises following amputation of left foot,050531-41845,Left foot,ICD9,I7037582037711759327
+ExactData Medical Health System,714009070-01,93.11,rehabilitation and remedial exercises following amputation of left foot,050421-19842,Left foot,ICD9,B7746334940599123335
+ExactData Medical Health System,050770000-01,00.63,Angioplasty with vasculer stents,050411-06202,carotid artery,ICD9,I6372452522745362261
+ExactData Medical Health System,492950000-01,37.49,Surgical repair with an infarction exclusion technique (IET),050707-86431,heart,ICD9,U2262116360688904318
+ExactData Medical Health System,802001361-01,33.51,Lung transplantation,060818-19724,Right lung,ICD9,G5154869227331702607
+ExactData Medical Health System,802001361-01,43.89,Sleeve gastrectomy,061120-48623,stomach,ICD9,R9290962810280117571
+ExactData Medical Health System,666849638-01,32.52,Lung transplantation,060612-70500,Both lung,ICD9,O0755960249286816959
+ExactData Medical Health System,666849638-01,43.89,Sleeve gastrectomy,060907-66120,stomach,ICD9,T6496968408781098745
+ExactData Medical Health System,050770000-01,00.63,Angioplasty with vasculer stents,060515-68301,carotid artery,ICD9,U6106250890264185234
+ExactData Medical Health System,492950000-01,35.72,Surgical repair with an infarction exclusion technique (IET),060130-59861,heartheart,ICD9,E9788467060245127108
+ExactData Medical Health System,492950000-01,35.12,left ventriculotomy,060130-64553,heart,ICD9,E9788467060245127108
+ExactData Medical Health System,802001361-01,32.52,Lung transplantation,070223-66334,Both lung,ICD9,A7203686608863741985
+ExactData Medical Health System,666849638-01,14.24,Panretinal photocoagulation (PRP),070518-37173,eye,ICD9,I2345342783876398011
+ExactData Medical Health System,714009070-02,01.24,burr hole (Trepanation),070730-37767,subdural,ICD9,Y0344548962644183255
+ExactData Medical Health System,050770000-01,39.74,Mechanical thrombolytic devices (Merci Retrieval System),070820-91346,basilar Artery,ICD9,V2271849572301533148
+ExactData Medical Health System,492950000-01,37.49,Surgical repair with an infarction exclusion technique (IET),070709-95714,heart,ICD9,N7319542206754166194
+ExactData Medical Health System,802001361-01,44.31,Roux-en-Y gastric bypass,081016-08606,stomach and small intestine,ICD9,Q6349711203284094085
+ExactData Medical Health System,000136865-01,55.12,drainage,080125-56413,Right kidney,ICD9,A9369927769927369442
+ExactData Medical Health System,000136865-01,87.71,CT-guided,080125-69505,Right kidney,ICD9,A9369927769927369442
+ExactData Medical Health System,666849638-01,43.89,Sleeve gastrectomy,090522-68762,stomach,ICD9,L2058417689571195326
+ExactData Medical Health System,666638286-01,55.12,drainage,091006-51392,Right kidney,ICD9,V6513463405097716192
+ExactData Medical Health System,666638286-01,87.71,CT-guided,091006-20820,Right kidney,ICD9,V6513463405097716192
+ExactData Medical Health System,787960000-01,55.12,drainage,100302-50926,Right kidney,ICD9,N5930179763854176905
+ExactData Medical Health System,787960000-01,87.71,CT-guided,100302-40297,Right kidney,ICD9,N5930179763854176905
+ExactData Medical Health System,802001361-01,33.51,Lung transplantation,100405-47444,Right lung,ICD9,J6606840515529613569
+ExactData Medical Health System,666849638-01,33.51,Lung transplantation,100928-38650,Right lung,ICD9,U2525449209926826431
+ExactData Medical Health System,714009070-02,39.51,Aneurysm clipping,101108-61490,subarachnoid,ICD9,G0712019200946965782
+ExactData Medical Health System,714009070-02,33.51,Lung transplantation,100219-83902,Right lung,ICD9,W3801675018083317523
+ExactData Medical Health System,050770000-01,80.88,surgical debridement,100222-57744,Foot,ICD9,L5549383618795015722
+ExactData Medical Health System,714009070-02,38.82,neuroendovascular surgery,110912-21459,subarachnoid,ICD9,K4630255997496994397
+ExactData Medical Health System,714009070-02,32.52,Lung transplantation,111129-69243,Both lung,ICD9,Q5240018436838410963
+ExactData Medical Health System,725210000-01,33.51,Lung transplantation,110908-08213,Right lung,ICD9,D3899201937560901075
+ExactData Medical Health System,802001361-01,80.88,surgical debridement,120801-90782,Foot,ICD9,E3869995752103048562
+ExactData Medical Health System,067430000-01,55.12,drainage,130531-82297,Right kidney,ICD9,O0347277924634799446
+ExactData Medical Health System,067430000-01,87.71,CT-guided,130531-31053,Right kidney,ICD9,O0347277924634799446
+ExactData Medical Health System,802001361-01,33.51,Lung transplantation,131226-39431,Right lung,ICD9,Q0665794277398887614
+ExactData Medical Health System,492950000-01,36.11,Coronary artery graft bypass (single),141211-71977,heart,ICD9,P5723083413763414132
+ExactData Medical Health System,666836691-01,39.51,Aneurysm clipping,050426-99211,subarachnoid,ICD9,E1478707638650722288
+ExactData Medical Health System,250450000-01,32.52,Lung transplantation,050502-64036,Both lung,ICD9,E9204802361389085102
+ExactData Medical Health System,224590000-01,77.88,Revisional surgery (ostectomy),051014-94005,Foot,ICD9,U3038573117628499735
+ExactData Medical Health System,666836691-01,32.52,Lung transplantation,060417-46963,Both lung,ICD9,F0277968468282123263
+ExactData Medical Health System,666836691-01,01.24,burr hole (Trepanation),061011-30365,subdural,ICD9,O3711534881588398336
+ExactData Medical Health System,931550000-01,14.73,Vitrectomy,060522-44734,eye,ICD9,W4510747482667729015
+ExactData Medical Health System,224590000-01,14.24,Panretinal photocoagulation (PRP),060426-26297,eye,ICD9,J1274976787229414185
+ExactData Medical Health System,852001866-01,39.95,hemodialysis,060525-58758,vena cava,ICD9,L1436293920754209778
+ExactData Medical Health System,666987316-01,43.89,Sleeve gastrectomy,060413-19232,stomach,ICD9,O1669252905326056591
+ExactData Medical Health System,666836691-01,39.51,Aneurysm clipping,070619-77587,subarachnoid,ICD9,S7462841525887227904
+ExactData Medical Health System,666836691-01,32.52,Lung transplantation,070828-30400,Both lung,ICD9,A1496638977354601737
+ExactData Medical Health System,000199767-01,01.24,burr hole (Trepanation),090304-06346,subdural,ICD9,Q1056390278924082851
+ExactData Medical Health System,000266513-01,01.39,surgical evacuation,101008-25187,temporal,ICD9,B2649377265097440098
+ExactData Medical Health System,852001866-01,54.98,Peritoneal dialysis,101108-92675,peritoneum,ICD9,O9037558103146164501
+ExactData Medical Health System,250450000-01,33.51,Lung transplantation,110914-47353,Right lung,ICD9,N6991120677787555493
+ExactData Medical Health System,000199767-01,32.52,Lung transplantation,110909-30496,Both lung,ICD9,A1376340650841448084
+ExactData Medical Health System,000199767-01,92.31,Stereotactic microsurgery,111128-09948,brain,ICD9,G0113528603565381411
+ExactData Medical Health System,000266513-01,01.24,burr hole (Trepanation),120403-72721,subdural,ICD9,U8657532037112917166
+ExactData Medical Health System,000199767-01,39.72,Endovascular balloon embolization,130208-12390,subarachnoid,ICD9,I3080719289157696199
+ExactData Medical Health System,666987316-01,14.73,Vitrectomy,130114-54192,eye,ICD9,Y1418794383092356104
+ExactData Medical Health System,666836691-01,01.24,burr hole (Trepanation),140221-72942,subdural,ICD9,B1179309086878702536
+ExactData Medical Health System,578007262-01,37.51,cardiac transplantation,140916-86678,heart,ICD9,N1998317438143606611
+ExactData Medical Health System,000266513-01,01.24,burr hole (Trepanation),141021-71652,subdural,ICD9,Z2631599777645055916
+ExactData Medical Health System,250450000-01,33.51,Lung transplantation,140207-47866,Right lung,ICD9,O9774058764510182643
+ExactData Medical Health System,224590000-01,36.11,Coronary artery graft bypass (single),141001-45947,heart,ICD9,A3567595211383370593
+ExactData Medical Health System,000171598-02,93.11,rehabilitation and remedial exercises following amputation of left foot,140310-59238,Left foot,ICD9,O4571750111330836746
+ExactData Medical Health System,000171598-02,93.11,rehabilitation and remedial exercises following amputation of left foot,140403-24424,Left foot,ICD9,X4950283865184510123
+ExactData Medical Health System,000171598-02,93.11,rehabilitation and remedial exercises following amputation of left foot,140425-11287,Left foot,ICD9,L8056184032475617993
+ExactData Medical Health System,000171598-02,93.11,rehabilitation and remedial exercises following amputation of left foot,140303-11744,Left foot,ICD9,K5804212987607155565
