@@ -22,7 +22,7 @@ remote_nginx_dir = '/etc/nginx/sites-enabled'
 remote_supervisor_dir = '/etc/supervisor/conf.d'
 
 git_remote = ['development']
-env.hosts = fabextras.TEST_HOSTS
+env.hosts = 'health'
 env.user = fabextras.USER
 env.password = fabextras.PASSWORD
 
