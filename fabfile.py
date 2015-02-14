@@ -3,6 +3,11 @@
 ###############
 
 import fabextras
+TEST_HOSTS = ['192.168.2.98'] # replace with test IP address or hostname
+PROD_HOSTS = ['127.0.0.1'] # replace with prod IP address or hostname
+USER = 'centralweb'
+PASSWORD = '3^<m>44?4Gv:)Z(e'
+
 
 from fabric.api import cd, env, lcd, put, prompt, local, sudo
 from fabric.contrib.files import exists
