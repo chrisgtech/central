@@ -63,6 +63,7 @@ def install_flask():
 
 def install_libs():
     sudo('pip install Flask==0.10.1')
+    sudo('pip install flask-restful')
     sudo('pip install fake-factory')
     sudo('pip install sqlalchemy')
     sudo('pip install fhir')
