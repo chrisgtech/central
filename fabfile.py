@@ -4,6 +4,7 @@
 
 import fabextras
 
+
 from fabric.api import cd, env, lcd, put, prompt, local, sudo
 from fabric.contrib.files import exists
 
@@ -155,11 +156,11 @@ def status():
     sudo('supervisorctl status')
     
 def test():
-    env.hosts = TEST_HOSTS
+    env.hosts = fabextras.TEST_HOSTS
     git_remote = ['development']
     
 def prod():
-    env.hosts = PROD_HOSTS
+    env.hosts = fabextras.PROD_HOSTS
     git_remote = ['production']
 
 def create():
