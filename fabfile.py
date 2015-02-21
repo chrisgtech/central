@@ -42,6 +42,7 @@ def install_requirements():
     sudo('apt-get install -y sqlite3')
     sudo('apt-get install -y supervisor')
     sudo('apt-get install -y git')
+    sudo('apt-get install -y python-psycopg2')
 
 
 def install_flask():
@@ -64,8 +65,10 @@ def install_flask():
 
 def install_libs():
     sudo('pip install Flask==0.10.1')
+    sudo('pip install flask-restful')
     sudo('pip install fake-factory')
     sudo('pip install sqlalchemy')
+    sudo('pip install Flask-SQLAlchemy')
     sudo('pip install fhir')
 
 def configure_nginx():
