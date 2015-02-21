@@ -1,11 +1,14 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
+from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost:5777/centraldb' 
+#db = SQLAlchemy(app)
 
 @app.route('/')
+@app.route('/index')
 def index():
-    return 'Flask is running!'
+    return render_template('main.html', title='Redirect')
 
 
 @app.route('/data')
