@@ -159,11 +159,11 @@ def status():
     
 def test():
     env.hosts = fabextras.TEST_HOSTS
-    git_remote = ['development']
+    git_remote[0] = 'development'
     
 def prod():
     env.hosts = fabextras.PROD_HOSTS
-    git_remote = ['production']
+    git_remote[0] = 'production'
 
 def create():
     install_requirements()
