@@ -4,6 +4,7 @@
 
 import fabextras
 
+
 from fabric.api import cd, env, lcd, put, prompt, local, sudo
 from fabric.contrib.files import exists
 
@@ -41,6 +42,7 @@ def install_requirements():
     sudo('apt-get install -y sqlite3')
     sudo('apt-get install -y supervisor')
     sudo('apt-get install -y git')
+    sudo('apt-get install -y python-psycopg2')
 
 
 def install_flask():
@@ -63,8 +65,10 @@ def install_flask():
 
 def install_libs():
     sudo('pip install Flask==0.10.1')
+    sudo('pip install flask-restful')
     sudo('pip install fake-factory')
     sudo('pip install sqlalchemy')
+    sudo('pip install Flask-SQLAlchemy')
     sudo('pip install fhir')
 
 def configure_nginx():
@@ -154,12 +158,12 @@ def status():
     sudo('supervisorctl status')
     
 def test():
-    env.hosts = TEST_HOSTS
-    git_remote = ['development']
+    env.hosts = fabextras.TEST_HOSTS
+    git_remote[0] = 'development'
     
 def prod():
-    env.hosts = PROD_HOSTS
-    git_remote = ['production']
+    env.hosts = fabextras.PROD_HOSTS
+    git_remote[0] = 'production'
 
 def create():
     install_requirements()
