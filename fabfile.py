@@ -70,6 +70,8 @@ def install_libs():
     sudo('pip install sqlalchemy')
     sudo('pip install Flask-SQLAlchemy')
     sudo('pip install fhir')
+    sudo('pip install lxml')
+    sudo('pip install yaml')
 
 def configure_nginx():
     """

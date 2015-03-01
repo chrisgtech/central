@@ -2,10 +2,7 @@ import sys
 
 import csv
 
-from faker import Factory
-fake = Factory.create('en_US')
-
-from utils import fileutils
+import utils
 import bioportal
 
 def fakename(sexcode):
@@ -38,14 +35,18 @@ def loadpatients(patientfile):
                 summary[header] = line[index]
             id = summary['DESYNPUF_ID']
             sexcode = summary['BENE_SEX_IDENT_CD']
-            name = fakename(sexcode)
+            birthdate = summary['BENE_BIRTH_DT']
             conditions = loadconditions(summary)
             
             patient = {}
             patient['id'] = id
-            patient['name'] = name
             patient['conditions'] = conditions
+            patient['birthdate'] = birthdate
             patient['summary'] = summary
+            if int(sexcode) > 1:
+                patient['sex'] = 'female'
+            else:
+                patient['sex'] = 'male'
             patients[id] = patient
             
     return patients
@@ -124,8 +125,8 @@ def set_alt_ndcs(patients):
                 pde['ALTS'] = ndcalts[ndc]
         
 def loadall():
-    patients = loadpatients('DE1_0_2008_Beneficiary_Summary_File_Sample_1.csv')
-    loaddrugevents(patients, 'DE1_0_2008_to_2010_Prescription_Drug_Events_Sample_1.csv')
+    patients = loadpatients('data/DE1_0_2008_Beneficiary_Summary_File_Sample_1.csv')
+    loaddrugevents(patients, 'data/DE1_0_2008_to_2010_Prescription_Drug_Events_Sample_1.csv')
     return patients
     
 def main(argv=None):
@@ -141,9 +142,9 @@ def main(argv=None):
     print '%s patients loaded' % len(patients)
     print 'With %s unique drug events' % pdecount
     
-    set_alt_ndcs(patients)
+    #set_alt_ndcs(patients)
     
-    lookup_ndcs(patients)
+    #lookup_ndcs(patients)
 
 if __name__ == "__main__":
     sys.exit(main())
