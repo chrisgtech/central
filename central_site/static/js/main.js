@@ -1,17 +1,21 @@
 $(document).ready(function(){
 	$('body').on('click', '.patient_card', function(x) {
-		console.log(this);
-		card = this;
+		loadPatientDetails($(this).attr('patient_id'));
+		//.modal is the 
 		$('.modal').modal();
-		//patient Detail
-		//TODO: Create function to handle how to display patient detail
 	});
 	getPatients();
 });
 
-
+/*
+Author: Michael
+Date: 03/14/2015
+Purpose: Fetches the patient data from the fhir server
+Todo:
+Add parameter to accept the number of desired records to pass
+*/
 function getPatients() {
-	//TODO: Get parameter to gather more than 50 patients
+	//TODO: Get parameter to gather [x] number of patients; 
 	//TODO: Get a list of possible parameters to pass in
 
 	$.ajax({
@@ -28,6 +32,14 @@ function getPatients() {
    });
 }
 
+
+
+/*
+Author: Michael
+Date: 03/14/2015
+Purpose: parses the data from getPatients() to render the patient cards
+in the Scroll container
+*/
 //Array for just learning what fields are available on a fhir server patient entry
 var allAttr = [];
 function parseData(data) {
@@ -42,6 +54,8 @@ function parseData(data) {
 		
 		//This is just a note of the types of fields I've encountered with other servers
 		//["resourceType", "text", "identifier", "name", "telecom", "gender", "birthDate", "address", "photo", "active", "extension", "managingOrganization"]
+		
+		//everyone has two phone
 		
 		//Two paths to go down: 1) where we just quickly throw data in the cards and assign the patient ID for reference 
 		//in a shared global array to populate the patient detail modal or 2) create each element as a javascript object, 
@@ -70,4 +84,14 @@ function parseData(data) {
 	//Dynamically edit width for the scroll container depending on the number of cards rendered
 	$('.patient_card_scroll').css('width', (350 * data.entry.length) + 'px');
 	
+}
+
+/*
+Author: Michael
+Date: 03/14/2015
+Purpose: Load details of patient in the Patient Detail screen
+Todo: everything :)
+*/
+function loadPatientDetails(patient_id) {
+	console.log(patient_id);
 }
