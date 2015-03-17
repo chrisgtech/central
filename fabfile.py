@@ -70,8 +70,8 @@ def install_libs():
     sudo('pip install sqlalchemy')
     sudo('pip install Flask-SQLAlchemy')
     sudo('pip install fhir')
-    sudo('pip install lxml')
-    sudo('pip install yaml')
+    #sudo('pip install lxml') #WLT these were causing issues with fab create
+    #sudo('pip install yaml')
 
 def configure_nginx():
     """
