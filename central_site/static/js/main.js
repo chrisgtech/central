@@ -45,7 +45,7 @@ Purpose: Fetches the patient data from the fhir server
 Todo:
 Add parameter to accept the number of desired records to pass
 */
-function getPatients(count, skip) {
+function getPatients(count) {
     $.ajax({
         url:"http://52.11.104.178:8080/Patient",  
         beforeSend: function(xhr) {
@@ -56,7 +56,7 @@ function getPatients(count, skip) {
         /*TODO: Find out what all parameters we can send over*/
         data: {
           _count : count ? count : 25,
-          _skip  : skip ? skip : 0
+          _skip  : $('.patient_card').length
         },
         success:function(data) {
             globData = data;
