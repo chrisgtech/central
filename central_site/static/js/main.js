@@ -55,7 +55,7 @@ function getPatients(count) {
         contentType: 'application/json',
         /*TODO: Find out what all parameters we can send over*/
         data: {
-          _count : count ? count : 25,
+          _count : count ? count : 10,
           _skip  : $('.patient_card').length
         },
         success:function(data) {
@@ -78,39 +78,32 @@ function parseData(data) {
     $.each(data.entry, function(e, entry) {
         var patientContent = entry.content;
         
-        //Two paths to go down: 1) where we just quickly throw data in the cards and assign the patient ID for reference 
-        //in a shared global array to populate the patient detail modal or 2) create each element as a javascript object, 
-        //bind the patient's data to the element, and use that to populate the patient detail modal
-
         $('#dashboard_loading_img').hide();
 
-        //Path 1, would require a global variable... tisk tisk
-        //path with patient ID as reference for global array
-        $('.patient_card_scroll').append('<div class="patient_card" patient_id="' + entry.title + '">' 
-                + '<img class="card_photo_thumbnail" src="' 
-                                + (patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg')
-                + '" alt="no_photo">' 
-                + '<div class="card_demographic">'
-                        //For patient name, see what could possible be in the array past the first element
-                        + patientContent.name[0].given[0] + " " + patientContent.name[0].family[0]
-                        + (patientContent.gender ? '<br>' + patientContent.gender.coding[0].display : '')
-                        + '<br>DOB: ' + ( patientContent.birthDate ? patientContent.birthDate.split('-')[1] 
-                                        + "/" + patientContent.birthDate.split('-')[2] 
-                                        + "/" + patientContent.birthDate.split('-')[0]
-                                        : 'N/A' )
-                + '</div>' 
-        + '</div>');
-
-        //Path 2
-        //path to binding data to the card
         var patient_card = document.createElement("div");
         patient_card.className = "patient_card";
+        patient_card.setAttribute('patient_id', entry.title);
         
+        var patient_img = document.createElement("img");
+        patient_img.className = "card_photo_thumbnail";
+        patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
+        patient_img.setAttribute('alt', 'no_photo');
          
-         
-         
-         
-         
+        var patient_demographics = document.createElement("div");
+        patient_demographics.className = "card_demographic";
+        //Patient Name
+        patient_demographics.innerHTML += patientContent.name[0].given[0] + " " + patientContent.name[0].family[0];
+        //Gender
+        patient_demographics.innerHTML += patientContent.gender ? '<br>' + patientContent.gender.coding[0].display : '';
+        //DOB
+        patient_demographics.innerHTML += '<br>DOB: ' + ( patientContent.birthDate ? patientContent.birthDate.split('-')[1] 
+                                        + "/" + patientContent.birthDate.split('-')[2] 
+                                        + "/" + patientContent.birthDate.split('-')[0]
+                                        : 'N/A');
+         patient_card.appendChild(patient_img);
+         patient_card.appendChild(patient_demographics);
+         $(patient_card).data(entry);
+        $('.patient_card_scroll').append(patient_card);
          
          
         updateScrollContainerWidth();

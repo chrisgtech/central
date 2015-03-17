@@ -91,7 +91,8 @@
 
 .patient_data {
 	padding: 25px;
-	height: 1650px;
+        min-height: 640px;
+        background-color: #efefef;
 }
 
 .dashboard_nav{
@@ -108,7 +109,9 @@
 	min-width: 125px;
 }
 
-
+.tab-content {
+    padding: 25px;
+}
 
 
 
