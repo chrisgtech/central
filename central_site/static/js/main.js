@@ -55,7 +55,7 @@ function getPatients(count) {
         contentType: 'application/json',
         /*TODO: Find out what all parameters we can send over*/
         data: {
-          _count : count ? count : 10,
+          _count : count ? count : 25,
           _skip  : $('.patient_card').length
         },
         success:function(data) {
