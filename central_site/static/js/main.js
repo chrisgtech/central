@@ -2,7 +2,7 @@ $(document).ready(function(){
 
     //binding [loadPatientDetails()] to dynamically added patient cards
     $('body').on('click', '.patient_card', function(x) {
-        loadPatientDetails($(this).attr('patient_id'));
+        loadPatientDetails($(this).data());
         //.modal is the 
         $('.modal').modal();
     });
@@ -55,7 +55,7 @@ function getPatients(count) {
         contentType: 'application/json',
         /*TODO: Find out what all parameters we can send over*/
         data: {
-          _count : count ? count : 10,
+          _count : count ? count : 25,
           _skip  : $('.patient_card').length
         },
         success:function(data) {
@@ -96,10 +96,7 @@ function parseData(data) {
         //Gender
         patient_demographics.innerHTML += patientContent.gender ? '<br>' + patientContent.gender.coding[0].display : '';
         //DOB
-        patient_demographics.innerHTML += '<br>DOB: ' + ( patientContent.birthDate ? patientContent.birthDate.split('-')[1] 
-                                        + "/" + patientContent.birthDate.split('-')[2] 
-                                        + "/" + patientContent.birthDate.split('-')[0]
-                                        : 'N/A');
+        patient_demographics.innerHTML += '<br>DOB: ' + ( patientContent.birthDate ? formateDate(patientContent.birthDate) : 'N/A');
          patient_card.appendChild(patient_img);
          patient_card.appendChild(patient_demographics);
          $(patient_card).data(entry);
@@ -111,11 +108,26 @@ function parseData(data) {
     
 }
 
+/*Author: Michael
+ * Date: 03/2015
+ * Just something to reuse to adjust width of scroll container
+ * */
 function updateScrollContainerWidth(){
     //Dynamically edit width for the scroll container depending on the number of cards rendered
-    $('.patient_card_scroll').css('width', (
-            (   parseInt($('.patient_card:first').css('width')) + 2 * parseInt($('.patient_card:first').css('padding')))
-            * $('.patient_card:visible').length) + 'px');
+    //Hayes, figure out why you chose 350
+    $('.patient_card_scroll').css('width', (350 * $('.patient_card:visible').length) + 'px');
+}
+
+
+/*
+ * Author: Michael
+ * Date: 3/17/2015
+ * Formate the date nicer
+ * 
+ */
+
+function formateDate(date){
+    return date.split('-')[1] + "/" + date.split('-')[2]  + "/" + date.split('-')[0];
 }
 
 /*
@@ -124,6 +136,55 @@ Date: 03/14/2015
 Purpose: Load details of patient in the Patient Detail screen
 Todo: everything :)
 */
-function loadPatientDetails(patient_id) {
-	console.log(patient_id);
+function loadPatientDetails(patient_data) {
+        debugger;
+        $('#patient_detail_name').text(patient_data.content.name[0].given[0] + " " +
+                                      patient_data.content.name[0].given[1] + " " +
+                                      patient_data.content.name[0].family[0]);
+        $('#patient_detail_DOB').text(formateDate(patient_data.content.birthDate));
+        $('#patient_detail_gender').text(patient_data.content.gender.coding[0].display);
+        $('#patient_detail_line').text(patient_data.content.address[0].line[0]);
+        $('#patient_detail_city').text(patient_data.content.address[0].city);
+        $('#patient_detail_state').text(patient_data.content.address[0].state);
+        $('#patient_detail_zip').text(patient_data.content.address[0].zip);
+    
+        $('#patient_detail_phone1, #patient_detail_phone2').text('');
+        $.each(patient_data.content.telecom, function(t, type){
+            if(type.system === 'email') {
+                $('#patient_detail_email').text(type.value);
+            } else {
+                switch(type.use) {
+                    case 'mobile' : 
+                        if($('#patient_detail_phone1').text() === ''){
+                            $('#phone1_icon').attr('class', 'glyphicon glyphicon-phone');
+                            $('#patient_detail_phone1').text(type.value);
+                        } else {
+                            $('#phone2_icon').attr('class', 'glyphicon glyphicon-phone');
+                            $('#patient_detail_phone2').text(type.value);
+                        }
+                        break;
+                    case 'home' : 
+                        if($('#patient_detail_phone1').text() === ''){
+                            $('#phone1_icon').attr('class', 'glyphicon glyphicon-home');
+                            $('#patient_detail_phone1').text(type.value);
+                        } else {
+                            $('#phone2_icon').attr('class', 'glyphicon glyphicon-home');
+                            $('#patient_detail_phone2').text(type.value);
+                        }
+                        break;
+                    case 'work' : 
+                        if($('#patient_detail_phone1').text() === ''){
+                            $('#phone1_icon').attr('class', 'glyphicon glyphicon-briefcase');
+                            $('#patient_detail_phone1').text(type.value);
+                        } else {
+                            $('#phone2_icon').attr('class', 'glyphicon glyphicon-briefcase');
+                            $('#patient_detail_phone2').text(type.value);
+                        }
+                        break;
+                }
+            }
+            
+            
+        });
+    
 }
