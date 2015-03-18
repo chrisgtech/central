@@ -111,8 +111,38 @@
 
 .tab-content {
     padding: 25px;
+    height: 480px;
+    background-color: white;
+    box-shadow: 0px 2px 3px #999;
 }
 
 
 
 
+/****************Patient Detail Section*****************/
+
+#patient_detail_photo {
+    max-width: 250px;
+    border: 1px solid #000;
+}
+
+#patient_detail_name {
+    padding: 10px 5px;
+    font-size: 18px;
+}
+
+.glyphicon {
+    margin-right: 5px;
+    
+}
+
+
+/**Hidden Things*****/
+
+.dashboard_nav.row {
+    display: none;
+}
+
+.jumbotron {
+    padding: 0px;
+}
