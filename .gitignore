@@ -40,6 +40,10 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
+# Settings
+.settings/
+.idea/
+
 # Translations
 *.mo
 *.pot
