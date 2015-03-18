@@ -1,0 +1,5 @@
+//Patient Count on Dashboard
+//Patient Check In screen
+	-Ajax call to search for specific patient by name, number, etc
+	
+//

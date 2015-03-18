@@ -23,7 +23,7 @@ remote_nginx_dir = '/etc/nginx/sites-enabled'
 remote_supervisor_dir = '/etc/supervisor/conf.d'
 
 git_remote = ['development']
-env.hosts = fabextras.TEST_HOSTS
+env.hosts = 'health'
 env.user = fabextras.USER
 env.password = fabextras.PASSWORD
 
@@ -71,8 +71,8 @@ def install_libs():
     # Install these on your client side too
     sudo('pip install fake-factory')
     sudo('pip install fhir')
-    sudo('pip install lxml')
-    sudo('pip install yaml')
+    #sudo('pip install lxml') #WLT these were causing issues with fab create
+    #sudo('pip install yaml')
 
 def configure_nginx():
     """

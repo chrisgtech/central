@@ -1,7 +1,7 @@
 
 
 /* ==========================================================================
-   Author's custom styles
+   Team Central Custom CSS
    ========================================================================== */
 
 .dashboard {
@@ -20,6 +20,14 @@
 	width: 100%;
 	height: 75px;
 }
+
+#dashboard_loading_img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20%;
+}
+
 
 .user_card {
 	margin: 0px 25px;
@@ -83,7 +91,8 @@
 
 .patient_data {
 	padding: 25px;
-	height: 1650px;
+        min-height: 640px;
+        background-color: #efefef;
 }
 
 .dashboard_nav{
@@ -100,7 +109,9 @@
 	min-width: 125px;
 }
 
-
+.tab-content {
+    padding: 25px;
+}
 
 
 
