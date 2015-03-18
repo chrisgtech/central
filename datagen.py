@@ -1,5 +1,5 @@
 import sys
-import csv, random, json
+import csv, random, json, operator, re, time
 
 from faker import Factory
 fake = Factory.create('en_US')
@@ -77,23 +77,269 @@ def fakeprofile(sex='female', birthyear=None):
     
     #profile = {'content':profile}
     
-    jsonified = json.dumps(profile)
-    return jsonified
+    return profile
     
-def createrecord(profile):
+def createrecord(data):
+    type = data['resourceType']
+    jsonified = json.dumps(data)
     rest = RestfulFHIR(fabextras.FHIR_URLS[0])
-    query = rest.create('Patient', profile)
-    if query.status_code != 201:
+    #url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
+    #print url
+    #return url
+    retries = 3
+    query = None
+    while retries > 0:
+        try:
+            query = rest.create(type, jsonified)
+            break
+        except:
+            print 'Retrying...'
+            retries -= 1
+            if retries < 1:
+                raise
+            time.sleep(15)
+            continue
+    if not query or query.status_code != 201:
         print query
+        print query.text
         return None
-    return query.headers['location']
+    url = query.headers['location']
+    print url
+    return url
+        
+def findid(url):
+    id = url[len(fabextras.FHIR_URLS[0]):]
+    firstslash = id.find('/')
+    id = id[firstslash+1:]
+    nextslash = id.find('/')
+    id = id[:nextslash]
+    return id
     
-def createall():
+def createconditions(patient):
+    codes = {'Alzheimer/Senile':'26929004', 'Heart Failure':'48447003', 'Kidney Disease':'236425005', 'Obstructive Pulmonary Disease':'13645005', 'Depression':'192080009', 'Diabetes':'73211009', 'Ischemic Heart Disease':'413838009', 'Osteoporosis':'64859006', 'Rheumatoid Arthritis/Osteoarthritis':'69896004', 'Stroke/Transient Ischemic Attack':'266257000', 'Skin Cancer':'372244006', 'Lung Cancer':'254637007', 'Colorectal Cancer':'93761005', 'Bladder Cancer':'93689003', "Non-Hodgkin's Lymphoma":'118601006', 'Thyroid Cancer':'94098005'}
+    officials = {'26929004':"Alzheimer's disease", '48447003':'Chronic heart failure', '236425005':'Chronic renal impairment', '13645005':'Chronic obstructive lung disease', '192080009':'Chronic depression', '73211009':'Diabetes mellitus', '413838009':'Chronic ischemic heart disease', '64859006':'Osteoporosis', '69896004':'Rheumatoid arthritis', '266257000':'Transient ischemic attack', '372244006':'Malignant melanoma', '254637007':'Non-small cell lung cancer', '93761005':'Primary malignant neoplasm of colon', '93689003':'Primary malignant neoplasm of bladder', '118601006':"Non-Hodgkin's lymphoma", '94098005':'Primary malignant neoplasm of thyroid gland'}
+    urls = []
+    for condition in patient.get('conditions'):
+        entry = {}
+        entry['resourceType'] = 'Condition'
+        entry['subject'] = {'reference': 'Patient/%s' % patient['fhirid']}
+        code = codes[condition]
+        official = officials[code]
+        entry['code'] = {}
+        entry['code']['coding'] = coding = [{}]
+        coding = coding[0]
+        coding['system'] = 'http://snomed.info/sct'
+        coding['code'] = code
+        coding['display'] = official
+        entry['code']['text'] = condition
+        entry['status'] = 'confirmed'
+        entry['onsetDate'] = fake.date(pattern='%Y-%m-%d')
+        url = createrecord(entry)
+        if url:
+            urls.append(url)
+            id = findid(url)
+            entry['id'] = id
+        else:
+            print 'Could not create condition: ' + official
+    return urls
+    
+def createmedications(patient, rxlookup, rxinfo, medications):
+    urls = []
+    tempstore = None
+    #tempstore = utils.restore('temp.yaml')
+    if not tempstore:
+        tempstore = {}
+    if not 'pdes' in patient:
+        return None
+    for pde in patient['pdes']:
+        ndc = pde['PROD_SRVC_ID']
+        if not ndc in rxlookup and not ndc in tempstore:
+            print 'Unrecognized NDC: ' + ndc
+            continue
+        supplydays = pde['DAYS_SUPLY_NUM']
+        supplydays = int(supplydays)
+        supplyquantity = pde['QTY_DSPNSD_NUM']
+        supplyquantity = int(float(supplyquantity))
+        supplydate = pde['SRVC_DT']
+        supplydate = '%s-%s-%s' % (supplydate[:4], supplydate[4:6], supplydate[6:])
+        rx = tempstore.get(ndc)
+        if not rx:
+            rx = rxlookup[ndc]
+            tempstore[ndc] = rx
+        if not rx in medications:
+            medications[rx] = medication = {}
+            medication['resourceType'] = 'Medication'
+            rxdetails = tempstore.get(rx)
+            if not rxdetails:
+                rxdetails = rxinfo[rx]
+                tempstore[rx] = rxdetails
+            #print rxdetails['name']
+            #print rxdetails
+            if 'brand' in rxdetails:
+                medication['name'] = rxdetails['brand']
+            else:
+                ingredientnames = [ingredient['name'] for ingredient in rxdetails['ingredients']]
+                medication['name'] = ' / '.join(ingredientnames)
+            #print medication['name']
+            medication['kind'] = 'product'
+            #medication['code'] = {'coding':[{}], 'text': rxdetails['name']}
+            medication['code'] = {'coding':[{}]}
+            coding = medication['code']['coding'][0]
+            coding['system'] = 'http://www.nlm.nih.gov/research/umls/rxnorm'
+            coding['code'] = rx
+            medication['isBrand'] = ('brand' in rxdetails)
+            medication['product'] = product = {}
+            product['form'] = {'text':rxdetails['form']}
+            product['ingredient'] = ingredients = []
+            for ingredient in rxdetails['ingredients']:
+                newingredient = {}
+                ingredients.append(newingredient)
+                newingredient['item'] = {'display':ingredient['name']}
+                newingredient['amount'] = {'numerator':{}, 'denominator':{'value':1}}
+                newingredient['amount']['numerator']['value'] = ingredient['quantity']
+                newingredient['amount']['numerator']['units'] = ingredient['quantityunits']
+            url = createrecord(medication)
+            if url:
+                urls.append(url)
+                id = findid(url)
+                medication['id'] = id
+            else:
+                print 'Could not create medication: ' + medication['name']
+            #utils.writetext('temp.txt', json.dumps(medication))
+            #print medication
+            #print ''
+            
+        prescription = {}
+        prescription['resourceType'] = 'MedicationPrescription'
+        prescription['dateWritten'] = supplydate
+        prescription['patient'] = medpatient = {}
+        medpatient['reference'] = 'Patient/%s' % patient['fhirid']
+        fullname = patient['profile']['name'][0]
+        fullname = '%s %s %s' % (fullname['given'][0], fullname['given'][1], fullname['family'][0])
+        medpatient['display'] = fullname
+        prescription['medication'] = medication = {}
+        id = medications[rx]['id']
+        medication['reference'] = 'Medication/%s' % id
+        medication['display'] = medications[rx]['name']
+        prescription['dispense'] = dispense = {}
+        dispense['quantity'] = supplyquantity
+        dispense['duration'] = supplydays
+        url = None
+        # For now MedicationPrescription doesn't seem to be supported
+        #url = createrecord(prescription)
+        if url:
+            urls.append(url)
+            newid = findid(url)
+            prescription['id'] = newid
+        else:
+            print 'Could not create prescription: ' + prescription['dateWritten']
+        
+        #print (supplydays, supplyquantity, supplydate)
+        #utils.writetext('temp.txt', json.dumps(prescription))
+        
+        #print ''
+    #utils.dump('temp.yaml', tempstore)
+    
+def rxdetails(rxlookup):
+    rxinfo = {}
+    rxnames = []
+    for rxinfo in rxlookup.values():
+        name = rxinfo['name']
+        if not name in rxnames:
+            rxnames.append(name)
+    types = ['16 Hour Transdermal Patch', '24 Hour Transdermal Patch', '72 Hour Transdermal Patch', 'Augmented Topical Cream', 'Augmented Topical Gel', 'Augmented Topical Lotion', 'Augmented Topical Ointment', 'Biweekly Transdermal Patch', 'Medicated Pad', 'Medicated Tape', 'Patch', 'Powder Spray', 'Topical Cake', 'Topical Cream', 'Topical Foam', 'Topical Gel', 'Topical Lotion', 'Topical Oil', 'Topical Ointment', 'Topical Powder', 'Topical Solution', 'Topical Spray', 'Transdermal Patch', 'Weekly Transdermal Patch', 'Dry Powder Inhaler', 'Gas', 'Gas for Inhalation', 'Inhalant', 'Inhalant Powder', 'Inhalant Solution', 'Metered Dose Inhaler', 'Nasal Inhalant', 'Nasal Inhaler', 'Nasal Spray', 'Douche', 'Vaginal Cream', 'Vaginal Foam', 'Vaginal Gel', 'Vaginal Ointment', 'Vaginal Powder', 'Vaginal Ring', 'Vaginal Spray', 'Vaginal Suppository', 'Vaginal Tablet', 'Injectable Solution', 'Injectable Suspension', 'Intramuscular Solution', 'Intramuscular Suspension', 'Intrathecal Suspension', 'Intravenous Solution', 'Intravenous Suspension', 'Prefilled Syringe', 'Enema', 'Rectal Cream', 'Rectal Foam', 'Rectal Gel', 'Rectal Ointment', 'Rectal Powder', 'Rectal Solution', 'Rectal Spray', 'Rectal Suppository', 'Rectal Suspension', 'Mucosal Spray', 'Mucous Membrane Topical Solution', 'Nasal Cream', 'Nasal Gel', 'Nasal Ointment', 'Nasal Solution', 'Nasal Suspension', 'Bar', 'Buccal Film', 'Buccal Tablet', 'Chewable Bar', 'Chewable Tablet', 'Chewing Gum', 'Crystals', 'Disintegrating Tablet', 'Elixir', 'Enteric Coated Capsule', 'Enteric Coated Tablet', 'Extended Release Capsule', 'Extended Release Enteric Coated Capsule', 'Extended Release Enteric Coated Tablet', 'Extended Release Suspension', 'Extended Release Tablet', 'Extended Release Oral Tablet', 'Extended Release Oral Capsule', 'Delayed Release Oral Tablet', 'Delayed Release Oral Capsule', 'Disintegrating Oral Tablet', 'Effervescent Oral Tablet', 'Flakes', 'Granules', 'Oral Granules', 'Lozenge', 'Oral Lozenge', 'Oral Capsule', 'Oral Cream', 'Oral Foam', 'Oral Gel', 'Oral Ointment', 'Oral Paste', 'Oral Powder', 'Oral Solution', 'Oral Spray', 'Oral Strip', 'Oral Suspension', 'Oral Tablet', 'Pellet', 'Pudding', 'Sublingual Tablet', 'Sustained Release Buccal Tablet', 'Wafer', 'Oral Wafer', 'Mouthwash', 'Toothpaste', 'Otic Cream', 'Otic Ointment', 'Otic Solution', 'Otic Suspension', 'Ophthalmic Cream', 'Ophthalmic Gel', 'Ophthalmic Irrigation Solution', 'Ophthalmic Ointment', 'Ophthalmic Solution', 'Ophthalmic Suspension', 'Drug Implant', 'Intraperitoneal Solution', 'Irrigation Solution', 'Paste', 'Prefilled Applicator', 'Urethral Suppository', 'Urethral Gel', 'Medicated Shampoo', 'Bar Soap', 'Medicated Bar Soap', 'Medicated Liquid Soap']
+    units = ['MG', 'ML', 'UNT', 'ACTUAT', 'MEQ', 'HR', 'SQCM', 'CELLS', 'BAU', 'AU', 'PNU', 'PCT']
+    types.sort(key=len, reverse=True)
+    for rxname in rxnames:
+        fullname = rxname
+        rxinfo[fullname] = info = {}
+        rxname = rxname.replace(' % ', ' PCT ')
+        rxbrand = None
+        rxunits = None
+        if '[' in rxname:
+            if not rxname.endswith(']'):
+                print 'Unknown brand: ' + fullname
+                continue
+            brandstart = rxname.find('[')
+            rxbrand = rxname[brandstart+1:-1]
+            rxname = rxname[:brandstart-1]
+        rxtype = None
+        for type in types:
+            if type in rxname:
+                rxtype = type
+                break
+        if not rxtype:
+            print 'Unknown type: ' + fullname
+            continue
+        rxname = rxname.replace(' ' + rxtype, '')
+        subnames = rxname.split(' / ')
+        ingredients = []
+        for subname in subnames:
+            ingredient = {}
+            if 'Pack' in rxname and '(' in subname:
+                packstart = subname.find('(') + 1
+                subname = subname[packstart:]
+            if 'Pack' in rxname and ')' in subname:
+                packend = subname.find(')')
+                subname = subname[:packend]
+            match = None
+            pattern = r'^((?P<strength>\d+(\.\d+)?) (?P<strengthunits>\w+))?(?P<drug>.+) (?P<quantity>(\d+)(\.\d+)?) (?P<units>\w+(/\w+)?)$'
+            match = re.search(pattern, subname)
+            if not match:
+                print 'Unknown format: ' + fullname
+                continue
+            rxstrength = match.group('strength')
+            rxstrengthunits = match.group('strengthunits')
+            rxdrugname = match.group('drug')
+            rxquantity = match.group('quantity')
+            rxquantityunits = match.group('units')
+            rxquantity = float(rxquantity)
+            if rxstrength:
+                rxstrength = float(rxstrength)
+            if rxstrength:
+                ingredient['strength'] = rxstrength
+                ingredient['strengthunits'] = rxstrengthunits
+            ingredient['name'] = rxdrugname
+            ingredient['quantity'] = rxquantity
+            ingredient['quantityunits'] = rxquantityunits
+            ingredients.append(ingredient)
+        if rxbrand:
+            info['brand'] = rxbrand
+        info['form'] = rxtype
+        info['ingredients'] = ingredients
+        #print fullname
+        #print rxbrand
+        #print rxtype
+        #print "'" + rxname + "'"
+        #print ''
+    return rxinfo
+    
+#def findcommonpdes(patients, rxlookup, rxinfo):
+#    totals = {}
+#    for patient in patients.values()[:100]:
+#        if not 'pdes' in patient:
+#            continue
+#        for pde in patient['pdes']:
+#            ndc = pde['PROD_SRVC_ID']
+#            if not ndc in rxlookup:
+#              continue
+#            name, rx = rxlookup[ndc]['name'], rxlookup[ndc]['rx']
+#            if not name in totals:
+#                totals[name] = 0
+#            totals[name] += 1
+#    commons = list(sorted(totals.items(), key=operator.itemgetter(1), reverse=True))
+#    for common in commons[:25]:
+#        print common
+#        print rxinfo[common[0]]
+    
+def createall(rxlookup, rxinfo):
     created = utils.restore('created.yaml')
     if not created:
         created = {}
     patients = desynpuf.loadall()
-    for patient in patients.values()[:10]:
+    #findcommonpdes(patients, rxlookup, rxinfo)
+    #exit()
+    for patient in patients.values()[:100]:
         if patient['id'] in created:
             continue
         birthyear = patient['birthdate'][:4]
@@ -103,14 +349,16 @@ def createall():
         if not url:
             print 'Could not create patient %s' % patient['id']
             continue
-        print url
-        id = url[len(fabextras.FHIR_URLS[0]):]
-        firstslash = id.find('/')
-        id = id[firstslash+1:]
-        nextslash = id.find('/')
-        id = id[:nextslash]
+        patient['profile'] = profile
+        #print url
+        id = findid(url)
         created[patient['id']] = id
-    utils.dump('created.yaml', created)
+        patient['fhirid'] = id
+        urls = createconditions(patient)
+        medications = {}
+        urls = createmedications(patient, rxlookup, rxinfo, medications)
+        
+    #utils.dump('created.yaml', created)
 
 def convert_txt(path):
     for file in utils.findfiles('*.txt', path):
@@ -124,12 +372,43 @@ def convert_txt(path):
                 for row in tabbed:
                     csved.writerow(row)
 
+def convert_rxlookup():
+    print 'Converting rxlookup'
+    print 'Loading old rxlookup'
+    rxlookup = utils.restore('rxlookup.yaml')
+    print 'Creating rxdetails'
+    rxinfoold = rxdetails(rxlookup)
+    print 'Coverting...'
+    rxlookupsmall = {}
+    rxinfo = {}
+    for ndc, namerx in rxlookup.items():
+        name, rx = namerx['name'], namerx['rx']
+        rxlookupsmall[ndc] = rx
+        rxinfo[rx] = rxinfoold[name]
+        rxinfo[rx]['name'] = name
+    print 'Saving rxlookup and rxinfo'
+    utils.dump('rxlookup-small.yaml', rxlookupsmall)
+    utils.dump('rxinfo.yaml', rxinfo)
+    return rxlookup, rxinfo
+
 def main(argv=None):
-    convert_txt('data/')
+    print 'Loading rxlookup'
+    rxlookup = utils.restore('rxlookup-small.yaml')
+    print 'Loading rxinfo'
+    rxinfo = utils.restore('rxinfo.yaml')
+    if not rxlookup or not rxinfo:
+        rxlookup, rxinfo = convert_rxlookup()
+        
+    #print 'Converting txt files'
+    #convert_txt('data/')
     #jsonified = fakeprofile()
     #utils.writetext('temp.txt', jsonified)
     #print createrecord(jsonified)
-    createall()
+    
+    #rxlookup = {}
+    #rxinfo = {}
+    print 'Creating records'
+    createall(rxlookup, rxinfo)
 
 if __name__ == "__main__":
     sys.exit(main())
