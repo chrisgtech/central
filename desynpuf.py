@@ -1,6 +1,6 @@
 import sys
 
-import csv
+import csv, random
 
 import utils
 import bioportal
@@ -16,6 +16,9 @@ def loadconditions(summary):
     conditions = []
     codemap = {'SP_ALZHDMTA':'Alzheimer/Senile', 'SP_CHF':'Heart Failure', 'SP_CHRNKIDN':'Kidney Disease', 'SP_CNCR':'Cancer', 'SP_COPD':'Obstructive Pulmonary Disease', 'SP_DEPRESSN':'Depression', 'SP_DIABETES':'Diabetes', 'SP_ISCHMCHT':'Ischemic Heart Disease', 'SP_OSTEOPRS':'Osteoporosis', 'SP_RA_OA':'Rheumatoid Arthritis/Osteoarthritis', 'SP_STRKETIA':'Stroke/Transient Ischemic Attack'}
     for code, name in codemap.items():
+        if name == 'Cancer':
+            cancers = ['Skin Cancer', 'Lung Cancer', 'Colorectal Cancer', 'Bladder Cancer', "Non-Hodgkin's Lymphoma", 'Thyroid Cancer']
+            name = random.choice(cancers)
         value = int(summary[code])
         if value < 2:
             conditions.append(name)
