@@ -87,6 +87,131 @@
                 </div>
             </div>
         </div>
+
+        <!--Check In Screen -->
+        <div id="CheckInScreen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg patient_data_container"">
+                <div class="modal-content patient_data">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h4>Check In</h4>
+                        </div>
+                        <div class="search_block col-sm-4">
+                            <div class="input-group">
+                                <input id="Check_In_Patient_Search" type="text" class="form-control" placeholder="Search for...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 40px 0px;">
+                        <label class="col-sm-2">Name: </label>
+                        <input type="text" class="col-sm-2" placeholder="First"/>
+                        <input type="text" class="col-sm-1" placeholder="M"/>
+                        <input type="text" class="col-sm-2" placeholder="Last" />
+                        <label class="col-sm-1 col-sm-offset-1">DOB: </label>
+                        <input type="text" class="col-sm-2" placeholder="MM/DD/YYYY" />
+                    </div>
+                    <div class="row" style="margin: 40px 0px;">
+                        <label class="col-sm-2">Address: </label>
+                        <input type="text" class="col-sm-3" placeholder="Street"/>
+                        <input type="text" class="col-sm-3" placeholder="City"/>
+                        <input type="text" class="col-sm-1" placeholder="State" />
+                        <input type="text" class="col-sm-2"  placeholder="Zip" />
+                    </div>
+                    <div class="row" style="margin: 40px 0px;">
+                        <label class="col-sm-2">Phone: </label>
+                        <input type="text" class="col-sm-3" placeholder="Home"/>
+                        <input type="text" class="col-sm-3" placeholder="Mobile"/>
+                        <input type="text" class="col-sm-3" placeholder="Work" />
+                    </div>
+                    <div class="row" style="margin: 40px 0px;">
+                        <label class="col-sm-2">Email: </label>
+                        <input type="text" class="col-sm-5" placeholder="Email"/>
+                        <label class="col-sm-1 col-sm-offset-1">Sex: </label>
+                        <input type="text" class="col-sm-2" placeholder="Gender" />
+                    </div>
+                    <div class="row" style="margin: 40px 0px;">
+                        <label class="col-sm-2">Visit For: </label>
+                        <div class="btn-group" data-toggle="buttons" class="col-sm-10">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Check Up
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option2" autocomplete="off"> Sick
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> Injury
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> Refill
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> Other
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 40px 0px;">
+                        <label class="col-sm-2">Details: </label>
+                        <textarea class="col-sm-9" rows="4"></textarea>
+                    </div>
+                    <div class="row" style="margin: 40px 0px;">
+                        <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3">Check In</button>
+                        <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-2">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Patient Detail Screen-->
+        <div id="PatientDetailScreen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg patient_data_container"">
+                <div class="modal-content patient_data">
+                    <div class="col-sm-4">
+                        <!-- This section is the left side for Patient Demographics-->
+                        <h4>Patient Details</h4>
+                        <img id="patient_detail_photo" src="img/no_photo.jpg"/> <br />
+                        <label id="patient_detail_name"></label> <br/>
+                        <label id="patient_detail_DOB"></label> <br/>
+                        <label id="patient_detail_gender"></label> <br/>
+                        <label id="patient_detail_line"></label> <br/>
+                        <label id="patient_detail_city"></label>, <label id="patient_detail_state"></label>  <label id="patient_detail_zip"></label> <br/>
+                        <br/>
+                        <br/>
+                        <span id="phone1_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone1"></label> <br/>
+                        <span id="phone2_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone2"></label> <br/>
+                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <label id="patient_detail_email"></label>
+
+
+                    </div>
+                    <div class="col-sm-8">
+                        <h4>Other Details</h4>
+                        <div role="tabpanel">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#vitals" aria-controls="vitals" role="tab" data-toggle="tab">Vitals</a></li>
+                                <li role="presentation"><a href="#labs" aria-controls="labs" role="tab" data-toggle="tab">Labs</a></li>
+                                <li role="presentation"><a href="#familyHistory" aria-controls="familyHistory" role="tab" data-toggle="tab">Family History</a></li>
+                                <li role="presentation"><a href="#carePlan" aria-controls="carePlan" role="tab" data-toggle="tab">Care Plan</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="vitals">Vitals Stuff Goes Here</div>
+                                <div role="tabpanel" class="tab-pane" id="labs">Labs Stuff Goes Here</div>
+                                <div role="tabpanel" class="tab-pane" id="familyHistory">Family History Stuff Goes Here</div>
+                                <div role="tabpanel" class="tab-pane" id="carePlan">Care Plan Stuff Goes Here</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
         <script src="js/vendor/bootstrap.min.js"></script>
