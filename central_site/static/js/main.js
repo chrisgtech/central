@@ -6,7 +6,6 @@ $(document).ready(function () {
         //.modal is the 
         $('#PatientDetailScreen').modal();
     });
-
     $('#Patient_Search').on('keyup', patientSearch);
     //initial load for patient data on card
     getPatients();
@@ -72,6 +71,7 @@ function getPatients(count) {
  */
 function parseData(data) {
     $('.patient_card_scroll').empty();
+    //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
         var patientContent = entry.content;
 
@@ -81,6 +81,7 @@ function parseData(data) {
         patient_card.className = "patient_card";
         patient_card.setAttribute('patient_id', entry.title);
 
+        // [condition] ? [true] : [false]
         var patient_img = document.createElement("img");
         patient_img.className = "card_photo_thumbnail";
         patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
@@ -98,11 +99,10 @@ function parseData(data) {
         patient_card.appendChild(patient_demographics);
         $(patient_card).data(entry);
         $('.patient_card_scroll').append(patient_card);
-
-
+        
         updateScrollContainerWidth();
     });
-
+    $('#num_of_patients').html('Patients Shown: ' + $('.patient_card').length);
 }
 
 /*Author: Michael
@@ -132,6 +132,9 @@ function formateDate(date) {
  Todo: everything :)
  */
 function loadPatientDetails(patient_data) {
+    
+    getPatientConditions(patient_data.title.split('/')[1]);
+    
     $('#patient_detail_name').text(patient_data.content.name[0].given[0] + " " +
             patient_data.content.name[0].given[1] + " " +
             patient_data.content.name[0].family[0]);
@@ -190,25 +193,69 @@ function loadPatientDetails(patient_data) {
  * Purpose: Open and clear out the Check In Screen
  */
 function openCheckInScreen() {
+    clearCheckInScreen();
     $('#CheckInScreen').modal();
 
 }
 
+/*
+ * Author: Michael
+ * Date: 03/19/2015
+ * Purpose: Open Drug Screen
+ */
+function openDrugScreen() {
+    $('#DrugScreen').modal();
 
+}
+
+/*
+ * 
+ * @returns {undefined}
+ */
+function clearCheckInScreen() {
+    $('#CheckInScreen input, #CheckInScreen textarea').val('');
+}
 /* Author: Michael and Chris
  * Date: 0/18/2015
  * Purpose: Function to gather patient's conditions
  */
 function getPatientConditions(patient_id) {
     $.ajax({
-        url: "http://52.11.104.178:8080/Condition?subject=" + patient_id,
+        url: "http://52.11.104.178:8080/Condition",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
+        },
+        data: {
+            subject: patient_id
+        },
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (data) {
+            console.log(data);
+            if(data.totalResults.length > 0){
+                alert("HEY!");
+            }
+            globCondition = data;
+            //Function goes here to handle conditions
+        }
+    });
+}
+
+/* Author: Michael
+ * Date: 3/19/2015 
+ * Purpose: Ajax call to gather all Drugs (Medications) in our server
+ * 
+ */
+function getMedications() {
+    $.ajax({
+        url: "http://52.11.104.178:8080/Medication",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
         },
         dataType: 'json',
         contentType: 'application/json',
         success: function (data) {
-            globCondition = data;
+            globMedication = data;
             //Function goes here to handle conditions
         }
     });

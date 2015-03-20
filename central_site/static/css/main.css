@@ -153,6 +153,11 @@ body {
 }
 
 
+#num_of_patients{
+    position: absolute; 
+    right: 10px; 
+    bottom: 95px;
+}
 /**test****/
 /* remove outer padding */
 	.main .row{
