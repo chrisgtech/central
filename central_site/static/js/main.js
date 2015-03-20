@@ -7,6 +7,10 @@ $(document).ready(function () {
         $('#PatientDetailScreen').modal();
     });
     $('#Patient_Search').on('keyup', patientSearch);
+    $('#Check_In_Search_Btn').on('click',function(x){
+       var pSearch = $('#Check_In_Patient_Search').val();
+       wlt_GetPatient(pSearch);
+       });
     //initial load for patient data on card
     getPatients();
 });
@@ -32,10 +36,12 @@ function patientSearch() {
     }
     //Update scroll container's width
     updateScrollContainerWidth();
-    //If there are atleast 1 visible card, hide that loading thing.  Otherwise, show that loading thing.
+    //If there are at least 1 visible card, hide that loading thing.  Otherwise, show that loading thing.
     $('.patient_card:visible').length > 0 ? $('#dashboard_loading_img').hide() : $('#dashboard_loading_img').show();
 }
-
+function patientFetch() {
+    var patientEntry = $(this)
+}
 /*
  Author: Michael
  Date: 03/14/2015
