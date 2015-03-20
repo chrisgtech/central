@@ -121,7 +121,6 @@ function updateScrollContainerWidth() {
  * Formate the date nicer
  * 
  */
-
 function formateDate(date) {
     return date.split('-')[1] + "/" + date.split('-')[2] + "/" + date.split('-')[0];
 }
