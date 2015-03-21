@@ -73,18 +73,24 @@ body {
 }
 
 .card_photo_thumbnail {
-    width: 125px;
+    /*width: 125px;
     position: absolute;
-    top: 15px;
+    top: 15px;*/
 }
 
 .card_demographic {
-    position: relative;
-    left: 140px;
+    /*position: relative;
+    left: 140px;*/
     color: white;
     font-size: 16px;
     max-width: 160px;
     display: flex;
+}
+
+.card_reason_for_visit{
+    margin-top: 25px;
+    background-color: white;
+    padding: 10px;
 }
 
 .patient_data_container {
@@ -93,9 +99,16 @@ body {
 }
 
 .patient_data {
+    position: relative;
     padding: 25px;
     min-height: 655px;
     background-color: #efefef;
+}
+
+.check_out{
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
 }
 
 .dashboard_nav{
@@ -135,7 +148,7 @@ body {
 }
 
 #patient_detail_name {
-    padding: 10px 5px;
+    padding: 0px;
     font-size: 18px;
 }
 

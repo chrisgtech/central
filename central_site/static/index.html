@@ -135,7 +135,7 @@
                     <input id="check_in_email" type="text" class="col-sm-5" placeholder="Email"/>
                     <label class="col-sm-1 col-sm-offset-1">Sex: </label>
                     <!--<input id="check_in_gender" type="text" class="col-sm-2" placeholder="Gender" /> -->
-                    <select id="check_in_gender">
+                    <select id="check_in_gender" class="form-control" style="width: 175px;">
                         <option value="UN">Select</option>
                         <option value="F">Female</option>
                         <option value="M">Male</option>
@@ -209,30 +209,28 @@
     <div id="PatientDetailScreen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg patient_data_container"">
             <div class="modal-content patient_data">
-                <div class="col-sm-4">
+                <div class="col-sm-4" style="height: 600px;">
                     <!-- This section is the left side for Patient Demographics-->
-                    <h4>Patient Details</h4>
+                    <h4 class="col-sm-8" id="patient_detail_name">Patient Details</h4>
+                    <h4 class="col-sm-4">Age: <label id="patient_detail_age"></label></h4>
                     <img id="patient_detail_photo" src="img/no_photo.jpg"/> <br />
-                    <label id="patient_detail_name"></label> <br/>
-                    <label id="patient_detail_DOB"></label> <br/>
-                    <label id="patient_detail_gender"></label> <br/>
-                    <label id="patient_detail_line"></label> <br/>
-                    <label id="patient_detail_city"></label>, <label id="patient_detail_state"></label>  <label id="patient_detail_zip"></label> <br/>
-                    <br/>
-                    <br/>
+                    
+                    <h4>Conditions: </h4>
+                    <div id="conditions"></div>
+                    
+                    <div style="position: absolute; bottom: 0px;">
                     <span id="phone1_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone1"></label> <br/>
                     <span id="phone2_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone2"></label> <br/>
                     <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href=""><label style="cursor: pointer;" id="patient_detail_email"></label></a>
-
+                    </div>
 
                 </div>
                 <div class="col-sm-8">
-                    <h4>Other Details</h4>
                     <div role="tabpanel">
-
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active"><a href="#vitals" aria-controls="vitals" role="tab" data-toggle="tab">Vitals</a></li>
+                            <li role="presentation"><a href="#drugs" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
                             <li role="presentation"><a href="#labs" aria-controls="labs" role="tab" data-toggle="tab">Labs</a></li>
                             <li role="presentation"><a href="#familyHistory" aria-controls="familyHistory" role="tab" data-toggle="tab">Family History</a></li>
                             <li role="presentation"><a href="#carePlan" aria-controls="carePlan" role="tab" data-toggle="tab">Care Plan</a></li>
@@ -241,6 +239,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="vitals">Vital Stuff Goes Here</div>
+                            <div role="tabpanel" class="tab-pane" id="drugs">Medication Stuff Goes Here</div>
                             <div role="tabpanel" class="tab-pane" id="labs">Labs Stuff Goes Here</div>
                             <div role="tabpanel" class="tab-pane" id="familyHistory">Family History Stuff Goes Here</div>
                             <div role="tabpanel" class="tab-pane" id="carePlan">Care Plan Stuff Goes Here</div>
@@ -248,14 +247,13 @@
 
                     </div>
                 </div>
+                <button type="button" class="btn btn-primary check_out" id="CheckOutButton" onclick="checkPatientOut();">Check Out</button>
             </div>
         </div>
     </div>
-
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+    <script src="../static/js/vendor/jquery-1.11.1.min.js"></script>
     <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/vendor/bootstrap-confirmation.js"></script>
     <script src="js/main.js"></script>
     <script src="js/will.js"></script>
     </body>
