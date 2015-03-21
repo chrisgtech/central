@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     //binding [loadPatientDetails()] to dynamically added patient cards
     $('body').on('click', '.patient_card', function (x) {
         loadPatientDetails($(this).data());
@@ -7,10 +6,6 @@ $(document).ready(function () {
         $('#PatientDetailScreen').modal();
     });
     $('#Patient_Search').on('keyup', patientSearch);
-    $('#Check_In_Search_Btn').on('click',function(x){
-       var pSearch = $('#Check_In_Patient_Search').val();
-       wlt_getPatient(pSearch);
-       });
     //initial load for patient data on card
     getPatients();
 });
@@ -39,6 +34,7 @@ function patientSearch() {
     //If there are at least 1 visible card, hide that loading thing.  Otherwise, show that loading thing.
     $('.patient_card:visible').length > 0 ? $('#dashboard_loading_img').hide() : $('#dashboard_loading_img').show();
 }
+
 function patientFetch() {
     var patientEntry = $(this)
 }
@@ -266,29 +262,3 @@ function getMedications() {
         }
     });
 }
-
-function htmlbodyHeightUpdate(){
-		var height3 = $( window ).height()
-		var height1 = $('.nav').height()+50
-		height2 = $('.main').height()
-		if(height2 > height3){
-			$('html').height(Math.max(height1,height3,height2)+10);
-			$('body').height(Math.max(height1,height3,height2)+10);
-		}
-		else
-		{
-			$('html').height(Math.max(height1,height3,height2));
-			$('body').height(Math.max(height1,height3,height2));
-		}
-		
-	}
-	$(document).ready(function () {
-		htmlbodyHeightUpdate()
-		$( window ).resize(function() {
-			htmlbodyHeightUpdate()
-		});
-		$( window ).scroll(function() {
-			height2 = $('.main').height()
-  			htmlbodyHeightUpdate()
-		});
-	});

@@ -123,6 +123,9 @@ body {
     overflow: hidden;
 }
 
+#MultplePatientSelection li.list-group-item{
+    cursor: pointer;
+}
 
 /****************Patient Detail Section*****************/
 
@@ -140,7 +143,6 @@ body {
     margin-right: 5px;
 
 }
-
 
 /**Hidden Things*****/
 
@@ -306,3 +308,15 @@ body {
 	section{
 		padding-left: 15px;
 	}
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+       

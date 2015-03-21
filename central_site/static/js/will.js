@@ -15,16 +15,34 @@ function wlt_getPatient(psearch) {
     });
 }
 
+function wlt_searchClicked(){
+       var pSearch = $('#Check_In_Patient_Search').val();
+       wlt_getPatient(pSearch);
+    }
+
 
 function wlt_placeData(data){
     //build alert string
     var alertString = "";
     $.each(data.entry, function (e, entry) {
         var resultsContent = entry.content;
-        alertString += resultsContent.name[0].given[0] + " " + resultsContent.name[0].given[1] + " " + resultsContent.name[0].family[0] + "\n"
+        alertString += resultsContent.name[0].given[0] + " " + resultsContent.name[0].given[1] + " " + resultsContent.name[0].family[0] + "\n";
         });
     if (data.entry.length>1){
-    alert(alertString);
+        $('#MultplePatientSelection .modal-body .list-group').empty();
+        $.each(data.entry, function (e, entry){
+            var resultsContent = entry.content;
+           $('#MultplePatientSelection .modal-body .list-group').append(
+                    '<li class="list-group-item" onclick="selectThisPatient(this);">' 
+                    + resultsContent.name[0].given[0] 
+                    + " " + resultsContent.name[0].given[1] 
+                    + " " + resultsContent.name[0].family[0]
+                    + "</li>");
+            $('#MultplePatientSelection .modal-body .list-group li:last').data(resultsContent);
+        });
+        
+        $('#MultplePatientSelection').modal();
+        //alert(alertString);
     }
     else
     {
@@ -42,19 +60,19 @@ function wlt_placeData(data){
 
     $.each(data.entry[0].content.telecom, function (e, telecom) {
         var resultsTelecom = telecom;
-        if (resultsTelecom.use == "home")
+        if (resultsTelecom.use === "home")
         {
             $('#check_in_number_home').val(resultsTelecom.value);
         }
-        else if(resultsTelecom.use == "mobile")
+        else if(resultsTelecom.use === "mobile")
         {
             $('#check_in_number_mobile').val(resultsTelecom.value);
         }
-        else if(resultsTelecom.use == "work")
+        else if(resultsTelecom.use === "work")
         {
             $('#check_in_number_work').val(resultsTelecom.value);
         }
-        else if(resultsTelecom.system == "email")
+        else if(resultsTelecom.system === "email")
         {
             $('#check_in_email').val(resultsTelecom.value);
         }
@@ -66,4 +84,11 @@ function wlt_placeData(data){
 
     }
 
+}
+
+
+function selectThisPatient(resultsContent){
+    $('#MultplePatientSelection').modal('hide');
+    
+    globThis = resultsContent;
 }
