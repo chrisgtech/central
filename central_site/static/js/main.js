@@ -9,7 +9,7 @@ $(document).ready(function () {
     $('#Patient_Search').on('keyup', patientSearch);
     $('#Check_In_Search_Btn').on('click',function(x){
        var pSearch = $('#Check_In_Patient_Search').val();
-       wlt_GetPatient(pSearch);
+       wlt_getPatient(pSearch);
        });
     //initial load for patient data on card
     getPatients();
