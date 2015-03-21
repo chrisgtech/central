@@ -102,7 +102,7 @@
                     </div>
                     <div class="search_block col-sm-4">
                         <div class="input-group">
-                            <input id="Check_In_Patient_Search" type="text" class="form-control" placeholder="Search for...">
+                            <input id="Check_In_Patient_Search" onkeypress="checkSearchKeyPress(event)" type="text" class="form-control" placeholder="Search for...">
                             <span class="input-group-btn">
                                 <button id="Check_In_Search_Btn" onclick="wlt_searchClicked();" class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                             </span>

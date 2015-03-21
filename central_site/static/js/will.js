@@ -46,19 +46,41 @@ function wlt_placeData(data){
     }
     else
     {
-    $('#check_in_first_name').val(data.entry[0].content.name[0].given[0]);
-    $('#check_in_middle_name').val(data.entry[0].content.name[0].given[1]);
-    $('#check_in_last_name').val(data.entry[0].content.name[0].family[0]);
+        fillInSinglePatient(data.entry[0].content)
+    }
+}
 
-    //$('#check_in_dob').val("test?");
-    $('#check_in_dob').val(data.entry[0].content.birthDate);
-    debugger;
-    $('#check_in_street').val(data.entry[0].content.address[0].line[0]);
-    $('#check_in_city').val(data.entry[0].content.address[0].city);
-    $('#check_in_state').val(data.entry[0].content.address[0].state);
-    $('#check_in_zip').val(data.entry[0].content.address[0].zip);
 
-    $.each(data.entry[0].content.telecom, function (e, telecom) {
+function selectThisPatient(resultsContent){
+    $('#MultplePatientSelection').modal('hide');
+    fillInSinglePatient($(resultsContent).data());
+    globThis = resultsContent;
+}
+
+
+function checkSearchKeyPress(event){
+    var key = event.keyCode;
+    if (event.keyCode === 13) ///parseInt()
+    {
+        wlt_searchClicked();
+    }
+    
+}
+
+function fillInSinglePatient(singlePatient)
+{
+    $('#check_in_first_name').val(singlePatient.name[0].given[0]);
+    $('#check_in_middle_name').val(singlePatient.name[0].given[1]);
+    $('#check_in_last_name').val(singlePatient.name[0].family[0]);
+
+    $('#check_in_dob').val(singlePatient.birthDate);
+     
+    $('#check_in_street').val(singlePatient.address[0].line[0]);
+    $('#check_in_city').val(singlePatient.address[0].city);
+    $('#check_in_state').val(singlePatient.address[0].state);
+    $('#check_in_zip').val(singlePatient.address[0].zip);
+
+    $.each(singlePatient.telecom, function (e, telecom) {
         var resultsTelecom = telecom;
         if (resultsTelecom.use === "home")
         {
@@ -80,15 +102,6 @@ function wlt_placeData(data){
         });
 
 
-    $('#check_in_gender').val(data.entry[0].content.gender.coding[0].display);
+    $('#check_in_gender').val(singlePatient.gender.coding[0].code);
 
     }
-
-}
-
-
-function selectThisPatient(resultsContent){
-    $('#MultplePatientSelection').modal('hide');
-    
-    globThis = resultsContent;
-}
