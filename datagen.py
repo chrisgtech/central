@@ -86,7 +86,7 @@ def createrecord(data):
     #url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
     #print url
     #return url
-    retries = 3
+    retries = 10
     query = None
     while retries > 0:
         try:
@@ -97,7 +97,10 @@ def createrecord(data):
             retries -= 1
             if retries < 1:
                 raise
-            time.sleep(15)
+            sleeptime = 15
+            if retries < 6:
+                sleeptime = 120
+            time.sleep(sleeptime)
             continue
     if not query or query.status_code != 201:
         print query
@@ -222,11 +225,17 @@ def createmedications(patient, rxlookup, rxinfo, medications):
         medication['reference'] = 'Medication/%s' % id
         medication['display'] = medications[rx]['name']
         prescription['dispense'] = dispense = {}
-        dispense['quantity'] = supplyquantity
-        dispense['duration'] = supplydays
+        dispense['quantity'] = quantity = {}
+        quantity['value'] = supplyquantity
+        quantity['system'] = 'http://unitsofmeasure.org'
+        dispense['expectedSupplyDuration'] = duration = {}
+        duration['value'] = supplydays
+        duration['units'] = 'days'
+        duration['system'] = 'http://unitsofmeasure.org'
+        
         url = None
         # For now MedicationPrescription doesn't seem to be supported
-        #url = createrecord(prescription)
+        url = createrecord(prescription)
         if url:
             urls.append(url)
             newid = findid(url)
