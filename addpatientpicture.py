@@ -93,8 +93,9 @@ def main(argv=None):
     numentries = data['totalResults']
     entries = data['entry']
     if len(entries) < numentries:
-        print "Did not get all expected entries!\n"
+        print "Did not get all expected entries! Expected: " + str(numentries) 
         numentries = len(entries)
+        print " Only got: " + str(numentries) + "\n"
         
     for i in xrange(numentries):
         if entries[i].has_key('content'):
