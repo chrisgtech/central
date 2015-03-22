@@ -1,12 +1,3 @@
-ReasonsForVisit = [
-    'Patient is being referred to a pulmonary specialist for a pulmonary function test and diagnosis.',
-    'Patient is being referred for a chronic bronchitis treatment and medication review.',
-    'Patient is being referred for a chronic bronchitis and medication review.',
-    'Patient is being referred for an Asthma diagnosis confirmation.',
-    'Cold symptoms',
-    'Broken arm'
-];
-
 $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
     $('body').on('click', '.patient_card', function (x) {
@@ -18,8 +9,26 @@ $(document).ready(function () {
         $('#PatientDetailScreen').modal();
     });
     $('#Patient_Search').on('keyup', patientSearch);
-    //initial load for patient data on card
-    getPatients(parseInt(Math.random()*10%6) + 1, parseInt(Math.random()*100%200));
+    $('#CheckOutButton').confirmation(
+    {
+        popout: true,
+        onConfirm : checkPatientOut
+    });
+    var initialPatients = [];
+    var randomNumOfInitialPatients = parseInt(Math.random()*100%15) + 1;
+    while(initialPatients.length < randomNumOfInitialPatients){
+        var randomPatient = PatientsWithPrescriptions[parseInt(Math.random()*100%PatientsWithPrescriptions.length)];
+        if(initialPatients.indexOf(randomPatient.split('/')[1]) === -1){
+            initialPatients.push(randomPatient.split('/')[1]);
+        }
+    }
+    
+    $.each(initialPatients, function(p, patientID) {
+        var param = {
+            _id : patientID
+        };
+        getPatients(param);
+    });
 });
 
 /*
@@ -54,7 +63,7 @@ function patientSearch() {
  Todo:
  Add parameter to accept the number of desired records to pass
  */
-function getPatients(count, skip) {
+function getPatients(param) {
     $.ajax({
         url: "http://52.11.104.178:8080/Patient",
         beforeSend: function (xhr) {
@@ -63,13 +72,11 @@ function getPatients(count, skip) {
         dataType: 'json',
         contentType: 'application/json',
         /*TODO: Find out what all parameters we can send over*/
-        data: {
-            _count: count ? count : 25,
-            _skip: skip ? skip : $('.patient_card').length
-        },
+        data: param,
         success: function (data) {
-            globPatients = data;
-            parseData(data);
+            if(data.totalResults > 0) {
+                parseData(data);
+            }
         }
     });
 }
@@ -81,7 +88,7 @@ function getPatients(count, skip) {
  in the Scroll container
  */
 function parseData(data) {
-    $('.patient_card_scroll').empty();
+    
     //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
         var reasonForVisit = ReasonsForVisit[parseInt(Math.random()*10%6)];
@@ -146,8 +153,6 @@ function updateScrollContainerWidth() {
 function formateDate(date) {
     return date.split('-')[1] + "/" + date.split('-')[2] + "/" + date.split('-')[0];
 }
-
-
 
 /*
  Author: Michael
@@ -214,8 +219,12 @@ function loadPatientDetails(card) {
     /*Section for Conditions*/
     //If the card does not have Condition data bounded to it, we'll go fetch them
     if(typeof $(card).data('ConditionData') === 'undefined'){
+        var param = {
+            _count: parseInt(Math.random()*10%3) + 1, 
+            _skip : parseInt(Math.random()*100%261)
+        };
         //function to fetch Conditions, right now randomly getting 1-3 conditions from the server
-        getConditions(parseInt(Math.random()*10%3) + 1, parseInt(Math.random()*100%261), function(results){
+        getConditions(param, function(results){
            $(card).data('ConditionData', results);
            loadPatientConditions(results);
         });
@@ -224,9 +233,14 @@ function loadPatientDetails(card) {
         loadPatientConditions($(card).data('ConditionData'));
     }
     
+    
     /*Section for Medication*/
     if(typeof $(card).data('MedicationData') === 'undefined'){
-        getMedications(parseInt(Math.random()*10%3) + 1, parseInt(Math.random()*100%4270), function(results){
+        var param = {
+            _count: parseInt(Math.random()*10%3) + 1,
+            _skip: parseInt(Math.random()*100%4270)
+        };
+        getMedications(param, function(results){
            $(card).data('MedicationData', results);
            loadPatientMedications(results);
         });
@@ -234,6 +248,10 @@ function loadPatientDetails(card) {
         //Already have bounded data for Medications so don't refetch
         loadPatientMedications($(card).data('MedicationData'));
     }
+    
+    
+    /*Reason For Visit*/
+    $('#visit').html($(card).data('ReasonForVisit'));
 }
 
 /*
@@ -258,7 +276,13 @@ function loadPatientConditions(ConditionData){
 function loadPatientMedications(MedicationData){
     $('#PatientDetailScreen #drugs').empty();
     $.each(MedicationData.entry, function(i, item) { 
-        $('#PatientDetailScreen #drugs').append(item.content.name + "<br/>");
+        var drugData = document.createElement("div");
+        drugData.className = "col-sm-12 drug_card";
+        drugData.innerHTML = "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name + "</div>";
+        drugData.innerHTML += "<div class='col-sm-12'>" + item.content.product.form.text + "</div>";
+        //drugData.innerHTML += "<div class='col-sm-12'>Ingredients: " + item.content.product.ingredient.length + "</div>";
+        $(drugData).data(item);
+        $('#PatientDetailScreen #drugs').append(drugData);
     });
     
 }
@@ -298,16 +322,13 @@ function clearCheckInScreen() {
  * Purpose: Temp workaround for Conditions; might actually turn into real
  * 
  */
-function getConditions(count, skip, processConditions) {
+function getConditions(param, processConditions) {
     $.ajax({
         url: "http://52.11.104.178:8080/Condition",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
         },
-        data: {
-            _count: count ? count : 25,
-            _skip: skip ? skip : 0
-        },
+        data: param,
         dataType: 'json',
         contentType: 'application/json',
         success: processConditions
@@ -319,25 +340,118 @@ function getConditions(count, skip, processConditions) {
  * Purpose: Temp workaround for medication
  * 
  */
-function getMedications(count, skip, processDrugs) {
+function getMedications(param, processDrugs) {
     $.ajax({
         url: "http://52.11.104.178:8080/Medication",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
         },
-        data: {
-            _count: count ? count : 25,
-            _skip: skip ? skip : 0
-        },
+        data: param,
         dataType: 'json',
         contentType: 'application/json',
         success: processDrugs
     });
 }
 
+//Just a test to see what's in drugs table
+var allDrugs = [];
+function getAllMedications(){
+    
+    var param = {
+        _count: 50,
+        _skip: 0
+    };
+    var processDrugs = function(x){
+        allDrugs.push.apply(allDrugs, x.entry);
+        param._skip += 50;
+        if(param._skip < x.totalResults){
+            getMedications(param, processDrugs);
+        } else {
+            console.log("Finished retrieving drugs");
+        }
+        
+    };
+    if(allDrugs.length === 0) {
+        getMedications(param, processDrugs);
+    }
+    
+}
 
+function getAllRecords(option, array){
+    
+    var param = {
+        _count: 50,
+        _skip: 0
+    };
+    var processDrugs = function(x){
+        array.push.apply(array, x.entry);
+        param._skip += 50;
+        if(param._skip < x.totalResults){
+            $.ajax({
+                url: "http://52.11.104.178:8080/" + option,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
+                },
+                dataType: 'json',
+                data: param,
+                contentType: 'application/json',
+                /*TODO: Find out what all parameters we can send over*/
+                success: processDrugs
+            });
+        } else {
+            console.log("Finished retrieving data");
+        }
+        
+    };
+    if(array.length === 0) {
+        $.ajax({
+                url: "http://52.11.104.178:8080/" + option,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
+                },
+                dataType: 'json',
+                data: param,
+                contentType: 'application/json',
+                /*TODO: Find out what all parameters we can send over*/
+                success: processDrugs
+            });
+    }
+    
+}
+/* Author: Michael
+ * Date: 3/21/2015
+ * Purpose: Remove a patient from the Queue list
+ * @returns {undefined}
+ */
 function checkPatientOut(){
     $('#PatientDetailScreen').modal('hide');
     $('.patient_card[patient_id="' + $('#PatientDetailScreen').data('PatientID') + '"]').remove();
     updateScrollContainerWidth();
 }
+
+/* Do we need this?
+function htmlbodyHeightUpdate(){
+		var height3 = $( window ).height()
+		var height1 = $('.nav').height()+50
+		height2 = $('.main').height()
+		if(height2 > height3){
+			$('html').height(Math.max(height1,height3,height2)+10);
+			$('body').height(Math.max(height1,height3,height2)+10);
+		}
+		else
+		{
+			$('html').height(Math.max(height1,height3,height2));
+			$('body').height(Math.max(height1,height3,height2));
+		}
+		
+	}
+	$(document).ready(function () {
+		htmlbodyHeightUpdate()
+		$( window ).resize(function() {
+			htmlbodyHeightUpdate()
+		});
+		$( window ).scroll(function() {
+			height2 = $('.main').height()
+  			htmlbodyHeightUpdate()
+		});
+	}); */
