@@ -91,6 +91,13 @@ function getPatients(param) {
  */
 function parseData(data) {
     
+    //set up the time variables for the appointments
+    var time = new Date();
+    var inc_time = 30 * 60000; // 15 minutes 
+    //inc_time.setHours(0,15,0);
+    time.setHours(8,0,0);
+    var options = {hour: "numeric", minute: "numeric"};
+    
     //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
         var reasonForVisit = ReasonsForVisit[parseInt(Math.random()*10%6)];
@@ -131,9 +138,16 @@ function parseData(data) {
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
         reason_for_visit.innerHTML = reasonForVisit;
         
+        var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
+        var appointment_queue = document.createElement("div");
+        appointment_queue.className = "card_appointment_queue col-sm-11";
+        appointment_queue.innerHTML = "Appointment #" + (e+1) + "                       Scheduled:"+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        time = new Date(time.getTime() + inc_time);
+        
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
+        patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
         $('.patient_card_scroll').append(patient_card);
