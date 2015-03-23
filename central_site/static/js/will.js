@@ -10,7 +10,15 @@ function wlt_getPatient(psearch) {
         //TODO: Find out what all parameters we can send over
         success: function (data) {
             globData = data;
+            if (globData.totalResults > 0){
             wlt_placeData(data);
+            }
+            else{
+                alert("No records were returned with that name");
+                clearPatient();
+                
+            }
+            
         }
     });
 }
@@ -103,5 +111,26 @@ function fillInSinglePatient(singlePatient)
 
 
     $('#check_in_gender').val(singlePatient.gender.coding[0].code);
+
+    } 
+function clearPatient()
+{
+    $('#check_in_first_name').val("");
+    $('#check_in_middle_name').val("");
+    $('#check_in_last_name').val("");
+
+    $('#check_in_dob').val("");
+     
+    $('#check_in_street').val("");
+    $('#check_in_city').val("");
+    $('#check_in_state').val("");
+    $('#check_in_zip').val("");
+    
+    $('#check_in_number_home').val("");
+    $('#check_in_number_mobile').val("");
+    $('#check_in_number_work').val("");
+    $('#check_in_email').val("");
+       
+     $('#check_in_gender').val('');
 
     }
