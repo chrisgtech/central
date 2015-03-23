@@ -103,7 +103,16 @@ function parseData(data) {
         // [condition] ? [true] : [false]
         var patient_img = document.createElement("img");
         patient_img.className = "card_photo_thumbnail col-sm-5";
-        patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
+        var picture = "";
+        try{
+        var picture = patientContent.photo[0].data;
+        patient_img.setAttribute('src','data:image/jpg;base64,'+picture);
+        }
+        catch(e){
+        patient_img.setAttribute('src','img/no_photo.jpg');
+        }
+        
+        //patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
         patient_img.setAttribute('alt', 'no_photo');
 
         var patient_demographics = document.createElement("div");
