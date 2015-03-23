@@ -17,7 +17,9 @@ $(document).ready(function () {
     var initialPatients = [];
     var randomNumOfInitialPatients = parseInt(Math.random()*100%15) + 1;
     while(initialPatients.length < randomNumOfInitialPatients){
-        var randomPatient = PatientsWithPrescriptions[parseInt(Math.random()*100%PatientsWithPrescriptions.length)];
+        var randomPatient = getPatients({_count:15});
+        //PatientsWithPrescriptions[parseInt(Math.random()*100%PatientsWithPrescriptions.length)];
+        //getPatients({_count:15});
         if(initialPatients.indexOf(randomPatient.split('/')[1]) === -1){
             initialPatients.push(randomPatient.split('/')[1]);
         }
@@ -186,6 +188,14 @@ function loadPatientDetails(card) {
     $('#patient_detail_city').text(patient_data.content.address[0].city);
     $('#patient_detail_state').text(patient_data.content.address[0].state);
     $('#patient_detail_zip').text(patient_data.content.address[0].zip);
+    
+    try{
+        var picture = patient_data.content.photo[0].data;
+        $('#patient_detail_photo').attr("src", 'data:image/jpg;base64,' + picture);
+       }
+    catch(e){
+        $('#patient_detail_photo').attr("src", 'img/no_photo.jpg');
+       }
 
     $('#patient_detail_phone1, #patient_detail_phone2').text('');
     $.each(patient_data.content.telecom, function (t, type) {
