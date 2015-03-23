@@ -5,9 +5,9 @@ from faker import Factory
 fake = Factory.create('en_US')
 from fhir import *
 
-import desynpuf, otherdata, utils, fabextras
+import desynpuf, otherdata, patientphotos, utils, fabextras
 
-def fakeprofile(sex='female', birthyear=None):
+def fakeprofile(sex='female', birthyear=None, images=None):
     profile = {}
     profile['resourceType'] = 'Patient'
     
@@ -75,6 +75,13 @@ def fakeprofile(sex='female', birthyear=None):
     address['zip'] = fake.zipcode()
     address['country'] = 'USA'
     
+    if images:
+        randomimage = random.choice(images[sex])
+        profile['photo'] = photo = [{}]
+        photo = photo[0]
+        photo['contentType'] = 'image/jpeg'
+        photo['title'] = 'Photo of ' + '%s %s %s' % (name['given'][0], name['given'][1], name['family'][0])
+        photo['data'] = randomimage
     #profile = {'content':profile}
     
     return profile
@@ -82,6 +89,8 @@ def fakeprofile(sex='female', birthyear=None):
 def createrecord(data):
     type = data['resourceType']
     jsonified = json.dumps(data)
+    #utils.writetext('temp.txt', jsonified)
+    #exit()
     rest = RestfulFHIR(fabextras.FHIR_URLS[0])
     #url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
     #print url
@@ -108,6 +117,7 @@ def createrecord(data):
         return None
     url = query.headers['location']
     print url
+    #exit()
     return url
         
 def findid(url):
@@ -411,6 +421,7 @@ def createall(rxlookup, rxinfo):
     if not created:
         created = {}
     patients = desynpuf.loadall()
+    images = patientphotos.findimages()
     medpatients = {}
     for patientkey in patients.keys():
         patient = patients[patientkey]
@@ -419,7 +430,7 @@ def createall(rxlookup, rxinfo):
         medpatients[patientkey] = patient
     extrapatients = otherdata.loadall()
     for patient in medpatients.values()[:100]:
-        print len(patient['pdes'])
+        #print len(patient['pdes'])
         patientindex = medpatients.values().index(patient)
         extraindex = patientindex % len(extrapatients)
         extrapatient = extrapatients.keys()[extraindex]
@@ -428,7 +439,7 @@ def createall(rxlookup, rxinfo):
             continue
         birthyear = patient['birthdate'][:4]
         sex = patient['sex']
-        profile = fakeprofile(sex, birthyear)
+        profile = fakeprofile(sex, birthyear, images)
         url = createrecord(profile)
         if not url:
             print 'Could not create patient %s' % patient['id']
