@@ -302,6 +302,7 @@ function loadData(option, results) {
  * @returns {undefined}
  */
 function loadPatientConditions(ConditionData){
+    var patientConditionCount = 0; // jc test data
     $('#PatientDetailScreen #conditions').empty();
     if(ConditionData.length === 0) $('#PatientDetailScreen #conditions').append("No Condition Data");
     $.each(ConditionData, function(i, item) { 
@@ -309,8 +310,10 @@ function loadPatientConditions(ConditionData){
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>";
         $(el).data(item);
+        patientConditionCount++;  // jc test data
         $('#PatientDetailScreen #conditions').append(el);
     });
+    //$('#PatientDetailScreen #conditions').prepend('Condition Count: ' + patientConditionCount); // jc test data
     
 }
 
@@ -321,6 +324,7 @@ function loadPatientConditions(ConditionData){
  * @returns {undefined}
  */
 function loadPatientMedicationPrescriptions(MedicationData){
+    var medicationCount = 0; // jc test data
     $('#PatientDetailScreen #medications').empty();
     if(MedicationData.length === 0) $('#PatientDetailScreen #medications').append("No Medication Data");
     $.each(MedicationData, function(i, item) { 
@@ -336,8 +340,10 @@ function loadPatientMedicationPrescriptions(MedicationData){
         
         
         $(el).data(item);
+        medicationCount++;  // jc test data
         $('#PatientDetailScreen #medications').append(el);
     });
+    //$('#PatientDetailScreen #medications').prepend('Prescription Count: ' + medicationCount); // jc test data
 }
 
 /*
@@ -347,7 +353,20 @@ function loadPatientMedicationPrescriptions(MedicationData){
  * @returns {undefined}
  */
 function loadPatientObservations(ObservationData){
+    var observationTotal = 0; // jc test count
     $('#PatientDetailScreen #observations').empty();
+    //Draw display buttons
+    var nav1 = document.createElement("div");
+    nav1.className = "col-sm-12 Observ_btn";
+    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
+    
+    nav1.innerHTML += "<a class='col-sm-1' id='CheckOutButton' class='btn check_out' >";
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button></a>";
+    
+    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
+    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button></a>";
+    $('#PatientDetailScreen #observations').append(nav1);
+
     if(ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
     $.each(ObservationData, function(i, item) { 
         var el = document.createElement("div");
@@ -357,8 +376,10 @@ function loadPatientObservations(ObservationData){
                 + ": " + (item.content.valueQuantity ? item.content.valueQuantity.value + " " 
                     + item.content.valueQuantity.units : 'N/A'); 
         $(el).data(item);
+        observationTotal++; // jc test data
         $('#PatientDetailScreen #observations').append(el);
     });
+    //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 }
 /*
  * Author: Michael
@@ -375,6 +396,30 @@ function clearCheckInScreen() {
     $('#CheckInScreen input, #CheckInScreen textarea').val('');
 }
 
+function openPlotScreen() {
+    $('#PatientDetailScreen #observations').empty();
+    var nav1 = document.createElement("div");
+    nav1.className = "col-sm-12 Observ_btn";
+    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
+    
+    nav1.innerHTML += "<a class='col-sm-1' id='CheckOutButton' class='btn check_out' >";
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button></a>";
+    
+    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
+    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button></a>";
+    $('#PatientDetailScreen #observations').append(nav1);
+    
+    var el = document.createElement("div");
+    el.className = "col-sm-12"
+    el.innerHTML +="<row></row>";
+    el.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";  
+    $('#PatientDetailScreen #observations').append(el);
+    createChart();
+}
+
+function dummyLoadPatientObservations(){
+    loadPatientObservations(globO);
+}
 /*
  * Author: Michael
  * Date: 03/19/2015
@@ -384,8 +429,6 @@ function openDrugScreen() {
     $('#DrugScreen').modal();
     //More to come here
 }
-
-
 
 
 /* Author: Michael
