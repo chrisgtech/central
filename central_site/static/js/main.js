@@ -14,10 +14,13 @@ $(document).ready(function () {
         popout: true,
         onConfirm : checkPatientOut
     });
-    var initialPatients = [];
+    
+    getPatients({ _count: 15 });
+    
+   /* var initialPatients = [];
     var randomNumOfInitialPatients = parseInt(Math.random()*100%15) + 1;
     while(initialPatients.length < randomNumOfInitialPatients){
-        var randomPatient = PatientsWithPrescriptions[parseInt(Math.random()*100%PatientsWithPrescriptions.length)];
+        var randomPatient = PatientsWithRxObsCond[parseInt(Math.random()*100%PatientsWithRxObsCond.length)];
         if(initialPatients.indexOf(randomPatient.split('/')[1]) === -1){
             initialPatients.push(randomPatient.split('/')[1]);
         }
@@ -28,7 +31,7 @@ $(document).ready(function () {
             _id : patientID
         };
         getPatients(param);
-    });
+    });*/
 });
 
 /*
@@ -216,78 +219,98 @@ function loadPatientDetails(card) {
         }
     });
     
-    /*Section for Conditions*/
-    //If the card does not have Condition data bounded to it, we'll go fetch them
-    if(typeof $(card).data('ConditionData') === 'undefined'){
+    var options = ['Condition', 'MedicationPrescription', 'Observation'];
+    $.each(options, function(o, option){
+       if(typeof $(card).data(option + 'Data') === 'undefined'){
         var param = {
-            _count: parseInt(Math.random()*10%3) + 1, 
-            _skip : parseInt(Math.random()*100%261)
+            'subject' : $(card).attr('patient_id').split('/')[1]
         };
+        if(option === 'MedicationPrescription'){
+            param = {
+                'patient._id' : $(card).attr('patient_id').split('/')[1]
+            };
+        }
         //function to fetch Conditions, right now randomly getting 1-3 conditions from the server
-        getConditions(param, function(results){
-           $(card).data('ConditionData', results);
-           loadPatientConditions(results);
+        getPatientData(option, param, function(results){
+           $(card).data(option + 'Data', results);
+           loadData(option, results);
         });
     } else {
         //Already have bounded data for Condtion so don't refetch
-        loadPatientConditions($(card).data('ConditionData'));
+        loadData(option, $(card).data(option + 'Data'));
     }
-    
-    
-    /*Section for Medication*/
-    if(typeof $(card).data('MedicationData') === 'undefined'){
-        var param = {
-            _count: parseInt(Math.random()*10%3) + 1,
-            _skip: parseInt(Math.random()*100%4270)
-        };
-        getMedications(param, function(results){
-           $(card).data('MedicationData', results);
-           loadPatientMedications(results);
-        });
-    } else {
-        //Already have bounded data for Medications so don't refetch
-        loadPatientMedications($(card).data('MedicationData'));
-    }
-    
+        
+    });
     
     /*Reason For Visit*/
     $('#visit').html($(card).data('ReasonForVisit'));
 }
 
+function loadData(option, results) {
+    switch(option){
+        case 'Condition' : globC = results; loadPatientConditions(results); break;
+        case 'MedicationPrescription' : globMP = results; loadPatientMedicationPrescriptions(results); break;
+        case 'Observation' : globO = results; loadPatientObservations(results); break;
+        default: globD = results; break;
+    }
+}
+
+
 /*
  * Author: Michael
  * Date: 03/21/2015
- * Purpose: Renders the Patients Conditions on the Patient Detail Screen
+ * Purpose: Renders the Patient's Conditions on the Patient Detail Screen
  * @returns {undefined}
  */
 function loadPatientConditions(ConditionData){
     $('#PatientDetailScreen #conditions').empty();
     $.each(ConditionData.entry, function(i, item) { 
-        $('#PatientDetailScreen #conditions').append(item.content.code.text + "<br/>");
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>";
+        $(el).data(item);
+        $('#PatientDetailScreen #conditions').append(el);
     });
 }
 
 /*
  * Author: Michael
  * Date: 03/21/2015
- * Purpose: Renders the Patients Medications on the Patient Detail Screen
+ * Purpose: Renders the Patient's MedicationPrescriptions on the Patient Detail Screen
  * @returns {undefined}
  */
-function loadPatientMedications(MedicationData){
-    $('#PatientDetailScreen #drugs').empty();
+function loadPatientMedicationPrescriptions(MedicationData){
+    $('#PatientDetailScreen #medications').empty();
     $.each(MedicationData.entry, function(i, item) { 
-        var drugData = document.createElement("div");
-        drugData.className = "col-sm-12 drug_card";
-        drugData.innerHTML = "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name + "</div>";
-        drugData.innerHTML += "<div class='col-sm-12'>" + item.content.product.form.text + "</div>";
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
+        el.innerHTML += "<div class='col-sm-12'>" + item.content.dateWritten + "</div>";
         //drugData.innerHTML += "<div class='col-sm-12'>Ingredients: " + item.content.product.ingredient.length + "</div>";
-        $(drugData).data(item);
-        $('#PatientDetailScreen #drugs').append(drugData);
+        $(el).data(item);
+        $('#PatientDetailScreen #medications').append(el);
     });
     
 }
 
-
+/*
+ * Author: Michael
+ * Date: 03/22/2015
+ * Purpose: Renders the Patient's Observations on the Patient Detail Screen
+ * @returns {undefined}
+ */
+function loadPatientObservations(ObservationData){
+    $('#PatientDetailScreen #observations').empty();
+    $.each(ObservationData.entry, function(i, item) { 
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name.coding[0].display + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.valueQuantity.value + "</div>";
+        $(el).data(item);
+        $('#PatientDetailScreen #observations').append(el);
+    });
+    
+}
 /*
  * Author: Michael
  * Date: 03/18/2015
@@ -296,7 +319,11 @@ function loadPatientMedications(MedicationData){
 function openCheckInScreen() {
     clearCheckInScreen();
     $('#CheckInScreen').modal();
-
+}/*
+ * Clears the Check In Screen
+ */
+function clearCheckInScreen() {
+    $('#CheckInScreen input, #CheckInScreen textarea').val('');
 }
 
 /*
@@ -306,52 +333,53 @@ function openCheckInScreen() {
  */
 function openDrugScreen() {
     $('#DrugScreen').modal();
-
+    //More to come here
 }
+
+
+
+
+/* Author: Michael
+ * Date: 3/22/2015
+ * Purpose: Generic function to reuse to fetch data based on the data_option sent in
+ * @param {String} data_option
+ * @param {Object} param
+ * @param {Function} process
+ */
+function getPatientData(data_option, param, process) {
+    $.ajax({
+        url: "http://52.11.104.178:8080/" + data_option,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
+        },
+        data: param,
+        dataType: 'json',
+        contentType: 'application/json',
+        success: process
+    });
+}
+
+
+/* Author: Michael
+ * Date: 3/21/2015
+ * Purpose: Remove a patient from the Queue list
+ * @returns {undefined}
+ */
+function checkPatientOut(){
+    $('#PatientDetailScreen').modal('hide');
+    $('.patient_card[patient_id="' + $('#PatientDetailScreen').data('PatientID') + '"]').remove();
+    updateScrollContainerWidth();
+}
+
+
 
 /*
  * 
- * @returns {undefined}
- */
-function clearCheckInScreen() {
-    $('#CheckInScreen input, #CheckInScreen textarea').val('');
-}
-
-/* Author: Michael
- * Date: 3/21/2015 
- * Purpose: Temp workaround for Conditions; might actually turn into real
+ * Functions for testing purposes
+ * 
  * 
  */
-function getConditions(param, processConditions) {
-    $.ajax({
-        url: "http://52.11.104.178:8080/Condition",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-        },
-        data: param,
-        dataType: 'json',
-        contentType: 'application/json',
-        success: processConditions
-    });
-}
 
-/* Author: Michael
- * Date: 3/21/2015 
- * Purpose: Temp workaround for medication
- * 
- */
-function getMedications(param, processDrugs) {
-    $.ajax({
-        url: "http://52.11.104.178:8080/Medication",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-        },
-        data: param,
-        dataType: 'json',
-        contentType: 'application/json',
-        success: processDrugs
-    });
-}
 
 //Just a test to see what's in drugs table
 var allDrugs = [];
@@ -418,40 +446,4 @@ function getAllRecords(option, array){
     }
     
 }
-/* Author: Michael
- * Date: 3/21/2015
- * Purpose: Remove a patient from the Queue list
- * @returns {undefined}
- */
-function checkPatientOut(){
-    $('#PatientDetailScreen').modal('hide');
-    $('.patient_card[patient_id="' + $('#PatientDetailScreen').data('PatientID') + '"]').remove();
-    updateScrollContainerWidth();
-}
 
-/* Do we need this?
-function htmlbodyHeightUpdate(){
-		var height3 = $( window ).height()
-		var height1 = $('.nav').height()+50
-		height2 = $('.main').height()
-		if(height2 > height3){
-			$('html').height(Math.max(height1,height3,height2)+10);
-			$('body').height(Math.max(height1,height3,height2)+10);
-		}
-		else
-		{
-			$('html').height(Math.max(height1,height3,height2));
-			$('body').height(Math.max(height1,height3,height2));
-		}
-		
-	}
-	$(document).ready(function () {
-		htmlbodyHeightUpdate()
-		$( window ).resize(function() {
-			htmlbodyHeightUpdate()
-		});
-		$( window ).scroll(function() {
-			height2 = $('.main').height()
-  			htmlbodyHeightUpdate()
-		});
-	}); */
