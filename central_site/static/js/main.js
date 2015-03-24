@@ -15,8 +15,19 @@ $(document).ready(function () {
         onConfirm : checkPatientOut
     });
     
-    getPatients({ _count: 15 });
     
+    var num_of_patients = parseInt(Math.random()*100%15);
+    var patient_index = [];
+    while(patient_index.length < num_of_patients){
+        var index = parseInt(Math.random()*100%100) + 4;
+        if(patient_index.indexOf(index) === -1) {
+            patient_index.push(index);
+        }
+    }
+    getPatients({
+        _count: 15,
+        _skip : 4
+    });
 });
 
 /*
@@ -117,7 +128,7 @@ function parseData(data) {
         //Gender
         patient_demographics.innerHTML += patientContent.gender ? '<br>' + patientContent.gender.coding[0].display : '';
         //DOB
-        patient_demographics.innerHTML += '<br>DOB: ' + (patientContent.birthDate ? formateDate(patientContent.birthDate) : 'N/A');
+        patient_demographics.innerHTML += '<br>DOB: ' + (patientContent.birthDate ? formatDate(patientContent.birthDate) : 'N/A');
         //patient_demographics.innerHTML += '<br>Reason For Visit: ' + reasonForVisit;
         
         var reason_for_visit = document.createElement("div");
@@ -161,7 +172,7 @@ function updateScrollContainerWidth() {
  * Format the date to MM/DD/YYYY
  * 
  */
-function formateDate(date) {
+function formatDate(date) {
     return date.split('-')[1] + "/" + date.split('-')[2] + "/" + date.split('-')[0];
 }
 
@@ -182,7 +193,7 @@ function loadPatientDetails(card) {
             patient_data.content.name[0].given[1] + " " +
             patient_data.content.name[0].family[0]);
     $('#patient_detail_age').text(age);
-    $('#patient_detail_DOB').text(formateDate(patient_data.content.birthDate));
+    $('#patient_detail_DOB').text(formatDate(patient_data.content.birthDate));
     $('#patient_detail_gender').text(patient_data.content.gender.coding[0].display);
     $('#patient_detail_line').text(patient_data.content.address[0].line[0]);
     $('#patient_detail_city').text(patient_data.content.address[0].city);
@@ -320,8 +331,10 @@ function loadPatientObservations(ObservationData){
     $.each(ObservationData.entry, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + formatDate(item.content.issued) + "</div>";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name.coding[0].display + "</div>";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.valueQuantity.value + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.valueQuantity.value + " " 
+                + item.content.valueQuantity.units + "</div>";
         $(el).data(item);
         $('#PatientDetailScreen #observations').append(el);
     });
