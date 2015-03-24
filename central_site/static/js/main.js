@@ -348,6 +348,21 @@ function loadPatientMedicationPrescriptions(MedicationData){
  */
 function loadPatientObservations(ObservationData){
     $('#PatientDetailScreen #observations').empty();
+    //Draw display buttons
+    var nav1 = document.createElement("div");
+    nav1.className = "col-sm-12 Observ_btn";
+    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
+    
+    nav1.innerHTML += "<a class='col-sm-1' id='CheckOutButton' class='btn check_out' >";
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>plot</button></a>";
+    
+    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
+    nav1.innerHTML += "<button type='button' class='btn Observ_btn '>Table</button></a>";
+    
+    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
+    nav1.innerHTML += "<button type='button' class='btn Observ_btn '>date</button></a>";
+    $('#PatientDetailScreen #observations').append(nav1);
+
     if(ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
     $.each(ObservationData, function(i, item) { 
         var el = document.createElement("div");
@@ -374,6 +389,12 @@ function openCheckInScreen() {
 function clearCheckInScreen() {
     $('#CheckInScreen input, #CheckInScreen textarea').val('');
 }
+
+function openPlotScreen() {
+    $('#PatientDetailScreen').modal('hide');
+    $('#PlotScreen').modal();
+    createChart();
+}/*
 
 /*
  * Author: Michael
