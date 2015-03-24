@@ -5,9 +5,9 @@ from faker import Factory
 fake = Factory.create('en_US')
 from fhir import *
 
-import desynpuf, utils, fabextras
+import desynpuf, otherdata, patientphotos, utils, fabextras
 
-def fakeprofile(sex='female', birthyear=None):
+def fakeprofile(sex='female', birthyear=None, images=None):
     profile = {}
     profile['resourceType'] = 'Patient'
     
@@ -75,6 +75,13 @@ def fakeprofile(sex='female', birthyear=None):
     address['zip'] = fake.zipcode()
     address['country'] = 'USA'
     
+    if images:
+        randomimage = random.choice(images[sex])
+        profile['photo'] = photo = [{}]
+        photo = photo[0]
+        photo['contentType'] = 'image/jpeg'
+        photo['title'] = 'Photo of ' + '%s %s %s' % (name['given'][0], name['given'][1], name['family'][0])
+        photo['data'] = randomimage
     #profile = {'content':profile}
     
     return profile
@@ -82,6 +89,8 @@ def fakeprofile(sex='female', birthyear=None):
 def createrecord(data):
     type = data['resourceType']
     jsonified = json.dumps(data)
+    #utils.writetext('temp.txt', jsonified)
+    #exit()
     rest = RestfulFHIR(fabextras.FHIR_URLS[0])
     #url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
     #print url
@@ -108,6 +117,7 @@ def createrecord(data):
         return None
     url = query.headers['location']
     print url
+    #exit()
     return url
         
 def findid(url):
@@ -323,6 +333,8 @@ def rxdetails(rxlookup):
         #print ''
     return rxinfo
     
+
+    
 #def findcommonpdes(patients, rxlookup, rxinfo):
 #    totals = {}
 #    for patient in patients.values()[:100]:
@@ -340,20 +352,94 @@ def rxdetails(rxlookup):
 #    for common in commons[:25]:
 #        print common
 #        print rxinfo[common[0]]
+
+def createobservations(patient):
+    urls = []
+    for vitalsorlab in patient['observations']:
+        subrecords = [vitalsorlab]
+        if vitalsorlab['Type'] == 'vitals':
+            subrecords = []
+            subtypes = []
+            subtypes.append(('Height', vitalsorlab['Height'], vitalsorlab['Height_Units']))
+            subtypes.append(('Weight', vitalsorlab['Weight'], vitalsorlab['Weight_Units']))
+            subtypes.append(('Body Temperature', vitalsorlab['Temperature'], vitalsorlab['Temperature_Units']))
+            subtypes.append(('Systolic Blood Pressure', vitalsorlab['SystolicBP'], 'mm[Hg]'))
+            subtypes.append(('Diastolic Blood Pressure', vitalsorlab['DiastolicBP'], 'mm[Hg]'))
+            subtypes.append(('Pulse Rate', vitalsorlab['Pulse'], 'bpm'))
+            subtypes.append(('Respiration Rate', vitalsorlab['Respiration'], 'brpm'))
+            for subtype in subtypes:
+                subrecord = {}
+                subrecord['Date_Collected'] = subrecord['Date_Resulted'] = vitalsorlab['Encounter_Date']
+                subrecord['Panel'] = 'FALSE'
+                subrecord['Test_Name'] = subtype[0]
+                subrecord['Result_Name'] = subtype[0]
+                subrecord['Result_Status'] = 'Final'
+                subrecord['Result_Description'] = '%s=%s %s' % subtype
+                subrecord['Numeric_Result'] = subtype[1]
+                subrecord['Units'] = subtype[2]
+                subrecords.append(subrecord)
+            
+        for subrecord in subrecords:
+            observation = {}
+            observation['resourceType'] = 'Observation'
+            observation['status'] = 'final'
+            observation['reliability'] = 'ok'
+            observation['issued'] = subrecord['Date_Collected']
+            observation['name'] = {'coding':[{}]}
+            coding = observation['name']['coding'][0]
+            coding['display'] = subrecord['Result_Name']
+            if 'Result_LOINC' in subrecord:
+                coding['system'] = 'http://loinc.org'
+                coding['code'] = subrecord['Result_LOINC']
+            if subrecord.get('Numeric_Result') and subrecord.get('Units'):
+                observation['valueQuantity'] = quantity = {}
+                quantity['value'] = float(subrecord['Numeric_Result'].replace(',',''))
+                quantity['units'] = subrecord['Units']
+            else:
+                observation['interpretation'] = {'coding':[{}]}
+                interpretation = observation['interpretation']['coding'][0]
+                interpretation['display'] = subrecord['Result_Description']
+            observation['subject'] = subject = {}
+            subject['reference'] = 'Patient/%s' % patient['fhirid']
+            fullname = patient['profile']['name'][0]
+            fullname = '%s %s %s' % (fullname['given'][0], fullname['given'][1], fullname['family'][0])
+            subject['display'] = fullname
+            #utils.writetext('temp.txt', json.dumps(observation))
+            url = None
+            url = createrecord(observation)
+            if url:
+                urls.append(url)
+                newid = findid(url)
+                observation['id'] = newid
+            else:
+                print 'Could not create observation: ' + subrecord['Result_Description']
+            
+    return urls
     
 def createall(rxlookup, rxinfo):
     created = utils.restore('created.yaml')
     if not created:
         created = {}
     patients = desynpuf.loadall()
-    #findcommonpdes(patients, rxlookup, rxinfo)
-    #exit()
-    for patient in patients.values()[:100]:
+    images = patientphotos.findimages()
+    medpatients = {}
+    for patientkey in patients.keys():
+        patient = patients[patientkey]
+        if not 'pdes' in patient:
+            continue
+        medpatients[patientkey] = patient
+    extrapatients = otherdata.loadall()
+    for patient in medpatients.values()[:100]:
+        #print len(patient['pdes'])
+        patientindex = medpatients.values().index(patient)
+        extraindex = patientindex % len(extrapatients)
+        extrapatient = extrapatients.keys()[extraindex]
+        patient['observations'] = extrapatients[extrapatient]
         if patient['id'] in created:
             continue
         birthyear = patient['birthdate'][:4]
         sex = patient['sex']
-        profile = fakeprofile(sex, birthyear)
+        profile = fakeprofile(sex, birthyear, images)
         url = createrecord(profile)
         if not url:
             print 'Could not create patient %s' % patient['id']
@@ -366,20 +452,9 @@ def createall(rxlookup, rxinfo):
         urls = createconditions(patient)
         medications = {}
         urls = createmedications(patient, rxlookup, rxinfo, medications)
+        urls = createobservations(patient)
         
     #utils.dump('created.yaml', created)
-
-def convert_txt(path):
-    for file in utils.findfiles('*.txt', path):
-        csvfile = file[:-4] + '.csv'
-        if utils.fileexists(csvfile):
-            continue
-        with open(file, 'rb') as input:
-            with open(csvfile, 'wb') as output:
-                tabbed = csv.reader(input, dialect=csv.excel_tab)
-                csved = csv.writer(output, dialect=csv.excel)
-                for row in tabbed:
-                    csved.writerow(row)
 
 def convert_rxlookup():
     print 'Converting rxlookup'
@@ -401,6 +476,8 @@ def convert_rxlookup():
     return rxlookup, rxinfo
 
 def main(argv=None):
+    rxlookup = {}
+    rxinfo = {}
     print 'Loading rxlookup'
     rxlookup = utils.restore('rxlookup-small.yaml')
     print 'Loading rxinfo'
@@ -408,14 +485,10 @@ def main(argv=None):
     if not rxlookup or not rxinfo:
         rxlookup, rxinfo = convert_rxlookup()
         
-    #print 'Converting txt files'
-    #convert_txt('data/')
     #jsonified = fakeprofile()
     #utils.writetext('temp.txt', jsonified)
     #print createrecord(jsonified)
     
-    #rxlookup = {}
-    #rxinfo = {}
     print 'Creating records'
     createall(rxlookup, rxinfo)
 

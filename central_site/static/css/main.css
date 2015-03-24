@@ -95,6 +95,18 @@ body {
     padding: 10px;
 }
 
+.card_appointment_queue{
+    //margin-bottom: 25px;
+    color: white;
+    opacity: 0.3;
+    position: absolute; 
+    right: 10px; 
+    bottom: 1px;
+    //background-color: blue;
+    text-align: right;
+    padding: 10px;
+}
+
 .patient_data_container {
     top: 20px;
     min-width: 850px;

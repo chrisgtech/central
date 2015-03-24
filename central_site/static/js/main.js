@@ -17,21 +17,6 @@ $(document).ready(function () {
     
     getPatients({ _count: 15 });
     
-   /* var initialPatients = [];
-    var randomNumOfInitialPatients = parseInt(Math.random()*100%15) + 1;
-    while(initialPatients.length < randomNumOfInitialPatients){
-        var randomPatient = PatientsWithRxObsCond[parseInt(Math.random()*100%PatientsWithRxObsCond.length)];
-        if(initialPatients.indexOf(randomPatient.split('/')[1]) === -1){
-            initialPatients.push(randomPatient.split('/')[1]);
-        }
-    }
-    
-    $.each(initialPatients, function(p, patientID) {
-        var param = {
-            _id : patientID
-        };
-        getPatients(param);
-    });*/
 });
 
 /*
@@ -92,6 +77,13 @@ function getPatients(param) {
  */
 function parseData(data) {
     
+    //set up the time variables for the appointments
+    var time = new Date();
+    var inc_time = 30 * 60000; // 15 minutes 
+    //inc_time.setHours(0,15,0);
+    time.setHours(8,0,0);
+    var options = {hour: "numeric", minute: "numeric"};
+    
     //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
         var reasonForVisit = ReasonsForVisit[parseInt(Math.random()*10%6)];
@@ -106,7 +98,16 @@ function parseData(data) {
         // [condition] ? [true] : [false]
         var patient_img = document.createElement("img");
         patient_img.className = "card_photo_thumbnail col-sm-5";
-        patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
+        var picture = "";
+        try{
+        var picture = patientContent.photo[0].data;
+        patient_img.setAttribute('src','data:image/jpg;base64,'+picture);
+        }
+        catch(e){
+        patient_img.setAttribute('src','img/no_photo.jpg');
+        }
+        
+        //patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
         patient_img.setAttribute('alt', 'no_photo');
 
         var patient_demographics = document.createElement("div");
@@ -123,9 +124,16 @@ function parseData(data) {
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
         reason_for_visit.innerHTML = reasonForVisit;
         
+        var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
+        var appointment_queue = document.createElement("div");
+        appointment_queue.className = "card_appointment_queue col-sm-11";
+        appointment_queue.innerHTML = "Appointment #" + (e+1) + "                       Scheduled:"+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        time = new Date(time.getTime() + inc_time);
+        
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
+        patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
         $('.patient_card_scroll').append(patient_card);
@@ -180,6 +188,14 @@ function loadPatientDetails(card) {
     $('#patient_detail_city').text(patient_data.content.address[0].city);
     $('#patient_detail_state').text(patient_data.content.address[0].state);
     $('#patient_detail_zip').text(patient_data.content.address[0].zip);
+    
+    try{
+        var picture = patient_data.content.photo[0].data;
+        $('#patient_detail_photo').attr("src", 'data:image/jpg;base64,' + picture);
+       }
+    catch(e){
+        $('#patient_detail_photo').attr("src", 'img/no_photo.jpg');
+       }
 
     $('#patient_detail_phone1, #patient_detail_phone2').text('');
     $.each(patient_data.content.telecom, function (t, type) {
