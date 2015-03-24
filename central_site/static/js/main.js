@@ -313,7 +313,7 @@ function loadPatientConditions(ConditionData){
         patientConditionCount++;  // jc test data
         $('#PatientDetailScreen #conditions').append(el);
     });
-    $('#PatientDetailScreen #conditions').prepend('Condition Count: ' + patientConditionCount); // jc test data
+    //$('#PatientDetailScreen #conditions').prepend('Condition Count: ' + patientConditionCount); // jc test data
     
 }
 
@@ -343,7 +343,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
         medicationCount++;  // jc test data
         $('#PatientDetailScreen #medications').append(el);
     });
-    $('#PatientDetailScreen #medications').prepend('Prescription Count: ' + medicationCount); // jc test data
+    //$('#PatientDetailScreen #medications').prepend('Prescription Count: ' + medicationCount); // jc test data
 }
 
 /*
@@ -361,13 +361,10 @@ function loadPatientObservations(ObservationData){
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
     
     nav1.innerHTML += "<a class='col-sm-1' id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>plot</button></a>";
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button></a>";
     
     nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' class='btn Observ_btn '>Table</button></a>";
-    
-    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();'class='btn Observ_btn '>date</button></a>";
+    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button></a>";
     $('#PatientDetailScreen #observations').append(nav1);
 
     if(ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
@@ -382,7 +379,7 @@ function loadPatientObservations(ObservationData){
         observationTotal++; // jc test data
         $('#PatientDetailScreen #observations').append(el);
     });
-    $('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
+    //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 }
 /*
  * Author: Michael
@@ -400,28 +397,29 @@ function clearCheckInScreen() {
 }
 
 function openPlotScreen() {
+    $('#PatientDetailScreen #observations').empty();
     var nav1 = document.createElement("div");
     nav1.className = "col-sm-12 Observ_btn";
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
     
     nav1.innerHTML += "<a class='col-sm-1' id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>plot</button></a>";
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button></a>";
     
     nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' class='btn Observ_btn '>Table</button></a>";
-    
-    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();'class='btn Observ_btn '>date</button></a>";
+    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button></a>";
     $('#PatientDetailScreen #observations').append(nav1);
     
-    var nav1 = document.createElement("div");
-    //$('#PatientDetailScreen').modal('hide');
-    $('#PatientDetailScreen #observations').empty();
-    nav1.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";
-    $('#PatientDetailScreen #observations').append(nav1);
+    var el = document.createElement("div");
+    el.className = "col-sm-12"
+    el.innerHTML +="<row></row>";
+    el.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";  
+    $('#PatientDetailScreen #observations').append(el);
     createChart();
-}/*
+}
 
+function dummyLoadPatientObservations(){
+    loadPatientObservations(globO);
+}
 /*
  * Author: Michael
  * Date: 03/19/2015
@@ -431,8 +429,6 @@ function openDrugScreen() {
     $('#DrugScreen').modal();
     //More to come here
 }
-
-
 
 
 /* Author: Michael
