@@ -250,23 +250,35 @@ function loadPatientDetails(card) {
     $.each(options, function(o, option){
        if(typeof $(card).data(option + 'Data') === 'undefined'){
         var param = {
-            'subject' : $(card).attr('patient_id').split('/')[1]
+            'subject' : $(card).attr('patient_id').split('/')[1],
+            _count: 50,
+            _skip : 0
         };
         if(option === 'MedicationPrescription'){
             param = {
-                'patient._id' : $(card).attr('patient_id').split('/')[1]
+                'patient._id' : $(card).attr('patient_id').split('/')[1],
+                _count: 50,
+                _skip : 0
             };
         }
+        var array = [];
+        var processDrugs = function(x){
+            array.push.apply(array, x.entry);
+            param._skip += 50;
+            if(param._skip < x.totalResults){
+                getPatientData(option, param, processDrugs);
+            } else {
+                $(card).data(option + 'Data', array);
+                loadData(option, array);
+            }
+        };
+        getPatientData(option, param, processDrugs);
         //function to fetch Conditions, right now randomly getting 1-3 conditions from the server
-        getPatientData(option, param, function(results){
-           $(card).data(option + 'Data', results);
-           loadData(option, results);
-        });
-    } else {
-        //Already have bounded data for Condtion so don't refetch
-        loadData(option, $(card).data(option + 'Data'));
-    }
         
+        } else {
+            //Already have bounded data for Condtion so don't refetch
+            loadData(option, $(card).data(option + 'Data'));
+        }
     });
     
     /*Reason For Visit*/
@@ -291,13 +303,15 @@ function loadData(option, results) {
  */
 function loadPatientConditions(ConditionData){
     $('#PatientDetailScreen #conditions').empty();
-    $.each(ConditionData.entry, function(i, item) { 
+    if(ConditionData.length === 0) $('#PatientDetailScreen #conditions').append("No Condition Data");
+    $.each(ConditionData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>";
         $(el).data(item);
         $('#PatientDetailScreen #conditions').append(el);
     });
+    
 }
 
 /*
@@ -308,16 +322,22 @@ function loadPatientConditions(ConditionData){
  */
 function loadPatientMedicationPrescriptions(MedicationData){
     $('#PatientDetailScreen #medications').empty();
-    $.each(MedicationData.entry, function(i, item) { 
+    if(MedicationData.length === 0) $('#PatientDetailScreen #medications').append("No Medication Data");
+    $.each(MedicationData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
-        el.innerHTML += "<div class='col-sm-12'>" + item.content.dateWritten + "</div>";
-        //drugData.innerHTML += "<div class='col-sm-12'>Ingredients: " + item.content.product.ingredient.length + "</div>";
+        el.innerHTML += "<div class='col-sm-12'>Date Written: " + formatDate(item.content.dateWritten) + "</div>";
+        if(item.content.dispense.expectedSupplyDuration){
+            el.innerHTML += "<div class='col-sm-12'>Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
+                    + " " + item.content.dispense.expectedSupplyDuration.units + "</div>";
+        }
+        el.innerHTML += "<div class='col-sm-12'>Quantity: " + item.content.dispense.quantity.value + "</div>";
+        
+        
         $(el).data(item);
         $('#PatientDetailScreen #medications').append(el);
     });
-    
 }
 
 /*
@@ -328,17 +348,17 @@ function loadPatientMedicationPrescriptions(MedicationData){
  */
 function loadPatientObservations(ObservationData){
     $('#PatientDetailScreen #observations').empty();
-    $.each(ObservationData.entry, function(i, item) { 
+    if(ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
+    $.each(ObservationData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + formatDate(item.content.issued) + "</div>";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name.coding[0].display + "</div>";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.valueQuantity.value + " " 
-                + item.content.valueQuantity.units + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>Recorded: " + formatDate(item.content.issued) + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name.coding[0].display 
+                + ": " + (item.content.valueQuantity ? item.content.valueQuantity.value + " " 
+                    + item.content.valueQuantity.units : 'N/A'); 
         $(el).data(item);
         $('#PatientDetailScreen #observations').append(el);
     });
-    
 }
 /*
  * Author: Michael
@@ -462,16 +482,16 @@ function getAllRecords(option, array){
     };
     if(array.length === 0) {
         $.ajax({
-                url: "http://52.11.104.178:8080/" + option,
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-                },
-                dataType: 'json',
-                data: param,
-                contentType: 'application/json',
-                /*TODO: Find out what all parameters we can send over*/
-                success: processDrugs
-            });
+            url: "http://52.11.104.178:8080/" + option,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
+            },
+            dataType: 'json',
+            data: param,
+            contentType: 'application/json',
+            /*TODO: Find out what all parameters we can send over*/
+            success: processDrugs
+        });
     }
     
 }
