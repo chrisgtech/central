@@ -8,6 +8,8 @@ $(document).ready(function () {
         //.modal is the 
         $('#PatientDetailScreen').modal();
     });
+    $('#drugStore').data("inventory", {});
+    
     $('#Patient_Search').on('keyup', patientSearch);
     $('#CheckOutButton').confirmation(
     {
@@ -190,6 +192,7 @@ function formatDate(date) {
  */
 function loadPatientDetails(card) {
     $('#PatientDetailScreen').data('PatientID', $(card).attr('patient_id'));
+    $('#conditions, #medications, #observations').empty();
     /*Patent Section*/
     var patient_data = $(card).data('PatientData');
     var dob = new Date(patient_data.content.birthDate);
@@ -346,22 +349,52 @@ function loadPatientMedicationPrescriptions(MedicationData){
     });
     
     $.each(MedicationData, function(i, item) { 
+        
+        var medId = item.content.medication.reference.split('/')[1];
+        
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
-        el.innerHTML += "<div class='col-sm-12'>Date Written: " + item.content.dateWritten.toLocaleDateString() + "</div>";
-        if(item.content.dispense.expectedSupplyDuration){
-            el.innerHTML += "<div class='col-sm-12'>Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
-                    + " " + item.content.dispense.expectedSupplyDuration.units + "</div>";
-        }
-        el.innerHTML += "<div class='col-sm-12'>Quantity: " + item.content.dispense.quantity.value + "</div>";
         
+        el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString()
+                + "</div><div class='col-sm-8 rxnorm " + medId + "'>&nbsp;</div>";
+        
+        el.innerHTML += "<div class='col-sm-4'>" + ( item.content.dispense.expectedSupplyDuration ? "Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
+                    + " " + item.content.dispense.expectedSupplyDuration.units : "&nbsp;")
+                    + "</div><div class='col-sm-8 brand " + medId + "'>&nbsp;</div>";
+        
+        el.innerHTML += "<div class='col-sm-4'>Quantity: " + item.content.dispense.quantity.value 
+                + "</div><div class='col-sm-8 form " + medId + "'>&nbsp;</div>";
         
         $(el).data(item);
         medicationCount++;  // jc test data
+        
+        if(typeof $("#drugStore").data("inventory")[medId] === 'undefined'){
+            getPatientData('Medication', { _id : medId }, 
+                function(drug){
+                    $("#drugStore").data("inventory")[medId] = drug;
+                    loadMedicationDetails(medId);
+                });
+        } else {
+            setTimeout(function() { loadMedicationDetails(medId);}, 500);
+        }
+        
         $('#PatientDetailScreen #medications').append(el);
     });
     //$('#PatientDetailScreen #medications').prepend('Prescription Count: ' + medicationCount); // jc test data
+}
+
+/* Author: Michael
+ * Date: 3/23/2015
+ * Purpose: Load the medication details for a prescription
+ * @param {type} ObservationData
+ * @returns {undefined}
+ */
+function loadMedicationDetails(medId){
+    var drugObj = $('#drugStore').data('inventory')[medId];
+    $('.' + medId + '.rxnorm').html("Rxnorm: " + drugObj.entry[0].content.code.coding[0].code);
+    $('.' + medId + '.brand').html("Brand: " + (drugObj.entry[0].content.isBrand ? 'Y' : 'N'));
+    $('.' + medId + '.form').html("Form: " + drugObj.entry[0].content.product.form.text);
 }
 
 /*
