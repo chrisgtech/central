@@ -73,16 +73,16 @@
                 <button type="button" class="btn btn-primary" onclick="openCheckInScreen();">Check In</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary" onclick="openDrugScreen();">Drugs</button>
+                <button type="button" class="btn btn-primary" onclick="openDrugScreen();" style="display:none;">Drugs</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary">Tab 1</button>
+                <button type="button" class="btn btn-primary" style="display:none;">Tab 1</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary">Tab 2</button>
+                <button type="button" class="btn btn-primary" style="display:none;">Tab 2</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary">Tab 3</button>
+                <button type="button" class="btn btn-primary" style="display:none;">Tab 3</button>
             </div>
         </div>
         <div id="num_of_patients">Number</div>
@@ -249,7 +249,11 @@
         </div>
     </div>
     
-    
+    // <script type ="text/javascript">
+    //    var myLink = document.getElementById("btn.btn-primary");
+    //    myLink.style.visibility = 'hidden';
+        // document.getElementById("btn btn-primary").;  // jc
+    // </script>
     
     <script src="js/vendor/jquery-1.11.1.min.js"></script>
     <script src="js/vendor/bootstrap.min.js"></script>
