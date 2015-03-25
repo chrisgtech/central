@@ -1,15 +1,20 @@
-$(document).ready(function () {
+// global variables - Mike, we need to talk about variables that we can both access.
+    var appointStartTime = new Date();
+    
+
+    
+    
+    $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
     $('body').on('click', '.patient_card', function (x) {
         /*Need to clear out the Detail Screen first*/
         //TODO: clearDetailScreen()
-        
+           
         loadPatientDetails(this);
         //.modal is the 
         $('#PatientDetailScreen').modal();
     });
     $('#drugStore').data("inventory", {});
-    
     $('#Patient_Search').on('keyup', patientSearch);
     $('#CheckOutButton').confirmation(
     {
@@ -30,6 +35,7 @@ $(document).ready(function () {
         _count: 15,
         _skip : 4
     });*/
+    appointStartTime.setHours(8,0,0); //appointments start at 8 am. (HH,MM,SS) 
     $.each(PresentationPatients, function(p, patient){
        getPatients({
            _id : patient.split('/')[1]
@@ -97,10 +103,9 @@ function getPatients(param) {
 function parseData(data) {
     
     //set up the time variables for the appointments
-    var time = new Date();
-    var inc_time = 30 * 60000; // 15 minutes 
-    //inc_time.setHours(0,15,0);
-    time.setHours(8,0,0);
+    
+    var inc_time = 30 * 60000; // appointments are spaced 30 minutes apart 
+
     var options = {hour: "numeric", minute: "numeric"};
     
     //$.each([array], function(index, element) {});
@@ -125,9 +130,7 @@ function parseData(data) {
         catch(e){
         patient_img.setAttribute('src','img/no_photo.jpg');
         }
-        
-        //patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
-        patient_img.setAttribute('alt', 'no_photo');
+                patient_img.setAttribute('alt', 'no_photo');
 
         var patient_demographics = document.createElement("div");
         patient_demographics.className = "card_demographic col-sm-7";
@@ -143,11 +146,11 @@ function parseData(data) {
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
         reason_for_visit.innerHTML = reasonForVisit;
         
-        var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
+        var newtime = new Intl.DateTimeFormat("en-US", options).format(appointStartTime);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        appointment_queue.innerHTML = "Appointment #" + (e+1) + "                       Scheduled:"+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
-        time = new Date(time.getTime() + inc_time);
+        appointment_queue.innerHTML = "Appointment #" + (e+1) + "Scheduled:"+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        appointStartTime = new Date(appointStartTime.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
