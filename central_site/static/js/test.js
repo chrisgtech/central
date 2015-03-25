@@ -1,11 +1,35 @@
-ReasonsForVisit = [
+/*ReasonsForVisit = [
     'Patient is being referred to a pulmonary specialist for a pulmonary function test and diagnosis.',
     'Patient is being referred for a chronic bronchitis treatment and medication review.',
     'Patient is being referred for a chronic bronchitis and medication review.',
     'Patient is being referred for an Asthma diagnosis confirmation.',
     'Cold symptoms',
-    'Broken arm'
+    'Broken arm',
+    'asdfa'
+];*/
+
+ReasonsForVisit = [
+  'Cold symptoms',
+  'Broken arm',
+  'Headache',
+  'Abdominal pain',
+  'Prescription renewal',
+  'Physical examination',
+  'Ankle sprain',
+  'Annual checkup',
+  'Test result review',
+  'Nausea',
+  'Blood test'
 ];
+
+PresentationPatients = ["Patient/550f9b4ae4b0b2557306acef" ,
+"Patient/550f9bffe4b0b2557306af92",
+"Patient/550f9d37e4b0b2557306b456",
+"Patient/550f9dc4e4b0b2557306b67e",
+"Patient/550f9ec7e4b0b2557306ba99",
+"Patient/550f9f98e4b0b2557306bdde",
+"Patient/550fa099e4b0b2557306c208",
+"Patient/550fa2bbe4b0b2557306ca79"];
 
 PatientsWithPrescriptions = ["Patient/550e1466e4b0ad4764fdefdd", "Patient/550e14a5e4b0ad4764fdefec", "Patient/550e16bce4b0ad4764fdf037", "Patient/550e17b0e4b0ad4764fdf046", "Patient/550e17fbe4b0ad4764fdf055", "Patient/550e17ffe4b0ad4764fdf063", "Patient/550e1832e4b0ad4764fdf125", "Patient/550e1836e4b0ad4764fdf134", "Patient/550e184fe4b0ad4764fdf196", "Patient/550e186be4b0ad4764fdf1fe", "Patient/550e18ace4b0ad4764fdf2f2", "Patient/550e18b1e4b0ad4764fdf303", "Patient/550e18ebe4b0ad4764fdf3ea", "Patient/550e18f7e4b0ad4764fdf41c", "Patient/550e18f9e4b0ad4764fdf424", "Patient/550e18ffe4b0ad4764fdf43a", "Patient/550e1950e4b0ad4764fdf57c", "Patient/550e19a1e4b0ad4764fdf6b6", "Patient/550e19fae4b0ad4764fdf80f", "Patient/550e19fbe4b0ad4764fdf813", "Patient/550e1a33e4b0ad4764fdf8e4", "Patient/550e1a57e4b0ad4764fdf96d", "Patient/550e1a7fe4b0ad4764fdfa0a", "Patient/550e1a8ee4b0ad4764fdfa3d", "Patient/550e1ab2e4b0ad4764fdfac0", "Patient/550e1ab4e4b0ad4764fdfac8", "Patient/550e1adae4b0ad4764fdfb43", "Patient/550e1afee4b0ad4764fdfbb5", "Patient/550e1b4ae4b0ad4764fdfcb9", "Patient/550e1b4de4b0ad4764fdfcc8", "Patient/550e1b92e4b0ad4764fdfdd1", "Patient/550e1bdbe4b0ad4764fdfee7", "Patient/550e1be6e4b0ad4764fdff06", "Patient/550e1c0ee4b0ad4764fdff9a", "Patient/550e1c4be4b0ad4764fe0080", "Patient/550e1c98e4b0ad4764fe0199", "Patient/550e1c99e4b0ad4764fe019d", "Patient/550e1cb8e4b0ad4764fe0209", "Patient/550e1ceae4b0ad4764fe02cf", "Patient/550e1d13e4b0ad4764fe0363", "Patient/550e1d25e4b0ad4764fe03b1", "Patient/550e1d27e4b0ad4764fe03b6", "Patient/550e1d30e4b0ad4764fe03da", "Patient/550e1d31e4b0ad4764fe03e0", "Patient/550e1d37e4b0ad4764fe03ef", "Patient/550e1d3de4b0ad4764fe0401", "Patient/550e1d45e4b0ad4764fe0416", "Patient/550e1d84e4b0ad4764fe049a", "Patient/550e1d90e4b0ad4764fe04c9", "Patient/550e1df8e4b0ad4764fe05fe", "Patient/550e1dfee4b0ad4764fe060d", "Patient/550e1e04e4b0ad4764fe0621", "Patient/550e1e2ae4b0ad4764fe069f", "Patient/550e1e2de4b0ad4764fe06a6", "Patient/550e1e63e4b0ad4764fe0751", "Patient/550e1e74e4b0ad4764fe0787", "Patient/550e1ee1e4b0ad4764fe08e1", "Patient/550e1ee6e4b0ad4764fe08f0", "Patient/550e1f0ce4b0ad4764fe0960", "Patient/550e1f2ee4b0ad4764fe09d5", "Patient/550e1f4ce4b0ad4764fe0a50", "Patient/550e1f6ee4b0ad4764fe0ad2", "Patient/550e1f89e4b0ad4764fe0b20", "Patient/550e1fd9e4b0ad4764fe0c1f", "Patient/550e1fdde4b0ad4764fe0c2a", "Patient/550e2028e4b0ad4764fe0d16", "Patient/550e2060e4b0ad4764fe0dc9", "Patient/550e2062e4b0ad4764fe0dd0", "Patient/550e2068e4b0ad4764fe0de3", "Patient/550e2091e4b0ad4764fe0e5c", "Patient/550e20aae4b0ad4764fe0ea8", "Patient/550e20c8e4b0ad4764fe0efe", "Patient/550e2104e4b0ad4764fe0fb7", "Patient/550e212be4b0ad4764fe1030", "Patient/550e2130e4b0ad4764fe103f", "Patient/550e2137e4b0ad4764fe1057", "Patient/550e2141e4b0ad4764fe1077", "Patient/550e2143e4b0ad4764fe107c", "Patient/550e2196e4b0ad4764fe1172", "Patient/550e21cee4b0ad4764fe1209", "Patient/550e220ee4b0ad4764fe12a9", "Patient/550e2215e4b0ad4764fe12bd", "Patient/550e221be4b0ad4764fe12d0", "Patient/550e2222e4b0ad4764fe12e2", "Patient/550e2254e4b0ad4764fe1382", "Patient/550e226de4b0ad4764fe13c0", "Patient/550e2270e4b0ad4764fe13c7"];
 PatientsWithRxObsCond = ["Patient/550efa30e4b0ad4764fe1459", "Patient/550efacde4b0ad4764fe16fc", "Patient/550efb44e4b0ad4764fe18fc", "Patient/550efb6ae4b0ad4764fe199c", "Patient/550efc06e4b0ad4764fe1ade", "Patient/550efca2e4b0ad4764fe1d81", "Patient/550efd21e4b0ad4764fe1f81", "Patient/550efd47e4b0ad4764fe2021", "Patient/550efdc7e4b0ad4764fe2245", "Patient/550efe45e4b0ad4764fe246d", "Patient/550efe8fe4b0ad4764fe25ab", "Patient/550efeece4b0ad4764fe2745", "Patient/550eff38e4b0ad4764fe2888", "Patient/550efffbe4b0ad4764fe2bcd", "Patient/550f0094e4b0ad4764fe2e5b", "Patient/550f00f5e4b0ad4764fe2ff7", "Patient/550f013ae4b0ad4764fe3117", "Patient/550f01a9e4b0ad4764fe32f5", "Patient/550f01f6e4b0ad4764fe3437", "Patient/550f022ce4b0ad4764fe351b", "Patient/550f0274e4b0ad4764fe3655", "Patient/550f02b9e4b0ad4764fe377b", "Patient/550f02f1e4b0ad4764fe3868", "Patient/550f0337e4b0ad4764fe398e", "Patient/550f0382e4b0ad4764fe3aca", "Patient/550f03eae4b0ad4764fe3c86", "Patient/550f0437e4b0ad4764fe3dd1", "Patient/550f0488e4b0ad4764fe3f33", "Patient/550f0520e4b0ad4764fe41bb", "Patient/550f059de4b0ad4764fe4392", "Patient/550f05f5e4b0ad4764fe44d6", "Patient/550f064be4b0ad4764fe460d", "Patient/550f06c8e4b0ad4764fe480c", "Patient/550f07dde4b0ad4764fe4c09", "Patient/550f083ce4b0ad4764fe4d90", "Patient/550f08d0e4b0ad4764fe5001", "Patient/550f0946e4b0ad4764fe51f8", "Patient/550f09b8e4b0ad4764fe53df", "Patient/550f09e0e4b0ad4764fe5483", "Patient/550f0a51e4b0ad4764fe566c", "Patient/550f0b1ae4b0ad4764fe59cb", "Patient/550f0bf2e4b0ad4764fe5d66", "Patient/550f0c39e4b0ad4764fe5e98", "Patient/550f0cc4e4b0ad4764fe60e8", "Patient/550f0d09e4b0ad4764fe621c", "Patient/550f0d56e4b0ad4764fe6366", "Patient/550f0d9ae4b0ad4764fe6489", "Patient/550f0df8e4b0ad4764fe6613", "Patient/550f0e31e4b0ad4764fe6710", "Patient/550f0e6ee4b0ad4764fe6811", "Patient/550f0ef4e4b0ad4764fe6a58", "Patient/550f0f2be4b0ad4764fe6b3f", "Patient/550f0fb0e4b0ad4764fe6d79", "Patient/550f1007e4b0ad4764fe6ef3", "Patient/550f1095e4b0ad4764fe715d", "Patient/550f112be4b0ad4764fe73ec", "Patient/550f116fe4b0ad4764fe750c", "Patient/550f11d0e4b0ad4764fe76b3", "Patient/550f122ce4b0ad4764fe7847", "Patient/550f12b0e4b0ad4764fe7a99", "Patient/550f12efe4b0ad4764fe7bad", "Patient/550f13cbe4b0ad4764fe7f74", "Patient/550f1430e4b0ad4764fe812b", "Patient/550f147ce4b0ad4764fe8276", "Patient/550f14a8e4b0ad4764fe8339", "Patient/550f14c7e4b0ad4764fe83bc", "Patient/550f15f1e4b0ad4764fe88b8", "Patient/550f1625e4b0ad4764fe899e", "Patient/550f169ee4b0ad4764fe8b9c", "Patient/550f16e0e4b0ad4764fe8cb9", "Patient/550f175ee4b0ad4764fe8edf", "Patient/550f17a6e4b0ad4764fe9016", "Patient/550f1836e4b0ad4764fe927b", "Patient/550f18aee4b0ad4764fe948e", "Patient/550f1911e4b0ad4764fe963b", "Patient/550f1948e4b0ad4764fe9732", "Patient/550f19cee4b0ad4764fe997a", "Patient/550f1a18e4b0ad4764fe9ac1", "Patient/550f1a8fe4b0ad4764fe9ccb", "Patient/550f1acae4b0ad4764fe9dd0", "Patient/550f1b1ae4b0ad4764fe9f35"];

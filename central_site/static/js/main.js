@@ -15,7 +15,7 @@ $(document).ready(function () {
         onConfirm : checkPatientOut
     });
     
-    
+    /*
     var num_of_patients = parseInt(Math.random()*100%15);
     var patient_index = [];
     while(patient_index.length < num_of_patients){
@@ -27,7 +27,13 @@ $(document).ready(function () {
     getPatients({
         _count: 15,
         _skip : 4
+    });*/
+    $.each(PresentationPatients, function(p, patient){
+       getPatients({
+           _id : patient.split('/')[1]
+       });
     });
+    
 });
 
 /*
@@ -327,11 +333,23 @@ function loadPatientMedicationPrescriptions(MedicationData){
     var medicationCount = 0; // jc test data
     $('#PatientDetailScreen #medications').empty();
     if(MedicationData.length === 0) $('#PatientDetailScreen #medications').append("No Medication Data");
+    
+    //Adding 4 years to Dates and order by desc
+    $.each(MedicationData, function(i, item) {
+        var temp = new Date(item.content.dateWritten);
+        MedicationData[i].content.dateWritten  = new Date(temp.setFullYear(temp.getFullYear() + 4));
+    });
+    MedicationData.sort(function(a, b) {
+        var a = a.content.dateWritten;
+        var b = b.content.dateWritten; 
+        return ((b < a) ? -1 : ((b > a) ? 1 : 0)); 
+    });
+    
     $.each(MedicationData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
-        el.innerHTML += "<div class='col-sm-12'>Date Written: " + formatDate(item.content.dateWritten) + "</div>";
+        el.innerHTML += "<div class='col-sm-12'>Date Written: " + item.content.dateWritten.toLocaleDateString() + "</div>";
         if(item.content.dispense.expectedSupplyDuration){
             el.innerHTML += "<div class='col-sm-12'>Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
                     + " " + item.content.dispense.expectedSupplyDuration.units + "</div>";
@@ -360,21 +378,30 @@ function loadPatientObservations(ObservationData){
     nav1.className = "col-sm-12 Observ_btn";
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
     
-    nav1.innerHTML += "<a class='col-sm-1' id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button></a>";
-    
-    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button></a>";
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button>";
+    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button>";
     $('#PatientDetailScreen #observations').append(nav1);
 
     if(ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
+    
+    //Convert Date strings to date objects
+    $.each(ObservationData, function(i, item) {
+        ObservationData[i].content.issued  = new Date(item.content.issued);
+    });
+    ObservationData.sort(function(a, b) {
+        var a = a.content.issued;
+        var b = b.content.issued; 
+        return ((b < a) ? -1 : ((b > a) ? 1 : 0)); 
+    });
+    
+    
     $.each(ObservationData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>Recorded: " + formatDate(item.content.issued) + "</div>";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name.coding[0].display 
+        el.innerHTML += "<div class='col-sm-12'>Recorded: " + item.content.issued.toLocaleDateString() + "</div>";
+        el.innerHTML += "<div class='col-sm-12'>" + item.content.name.coding[0].display 
                 + ": " + (item.content.valueQuantity ? item.content.valueQuantity.value + " " 
-                    + item.content.valueQuantity.units : 'N/A'); 
+                    + item.content.valueQuantity.units : item.content.interpretation.coding[0].display); 
         $(el).data(item);
         observationTotal++; // jc test data
         $('#PatientDetailScreen #observations').append(el);
@@ -402,11 +429,9 @@ function openPlotScreen() {
     nav1.className = "col-sm-12 Observ_btn";
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
     
-    nav1.innerHTML += "<a class='col-sm-1' id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button></a>";
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button>";
     
-    nav1.innerHTML += "<a class='col-sm-1'id='CheckOutButton' class='btn check_out' >";
-    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button></a>";
+    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button>";
     $('#PatientDetailScreen #observations').append(nav1);
     
     var el = document.createElement("div");
