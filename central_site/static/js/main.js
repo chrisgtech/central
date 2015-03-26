@@ -37,8 +37,10 @@
     });*/
     appointStartTime.setHours(8,0,0); //appointments start at 8 am. (HH,MM,SS) 
     $.each(PresentationPatients, function(p, patient){
-       getPatients({
-           _id : patient.split('/')[1]
+       getPatientData('Patient' , { _id : patient.split('/')[1] }, function(data){
+           if(data.totalResults > 0) {
+                parsePatientData(data);
+            }
        });
     });
     
@@ -72,35 +74,10 @@ function patientSearch() {
 /*
  Author: Michael
  Date: 03/14/2015
- Purpose: Fetches the patient data from the fhir server
- Todo:
- Add parameter to accept the number of desired records to pass
- */
-function getPatients(param) {
-    $.ajax({
-        url: "http://52.11.104.178:8080/Patient",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-        },
-        dataType: 'json',
-        contentType: 'application/json',
-        /*TODO: Find out what all parameters we can send over*/
-        data: param,
-        success: function (data) {
-            if(data.totalResults > 0) {
-                parseData(data);
-            }
-        }
-    });
-}
-
-/*
- Author: Michael
- Date: 03/14/2015
  Purpose: parses the data from getPatients() to render the patient cards
  in the Scroll container
  */
-function parseData(data) {
+function parsePatientData(data) {
     
     //set up the time variables for the appointments
     
@@ -164,28 +141,6 @@ function parseData(data) {
     });
 }
 
-/*Author: Michael
- * Date: 03/2015
- * Just something to reuse to adjust width of scroll container
- * */
-function updateScrollContainerWidth() {
-    var num_of_cards = $('.patient_card:visible').length;
-    
-    //Dynamically edit width for the scroll container depending on the number of cards rendered
-    $('.patient_card_scroll').css('width', ((parseInt($('.patient_card:first').css('width')) + 50) * $('.patient_card:visible').length) + 'px');
-    $('#num_of_patients').html('Patients Shown: ' + num_of_cards);
-    
-}
-
-/*
- * Author: Michael
- * Date: 3/17/2015
- * Format the date to MM/DD/YYYY
- * 
- */
-function formatDate(date) {
-    return date.split('-')[1] + "/" + date.split('-')[2] + "/" + date.split('-')[0];
-}
 
 /*
  Author: Michael
@@ -195,7 +150,7 @@ function formatDate(date) {
  */
 function loadPatientDetails(card) {
     $('#PatientDetailScreen').data('PatientID', $(card).attr('patient_id'));
-    $('#conditions, #medications, #observations').empty();
+    $('#conditions, #medications, #observations').empty().append("<img class='patient_detail_loading' src='img/loading.gif' alt='Loading'/>");
     /*Patent Section*/
     var patient_data = $(card).data('PatientData');
     var dob = new Date(patient_data.content.birthDate);
@@ -281,7 +236,7 @@ function loadPatientDetails(card) {
                 getPatientData(option, param, processDrugs);
             } else {
                 $(card).data(option + 'Data', array);
-                loadData(option, array);
+                dataSwitch(option, array);
             }
         };
         getPatientData(option, param, processDrugs);
@@ -289,7 +244,7 @@ function loadPatientDetails(card) {
         
         } else {
             //Already have bounded data for Condtion so don't refetch
-            loadData(option, $(card).data(option + 'Data'));
+            dataSwitch(option, $(card).data(option + 'Data'));
         }
     });
     
@@ -297,7 +252,12 @@ function loadPatientDetails(card) {
     $('#visit').html($(card).data('ReasonForVisit'));
 }
 
-function loadData(option, results) {
+/*
+ * Author: Michael
+ * Date: 3/14/2015
+ * Purpose: Switch data to proper load function based on [option]
+ */
+function dataSwitch(option, results) {
     switch(option){
         case 'Condition' : globC = results; loadPatientConditions(results); break;
         case 'MedicationPrescription' : globMP = results; loadPatientMedicationPrescriptions(results); break;
@@ -329,63 +289,7 @@ function loadPatientConditions(ConditionData){
     
 }
 
-/*
- * Author: Michael
- * Date: 03/21/2015
- * Purpose: Renders the Patient's MedicationPrescriptions on the Patient Detail Screen
- * @returns {undefined}
- */
-function loadPatientMedicationPrescriptions(MedicationData){
-    var medicationCount = 0; // jc test data
-    $('#PatientDetailScreen #medications').empty();
-    if(MedicationData.length === 0) $('#PatientDetailScreen #medications').append("No Medication Data");
-    
-    //Adding 4 years to Dates and order by desc
-    $.each(MedicationData, function(i, item) {
-        var temp = new Date(item.content.dateWritten);
-        MedicationData[i].content.dateWritten  = new Date(temp.setFullYear(temp.getFullYear() + 4));
-    });
-    MedicationData.sort(function(a, b) {
-        var a = a.content.dateWritten;
-        var b = b.content.dateWritten; 
-        return ((b < a) ? -1 : ((b > a) ? 1 : 0)); 
-    });
-    
-    $.each(MedicationData, function(i, item) { 
-        
-        var medId = item.content.medication.reference.split('/')[1];
-        
-        var el = document.createElement("div");
-        el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
-        
-        el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString()
-                + "</div><div class='col-sm-8 rxnorm " + medId + "'>&nbsp;</div>";
-        
-        el.innerHTML += "<div class='col-sm-4'>" + ( item.content.dispense.expectedSupplyDuration ? "Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
-                    + " " + item.content.dispense.expectedSupplyDuration.units : "&nbsp;")
-                    + "</div><div class='col-sm-8 brand " + medId + "'>&nbsp;</div>";
-        
-        el.innerHTML += "<div class='col-sm-4'>Quantity: " + item.content.dispense.quantity.value 
-                + "</div><div class='col-sm-8 form " + medId + "'>&nbsp;</div>";
-        
-        $(el).data(item);
-        medicationCount++;  // jc test data
-        
-        if(typeof $("#drugStore").data("inventory")[medId] === 'undefined'){
-            getPatientData('Medication', { _id : medId }, 
-                function(drug){
-                    $("#drugStore").data("inventory")[medId] = drug;
-                    loadMedicationDetails(medId);
-                });
-        } else {
-            setTimeout(function() { loadMedicationDetails(medId);}, 500);
-        }
-        
-        $('#PatientDetailScreen #medications').append(el);
-    });
-    //$('#PatientDetailScreen #medications').prepend('Prescription Count: ' + medicationCount); // jc test data
-}
+
 
 /* Author: Michael
  * Date: 3/23/2015
@@ -400,50 +304,7 @@ function loadMedicationDetails(medId){
     $('.' + medId + '.form').html("Form: " + drugObj.entry[0].content.product.form.text);
 }
 
-/*
- * Author: Michael
- * Date: 03/22/2015
- * Purpose: Renders the Patient's Observations on the Patient Detail Screen
- * @returns {undefined}
- */
-function loadPatientObservations(ObservationData){
-    var observationTotal = 0; // jc test count
-    $('#PatientDetailScreen #observations').empty();
-    //Draw display buttons
-    var nav1 = document.createElement("div");
-    nav1.className = "col-sm-12 Observ_btn";
-    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
-    
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button>";
-    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button>";
-    $('#PatientDetailScreen #observations').append(nav1);
 
-    if(ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
-    
-    //Convert Date strings to date objects
-    $.each(ObservationData, function(i, item) {
-        ObservationData[i].content.issued  = new Date(item.content.issued);
-    });
-    ObservationData.sort(function(a, b) {
-        var a = a.content.issued;
-        var b = b.content.issued; 
-        return ((b < a) ? -1 : ((b > a) ? 1 : 0)); 
-    });
-    
-    
-    $.each(ObservationData, function(i, item) { 
-        var el = document.createElement("div");
-        el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12'>Recorded: " + item.content.issued.toLocaleDateString() + "</div>";
-        el.innerHTML += "<div class='col-sm-12'>" + item.content.name.coding[0].display 
-                + ": " + (item.content.valueQuantity ? item.content.valueQuantity.value + " " 
-                    + item.content.valueQuantity.units : item.content.interpretation.coding[0].display); 
-        $(el).data(item);
-        observationTotal++; // jc test data
-        $('#PatientDetailScreen #observations').append(el);
-    });
-    //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
-}
 /*
  * Author: Michael
  * Date: 03/18/2015
