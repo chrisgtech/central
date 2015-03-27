@@ -62,3 +62,5 @@ fabextras.py
 
 /*.json
 /*.yaml
+/central_site/nbproject/private/
+/central_site/nbproject/
