@@ -1,3 +1,9 @@
+//set up the time variables for the appointments
+var time = new Date();
+var inc_time = 30 * 60000; 
+//inc_time.setHours(0,15,0);
+time.setHours(8,0,0);
+
 $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
     $('body').on('click', '.patient_card', function (x) {
@@ -71,13 +77,10 @@ function patientSearch() {
  Purpose: parses the data from getPatients() to render the patient cards
  in the Scroll container
  */
+
 function parsePatientData(data) {
     
-    //set up the time variables for the appointments
-    var time = new Date();
-    var inc_time = 30 * 60000; // 15 minutes 
-    //inc_time.setHours(0,15,0);
-    time.setHours(8,0,0);
+    
     var options = {hour: "numeric", minute: "numeric"};
     
     //$.each([array], function(index, element) {});
@@ -123,7 +126,7 @@ function parsePatientData(data) {
         var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        appointment_queue.innerHTML = "Appointment #" + (e+1) + "                       Scheduled:"+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "                       Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
         time = new Date(time.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
@@ -233,6 +236,14 @@ function loadPatientDetails(card) {
                 getPatientData(option, param, processDrugs);
             } else {
                 $(card).data(option + 'Data', array);
+                //HotFix for old medication dates
+                if(option === 'MedicationPrescription'){
+                    //Adding 5 years to Dates and order by desc
+                    $.each(array, function(i, item) {
+                        var temp = new Date(item.content.dateWritten);
+                        array[i].content.dateWritten  = new Date(temp.setFullYear(temp.getFullYear() + 5));
+                    });
+                }
                 dataSwitch(option, array);
             }
         };
@@ -329,7 +340,7 @@ function openPlotScreen() {
     $('#PatientDetailScreen #observations').append(nav1);
     
     var el = document.createElement("div");
-    el.className = "col-sm-12"
+    el.className = "col-sm-12";
     el.innerHTML +="<row></row>";
     el.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";  
     $('#PatientDetailScreen #observations').append(el);
@@ -378,7 +389,7 @@ function getPatientData(data_option, param, process) {
  */
 function checkPatientOut(){
     $('#PatientDetailScreen').modal('hide');
-    $('.patient_card[patient_id="' + $('#PatientDetailScreen').data('PatientID') + '"]').remove();
+    $('.patient_card[patient_id="' + $('#PatientDetailScreen').data('PatientID') + '"]').hide();
     updateScrollContainerWidth();
 }
 

@@ -189,7 +189,16 @@ body {
   margin-top: 215px;
 }
 
+.medication_history_btn {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 10px;
+}
 
+#medications {
+    padding-bottom: 15px;
+}
 /**Hidden Things*****/
 
 .dashboard_nav.row {
