@@ -1,34 +1,50 @@
+
+//set up the time variables for the appointments
+var time = new Date();
+var inc_time = 30 * 60000; 
+//inc_time.setHours(0,15,0);
+time.setHours(8,0,0);
+
 $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
     $('body').on('click', '.patient_card', function (x) {
         /*Need to clear out the Detail Screen first*/
         //TODO: clearDetailScreen()
-        
+           
         loadPatientDetails(this);
         //.modal is the 
         $('#PatientDetailScreen').modal();
     });
+    $('#drugStore').data("inventory", {});
     $('#Patient_Search').on('keyup', patientSearch);
     $('#CheckOutButton').confirmation(
     {
         popout: true,
         onConfirm : checkPatientOut
     });
-    var initialPatients = [];
-    var randomNumOfInitialPatients = parseInt(Math.random()*100%15) + 1;
-    while(initialPatients.length < randomNumOfInitialPatients){
-        var randomPatient = PatientsWithPrescriptions[parseInt(Math.random()*100%PatientsWithPrescriptions.length)];
-        if(initialPatients.indexOf(randomPatient.split('/')[1]) === -1){
-            initialPatients.push(randomPatient.split('/')[1]);
+    
+    /*
+    var num_of_patients = parseInt(Math.random()*100%15);
+    var patient_index = [];
+    while(patient_index.length < num_of_patients){
+        var index = parseInt(Math.random()*100%100) + 4;
+        if(patient_index.indexOf(index) === -1) {
+            patient_index.push(index);
         }
     }
-    
-    $.each(initialPatients, function(p, patientID) {
-        var param = {
-            _id : patientID
-        };
-        getPatients(param);
+    getPatients({
+        _count: 15,
+        _skip : 4
+    });*/
+    appointStartTime.setHours(8,0,0); //appointments start at 8 am. (HH,MM,SS) 
+    $.each(PresentationPatients, function(p, patient){
+       getPatientData('Patient' , { _id : patient.split('/')[1] }, function(data){
+           if(data.totalResults > 0) {
+                parsePatientData(data);
+            }
+       });
     });
+    
 });
 
 /*
@@ -59,35 +75,17 @@ function patientSearch() {
 /*
  Author: Michael
  Date: 03/14/2015
- Purpose: Fetches the patient data from the fhir server
- Todo:
- Add parameter to accept the number of desired records to pass
- */
-function getPatients(param) {
-    $.ajax({
-        url: "http://52.11.104.178:8080/Patient",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-        },
-        dataType: 'json',
-        contentType: 'application/json',
-        /*TODO: Find out what all parameters we can send over*/
-        data: param,
-        success: function (data) {
-            if(data.totalResults > 0) {
-                parseData(data);
-            }
-        }
-    });
-}
-
-/*
- Author: Michael
- Date: 03/14/2015
  Purpose: parses the data from getPatients() to render the patient cards
  in the Scroll container
  */
-function parseData(data) {
+
+function parsePatientData(data) {
+    
+    //set up the time variables for the appointments
+    
+    var inc_time = 30 * 60000; // appointments are spaced 30 minutes apart 
+
+    var options = {hour: "numeric", minute: "numeric"};
     
     //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
@@ -103,8 +101,15 @@ function parseData(data) {
         // [condition] ? [true] : [false]
         var patient_img = document.createElement("img");
         patient_img.className = "card_photo_thumbnail col-sm-5";
-        patient_img.setAttribute('src', patientContent.photo && patientContent.photo[0].url ? patientContent.photo[0].url : 'img/no_photo.jpg');
-        patient_img.setAttribute('alt', 'no_photo');
+        var picture = "";
+        try{
+        var picture = patientContent.photo[0].data;
+        patient_img.setAttribute('src','data:image/jpg;base64,'+picture);
+        }
+        catch(e){
+        patient_img.setAttribute('src','img/no_photo.jpg');
+        }
+                patient_img.setAttribute('alt', 'no_photo');
 
         var patient_demographics = document.createElement("div");
         patient_demographics.className = "card_demographic col-sm-7";
@@ -113,16 +118,23 @@ function parseData(data) {
         //Gender
         patient_demographics.innerHTML += patientContent.gender ? '<br>' + patientContent.gender.coding[0].display : '';
         //DOB
-        patient_demographics.innerHTML += '<br>DOB: ' + (patientContent.birthDate ? formateDate(patientContent.birthDate) : 'N/A');
+        patient_demographics.innerHTML += '<br>DOB: ' + (patientContent.birthDate ? formatDate(patientContent.birthDate) : 'N/A');
         //patient_demographics.innerHTML += '<br>Reason For Visit: ' + reasonForVisit;
         
         var reason_for_visit = document.createElement("div");
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
         reason_for_visit.innerHTML = reasonForVisit;
         
+        var newtime = new Intl.DateTimeFormat("en-US", options).format(appointStartTime);
+        var appointment_queue = document.createElement("div");
+        appointment_queue.className = "card_appointment_queue col-sm-11";
+        appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        time = new Date(time.getTime() + inc_time);
+        
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
+        patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
         $('.patient_card_scroll').append(patient_card);
@@ -131,28 +143,6 @@ function parseData(data) {
     });
 }
 
-/*Author: Michael
- * Date: 03/2015
- * Just something to reuse to adjust width of scroll container
- * */
-function updateScrollContainerWidth() {
-    var num_of_cards = $('.patient_card:visible').length;
-    
-    //Dynamically edit width for the scroll container depending on the number of cards rendered
-    $('.patient_card_scroll').css('width', ((parseInt($('.patient_card:first').css('width')) + 50) * $('.patient_card:visible').length) + 'px');
-    $('#num_of_patients').html('Patients Shown: ' + num_of_cards);
-    
-}
-
-/*
- * Author: Michael
- * Date: 3/17/2015
- * Format the date to MM/DD/YYYY
- * 
- */
-function formateDate(date) {
-    return date.split('-')[1] + "/" + date.split('-')[2] + "/" + date.split('-')[0];
-}
 
 /*
  Author: Michael
@@ -162,6 +152,7 @@ function formateDate(date) {
  */
 function loadPatientDetails(card) {
     $('#PatientDetailScreen').data('PatientID', $(card).attr('patient_id'));
+    $('#conditions, #medications, #observations').empty().append("<img class='patient_detail_loading' src='img/loading.gif' alt='Loading'/>");
     /*Patent Section*/
     var patient_data = $(card).data('PatientData');
     var dob = new Date(patient_data.content.birthDate);
@@ -171,12 +162,20 @@ function loadPatientDetails(card) {
             patient_data.content.name[0].given[1] + " " +
             patient_data.content.name[0].family[0]);
     $('#patient_detail_age').text(age);
-    $('#patient_detail_DOB').text(formateDate(patient_data.content.birthDate));
+    $('#patient_detail_DOB').text(formatDate(patient_data.content.birthDate));
     $('#patient_detail_gender').text(patient_data.content.gender.coding[0].display);
     $('#patient_detail_line').text(patient_data.content.address[0].line[0]);
     $('#patient_detail_city').text(patient_data.content.address[0].city);
     $('#patient_detail_state').text(patient_data.content.address[0].state);
     $('#patient_detail_zip').text(patient_data.content.address[0].zip);
+    
+    try{
+        var picture = patient_data.content.photo[0].data;
+        $('#patient_detail_photo').attr("src", 'data:image/jpg;base64,' + picture);
+       }
+    catch(e){
+        $('#patient_detail_photo').attr("src", 'img/no_photo.jpg');
+       }
 
     $('#patient_detail_phone1, #patient_detail_phone2').text('');
     $.each(patient_data.content.telecom, function (t, type) {
@@ -216,39 +215,48 @@ function loadPatientDetails(card) {
         }
     });
     
-    /*Section for Conditions*/
-    //If the card does not have Condition data bounded to it, we'll go fetch them
-    if(typeof $(card).data('ConditionData') === 'undefined'){
+    var options = ['Condition', 'MedicationPrescription', 'Observation'];
+    $.each(options, function(o, option){
+       if(typeof $(card).data(option + 'Data') === 'undefined'){
         var param = {
-            _count: parseInt(Math.random()*10%3) + 1, 
-            _skip : parseInt(Math.random()*100%261)
+            'subject' : $(card).attr('patient_id').split('/')[1],
+            _count: 50,
+            _skip : 0
         };
+        if(option === 'MedicationPrescription'){
+            param = {
+                'patient._id' : $(card).attr('patient_id').split('/')[1],
+                _count: 50,
+                _skip : 0
+            };
+        }
+        var array = [];
+        var processDrugs = function(x){
+            array.push.apply(array, x.entry);
+            param._skip += 50;
+            if(param._skip < x.totalResults){
+                getPatientData(option, param, processDrugs);
+            } else {
+                $(card).data(option + 'Data', array);
+                //HotFix for old medication dates
+                if(option === 'MedicationPrescription'){
+                    //Adding 5 years to Dates and order by desc
+                    $.each(array, function(i, item) {
+                        var temp = new Date(item.content.dateWritten);
+                        array[i].content.dateWritten  = new Date(temp.setFullYear(temp.getFullYear() + 5));
+                    });
+                }
+                dataSwitch(option, array);
+            }
+        };
+        getPatientData(option, param, processDrugs);
         //function to fetch Conditions, right now randomly getting 1-3 conditions from the server
-        getConditions(param, function(results){
-           $(card).data('ConditionData', results);
-           loadPatientConditions(results);
-        });
-    } else {
-        //Already have bounded data for Condtion so don't refetch
-        loadPatientConditions($(card).data('ConditionData'));
-    }
-    
-    
-    /*Section for Medication*/
-    if(typeof $(card).data('MedicationData') === 'undefined'){
-        var param = {
-            _count: parseInt(Math.random()*10%3) + 1,
-            _skip: parseInt(Math.random()*100%4270)
-        };
-        getMedications(param, function(results){
-           $(card).data('MedicationData', results);
-           loadPatientMedications(results);
-        });
-    } else {
-        //Already have bounded data for Medications so don't refetch
-        loadPatientMedications($(card).data('MedicationData'));
-    }
-    
+        
+        } else {
+            //Already have bounded data for Condtion so don't refetch
+            dataSwitch(option, $(card).data(option + 'Data'));
+        }
+    });
     
     /*Reason For Visit*/
     $('#visit').html($(card).data('ReasonForVisit'));
@@ -256,35 +264,54 @@ function loadPatientDetails(card) {
 
 /*
  * Author: Michael
- * Date: 03/21/2015
- * Purpose: Renders the Patients Conditions on the Patient Detail Screen
- * @returns {undefined}
+ * Date: 3/14/2015
+ * Purpose: Switch data to proper load function based on [option]
  */
-function loadPatientConditions(ConditionData){
-    $('#PatientDetailScreen #conditions').empty();
-    $.each(ConditionData.entry, function(i, item) { 
-        $('#PatientDetailScreen #conditions').append(item.content.code.text + "<br/>");
-    });
+function dataSwitch(option, results) {
+    switch(option){
+        case 'Condition' : globC = results; loadPatientConditions(results); break;
+        case 'MedicationPrescription' : globMP = results; loadPatientMedicationPrescriptions(results); break;
+        case 'Observation' : globO = results; loadPatientObservations(results); break;
+        default: globD = results; break;
+    }
 }
+
 
 /*
  * Author: Michael
  * Date: 03/21/2015
- * Purpose: Renders the Patients Medications on the Patient Detail Screen
+ * Purpose: Renders the Patient's Conditions on the Patient Detail Screen
  * @returns {undefined}
  */
-function loadPatientMedications(MedicationData){
-    $('#PatientDetailScreen #drugs').empty();
-    $.each(MedicationData.entry, function(i, item) { 
-        var drugData = document.createElement("div");
-        drugData.className = "col-sm-12 drug_card";
-        drugData.innerHTML = "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.name + "</div>";
-        drugData.innerHTML += "<div class='col-sm-12'>" + item.content.product.form.text + "</div>";
-        //drugData.innerHTML += "<div class='col-sm-12'>Ingredients: " + item.content.product.ingredient.length + "</div>";
-        $(drugData).data(item);
-        $('#PatientDetailScreen #drugs').append(drugData);
+function loadPatientConditions(ConditionData){
+    var patientConditionCount = 0; // jc test data
+    $('#PatientDetailScreen #conditions').empty();
+    if(ConditionData.length === 0) $('#PatientDetailScreen #conditions').append("No Condition Data");
+    $.each(ConditionData, function(i, item) { 
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>";
+        $(el).data(item);
+        patientConditionCount++;  // jc test data
+        $('#PatientDetailScreen #conditions').append(el);
     });
+    //$('#PatientDetailScreen #conditions').prepend('Condition Count: ' + patientConditionCount); // jc test data
     
+}
+
+
+
+/* Author: Michael
+ * Date: 3/23/2015
+ * Purpose: Load the medication details for a prescription
+ * @param {type} ObservationData
+ * @returns {undefined}
+ */
+function loadMedicationDetails(medId){
+    var drugObj = $('#drugStore').data('inventory')[medId];
+    $('.' + medId + '.rxnorm').html("Rxnorm: " + drugObj.entry[0].content.code.coding[0].code);
+    $('.' + medId + '.brand').html("Brand: " + (drugObj.entry[0].content.isBrand ? 'Y' : 'N'));
+    $('.' + medId + '.form').html("Form: " + drugObj.entry[0].content.product.form.text);
 }
 
 
@@ -296,9 +323,35 @@ function loadPatientMedications(MedicationData){
 function openCheckInScreen() {
     clearCheckInScreen();
     $('#CheckInScreen').modal();
-
+}/*
+ * Clears the Check In Screen
+ */
+function clearCheckInScreen() {
+    $('#CheckInScreen input, #CheckInScreen textarea').val('');
 }
 
+function openPlotScreen() {
+    $('#PatientDetailScreen #observations').empty();
+    var nav1 = document.createElement("div");
+    nav1.className = "col-sm-12 Observ_btn";
+    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
+    
+    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button>";
+    
+    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button>";
+    $('#PatientDetailScreen #observations').append(nav1);
+    
+    var el = document.createElement("div");
+    el.className = "col-sm-12";
+    el.innerHTML +="<row></row>";
+    //el.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";  
+    $('#PatientDetailScreen #observations').append(el);
+    createChart();
+}
+
+function dummyLoadPatientObservations(){
+    loadPatientObservations(globO);
+}
 /*
  * Author: Michael
  * Date: 03/19/2015
@@ -306,52 +359,51 @@ function openCheckInScreen() {
  */
 function openDrugScreen() {
     $('#DrugScreen').modal();
-
+    //More to come here
 }
+
+
+/* Author: Michael
+ * Date: 3/22/2015
+ * Purpose: Generic function to reuse to fetch data based on the data_option sent in
+ * @param {String} data_option
+ * @param {Object} param
+ * @param {Function} process
+ */
+function getPatientData(data_option, param, process) {
+    $.ajax({
+        url: "http://52.11.104.178:8080/" + data_option,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
+        },
+        data: param,
+        dataType: 'json',
+        contentType: 'application/json',
+        success: process
+    });
+}
+
+
+/* Author: Michael
+ * Date: 3/21/2015
+ * Purpose: Remove a patient from the Queue list
+ * @returns {undefined}
+ */
+function checkPatientOut(){
+    $('#PatientDetailScreen').modal('hide');
+    $('.patient_card[patient_id="' + $('#PatientDetailScreen').data('PatientID') + '"]').hide();
+    updateScrollContainerWidth();
+}
+
+
 
 /*
  * 
- * @returns {undefined}
- */
-function clearCheckInScreen() {
-    $('#CheckInScreen input, #CheckInScreen textarea').val('');
-}
-
-/* Author: Michael
- * Date: 3/21/2015 
- * Purpose: Temp workaround for Conditions; might actually turn into real
+ * Functions for testing purposes
+ * 
  * 
  */
-function getConditions(param, processConditions) {
-    $.ajax({
-        url: "http://52.11.104.178:8080/Condition",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-        },
-        data: param,
-        dataType: 'json',
-        contentType: 'application/json',
-        success: processConditions
-    });
-}
 
-/* Author: Michael
- * Date: 3/21/2015 
- * Purpose: Temp workaround for medication
- * 
- */
-function getMedications(param, processDrugs) {
-    $.ajax({
-        url: "http://52.11.104.178:8080/Medication",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-        },
-        data: param,
-        dataType: 'json',
-        contentType: 'application/json',
-        success: processDrugs
-    });
-}
 
 //Just a test to see what's in drugs table
 var allDrugs = [];
@@ -405,53 +457,17 @@ function getAllRecords(option, array){
     };
     if(array.length === 0) {
         $.ajax({
-                url: "http://52.11.104.178:8080/" + option,
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
-                },
-                dataType: 'json',
-                data: param,
-                contentType: 'application/json',
-                /*TODO: Find out what all parameters we can send over*/
-                success: processDrugs
-            });
+            url: "http://52.11.104.178:8080/" + option,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Basic Y2xpZW50OnNlY3JldA==");
+            },
+            dataType: 'json',
+            data: param,
+            contentType: 'application/json',
+            /*TODO: Find out what all parameters we can send over*/
+            success: processDrugs
+        });
     }
     
 }
-/* Author: Michael
- * Date: 3/21/2015
- * Purpose: Remove a patient from the Queue list
- * @returns {undefined}
- */
-function checkPatientOut(){
-    $('#PatientDetailScreen').modal('hide');
-    $('.patient_card[patient_id="' + $('#PatientDetailScreen').data('PatientID') + '"]').remove();
-    updateScrollContainerWidth();
-}
 
-/* Do we need this?
-function htmlbodyHeightUpdate(){
-		var height3 = $( window ).height()
-		var height1 = $('.nav').height()+50
-		height2 = $('.main').height()
-		if(height2 > height3){
-			$('html').height(Math.max(height1,height3,height2)+10);
-			$('body').height(Math.max(height1,height3,height2)+10);
-		}
-		else
-		{
-			$('html').height(Math.max(height1,height3,height2));
-			$('body').height(Math.max(height1,height3,height2));
-		}
-		
-	}
-	$(document).ready(function () {
-		htmlbodyHeightUpdate()
-		$( window ).resize(function() {
-			htmlbodyHeightUpdate()
-		});
-		$( window ).scroll(function() {
-			height2 = $('.main').height()
-  			htmlbodyHeightUpdate()
-		});
-	}); */

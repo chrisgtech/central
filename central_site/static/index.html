@@ -73,16 +73,16 @@
                 <button type="button" class="btn btn-primary" onclick="openCheckInScreen();">Check In</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary" onclick="openDrugScreen();">Drugs</button>
+                <button type="button" class="btn btn-primary" id="drugStore" onclick="openDrugScreen();" style="display:none;">Drugs</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary">Tab 1</button>
+                <button type="button" class="btn btn-primary" style="display:none;">Tab 1</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary">Tab 2</button>
+                <button type="button" class="btn btn-primary" style="display:none;">Tab 2</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
-                <button type="button" class="btn btn-primary">Tab 3</button>
+                <button type="button" class="btn btn-primary" style="display:none;">Tab 3</button>
             </div>
         </div>
         <div id="num_of_patients">Number</div>
@@ -207,16 +207,13 @@
 
     <!--Patient Detail Screen-->
     <div id="PatientDetailScreen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg patient_data_container"">
+        <div class="modal-dialog modal-lg patient_data_container">
             <div class="modal-content patient_data">
-                <div class="col-sm-4" style="height: 600px;">
+                <div class="col-sm-3" style="height: 600px;">
                     <!-- This section is the left side for Patient Demographics-->
                     <h5 class="col-sm-8" id="patient_detail_name">Patient Details</h5>
                     <h5 class="col-sm-4">Age: <label id="patient_detail_age"></label></h5>
                     <img id="patient_detail_photo" src="img/no_photo.jpg"/> <br />
-                    
-                    <h4>Conditions: </h4>
-                    <div id="conditions"></div>
                     
                     <h4>Reason For Visit: </h4>
                     <div id="visit"></div>
@@ -228,22 +225,22 @@
                     </div>
 
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-9">
                     <div role="tabpanel">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#vitals" aria-controls="vitals" role="tab" data-toggle="tab">Vitals</a></li>
-                            <li role="presentation"><a href="#drugs" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
-                            <li role="presentation"><a href="#labs" aria-controls="labs" role="tab" data-toggle="tab">Labs</a></li>
-                            <li role="presentation"><a href="#familyHistory" aria-controls="familyHistory" role="tab" data-toggle="tab">Family History</a></li>
+                            <li role="presentation" class="active"><a href="#conditions" aria-controls="vitals" role="tab" data-toggle="tab">Conditions</a></li>
+                            <li role="presentation"><a href="#medications" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
+                            <li role="presentation"><a href="#observations" aria-controls="labs" role="tab" data-toggle="tab">Observations</a></li>
                         </ul>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="vitals">Vitals coming soon...</div>
-                            <div role="tabpanel" class="tab-pane" id="drugs">Medication Stuff Goes Here</div>
-                            <div role="tabpanel" class="tab-pane" id="labs">Labs coming soon...</div>
-                            <div role="tabpanel" class="tab-pane" id="familyHistory">Family History coming soon...</div>
+                            <div role="tabpanel" class="tab-pane active" id="conditions">Conditions coming soon...
+                            <canvas id='myChart' width='725' height='400'></canvas>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="medications">Medications coming soon...</div>
+                            <div role="tabpanel" class="tab-pane" id="observations">Observations coming soon...</div>
                         </div>
 
                     </div>
@@ -253,11 +250,25 @@
             </div>
         </div>
     </div>
+    
+    // <script type ="text/javascript">
+    //    var myLink = document.getElementById("btn.btn-primary");
+    //    myLink.style.visibility = 'hidden';
+        // document.getElementById("btn btn-primary").;  // jc
+    // </script>
+    
     <script src="js/vendor/jquery-1.11.1.min.js"></script>
     <script src="js/vendor/bootstrap.min.js"></script>
     <script src="js/vendor/bootstrap-confirmation.js"></script>
+    <script src="js/vendor/highcharts.js"></script>
+    <script src="js/vendor/exporting.js"></script>
     <script src="js/test.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/maintenance.js"></script>
+    <script src="js/medicationPrescription.js"></script>
+    <script src="js/observation.js"></script>
+    <script src="js/checkin.js"></script>
+    <script src="js/charting.js"></script>
     <script src="js/will.js"></script>
+    <script src="js/main.js"></script>
     </body>
 </html>

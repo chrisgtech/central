@@ -95,14 +95,26 @@ body {
     padding: 10px;
 }
 
+.card_appointment_queue{
+    //margin-bottom: 25px;
+    color: white;
+    opacity: 0.3;
+    position: absolute; 
+    right: 10px; 
+    bottom: 1px;
+    //background-color: blue;
+    text-align: right;
+    padding: 10px;
+}
+
 .patient_data_container {
     top: 20px;
-    min-width: 850px;
+    min-width: 1100px;
 }
 
 .patient_data {
     position: relative;
-    padding: 25px;
+    padding: 10px;
     min-height: 655px;
     background-color: #efefef;
 }
@@ -128,8 +140,8 @@ body {
 }
 
 .tab-content {
-    padding: 25px;
-    height: 500px;
+    padding: 5px;
+    height: 525px;
     background-color: white;
     box-shadow: 0px 2px 3px #999;
     overflow-y: scroll;
@@ -163,6 +175,30 @@ body {
   background-color: #efefef;
 }
 
+.Observ_btn {
+  position: relative;
+  padding: 3px;
+  border: 1px solid #ccc;
+  background-color: #DAE5E8;
+}
+
+.patient_detail_loading {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: 215px;
+}
+
+.medication_history_btn {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 10px;
+}
+
+#medications {
+    padding-bottom: 15px;
+}
 /**Hidden Things*****/
 
 .dashboard_nav.row {
