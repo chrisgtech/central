@@ -1,9 +1,10 @@
 import sys
-import csv, random, json, operator, re, time
+import csv, random, json, operator, re, time, datetime
 
 from faker import Factory
 fake = Factory.create('en_US')
 from fhir import *
+import dateutil.parser
 
 import desynpuf, otherdata, patientphotos, utils, fabextras
 
@@ -86,15 +87,36 @@ def fakeprofile(sex='female', birthyear=None, images=None):
     
     return profile
     
+dateranges = {}
+dateoffsets = {'observation':90, 'prescription':1549}
+def dateupdate(type, date):
+    if not type in dateranges:
+        dateranges[type] = {'min':datetime.datetime.max, 'max':datetime.datetime.min}
+    #if not type in dateoffsets:
+    #    dateoffsets[type] = 999999
+    parsed = dateutil.parser.parse(date)
+    #current = datetime.datetime.today()
+    #offset = (current - parsed).days
+    #if offset < dateoffsets[type]:
+    #    dateoffsets[type] = offset
+    offset = dateoffsets[type]
+    updated = parsed + datetime.timedelta(days=offset)
+    if updated < dateranges[type]['min']:
+        dateranges[type]['min'] = updated
+    if updated > dateranges[type]['max']:
+        dateranges[type]['max'] = updated
+    newdate = updated.strftime('%Y-%m-%d')
+    return newdate
+    
 def createrecord(data):
     type = data['resourceType']
     jsonified = json.dumps(data)
     #utils.writetext('temp.txt', jsonified)
     #exit()
     rest = RestfulFHIR(fabextras.FHIR_URLS[0])
-    #url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
-    #print url
-    #return url
+    url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
+    print url
+    return url
     retries = 10
     query = None
     while retries > 0:
@@ -175,6 +197,7 @@ def createmedications(patient, rxlookup, rxinfo, medications):
         supplyquantity = int(float(supplyquantity))
         supplydate = pde['SRVC_DT']
         supplydate = '%s-%s-%s' % (supplydate[:4], supplydate[4:6], supplydate[6:])
+        supplydate = dateupdate('prescription', supplydate)
         rx = tempstore.get(ndc)
         if not rx:
             rx = rxlookup[ndc]
@@ -385,6 +408,7 @@ def createobservations(patient):
             observation['status'] = 'final'
             observation['reliability'] = 'ok'
             observation['issued'] = subrecord['Date_Collected']
+            observation['issued'] = dateupdate('observation', observation['issued'])
             observation['name'] = {'coding':[{}]}
             coding = observation['name']['coding'][0]
             coding['display'] = subrecord['Result_Name']
@@ -425,7 +449,7 @@ def createall(rxlookup, rxinfo):
     medpatients = {}
     for patientkey in patients.keys():
         patient = patients[patientkey]
-        if not 'pdes' in patient:
+        if not patient.get('pdes') or not patient.get('conditions'):
             continue
         medpatients[patientkey] = patient
     extrapatients = otherdata.loadall()
@@ -491,6 +515,8 @@ def main(argv=None):
     
     print 'Creating records'
     createall(rxlookup, rxinfo)
+    #print dateranges
+    #print dateoffsets
 
 if __name__ == "__main__":
     sys.exit(main())
