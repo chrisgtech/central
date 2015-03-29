@@ -114,9 +114,9 @@ def createrecord(data):
     #utils.writetext('temp.txt', jsonified)
     #exit()
     rest = RestfulFHIR(fabextras.FHIR_URLS[0])
-    url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
-    print url
-    return url
+    #url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
+    #print url
+    #return url
     retries = 10
     query = None
     while retries > 0:
