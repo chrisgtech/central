@@ -6,6 +6,7 @@ var inc_time = 30 * 60000;
 time.setHours(8,0,0);
 
 $(document).ready(function () {
+    debugger;
     //binding [loadPatientDetails()] to dynamically added patient cards
     $('body').on('click', '.patient_card', function (x) {
         /*Need to clear out the Detail Screen first*/
@@ -31,19 +32,20 @@ $(document).ready(function () {
         if(patient_index.indexOf(index) === -1) {
             patient_index.push(index);
         }
-    }
-    getPatients({
-        _count: 15,
-        _skip : 4
-    });*/
-    appointStartTime.setHours(8,0,0); //appointments start at 8 am. (HH,MM,SS) 
-    $.each(PresentationPatients, function(p, patient){
+    } */
+    getPatientData('Patient' , { _count: 15,
+        _skip : 4 }, function(data){
+           if(data.totalResults > 0) {
+                parsePatientData(data);
+            }
+       });
+    /*$.each(PresentationPatients, function(p, patient){
        getPatientData('Patient' , { _id : patient.split('/')[1] }, function(data){
            if(data.totalResults > 0) {
                 parsePatientData(data);
             }
        });
-    });
+    });*/
     
 });
 
@@ -125,10 +127,10 @@ function parsePatientData(data) {
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
         reason_for_visit.innerHTML = reasonForVisit;
         
-        var newtime = new Intl.DateTimeFormat("en-US", options).format(appointStartTime);
+        //var newtime = new Intl.DateTimeFormat("en-US", options).format(appointStartTime);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
         time = new Date(time.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
@@ -346,7 +348,7 @@ function openPlotScreen() {
     el.innerHTML +="<row></row>";
     //el.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";  
     $('#PatientDetailScreen #observations').append(el);
-    createChart();
+    //createChart();
 }
 
 function dummyLoadPatientObservations(){

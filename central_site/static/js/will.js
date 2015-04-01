@@ -127,7 +127,7 @@ chart = new Highcharts.Chart({
             ]
         }]
     });
-    }
+}
     
     
     
