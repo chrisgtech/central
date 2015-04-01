@@ -4,9 +4,12 @@ var time = new Date();
 var inc_time = 30 * 60000; 
 time.setHours(8,0,0);
 
+var globData;
+
 
 $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
+    openFDAtest();
     $('body').on('click', '.patient_card', function (x) {
         /*Need to clear out the Detail Screen first*/
         //TODO: clearDetailScreen()

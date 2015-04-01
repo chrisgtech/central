@@ -2,20 +2,16 @@
 
 
 function createChart(){
-//    var chart = new Highcharts.Chart({
-//        chart: {
-//            //alignTicks: false,
-//            type: 'spline',
-//            renderTo: 'myChart'
-//        },
-//    })
+//data to be passed to this function
+var titleText = "Put title here";
+var 
 chart = new Highcharts.Chart({
         chart: {
             type: 'spline',
             renderTo: 'myChart'
         },
         title: {
-            text: 'Snow depth at Vikjafjellet, Norway'
+            text: titleText
         },
         subtitle: {
             text: 'Irregular time data in Highcharts JS'
@@ -130,8 +126,16 @@ chart = new Highcharts.Chart({
     }
     
     
+function openFDAtest(){            //This works
+        $.ajax({
+        url: "https://api.fda.gov/drug/label.json?api_key=BVwl0V7hfVYHDw5SwEg8DZ75q9SHzCRqD5ibjY7Q&search=openfda.rxcui:+239191",
+        success: function (data) {
+            globData=data;
+            console.log("rxcui = 239191 adverse reactions: "+globData.results[0].adverse_reactions );
+        }
+        });
     
-    
+}
     
     
     
@@ -266,3 +270,69 @@ function printObservationData(ObservationData){
 //    seriesAry.push(weightObj);
 //    return seriesAry;
 //}
+
+
+//function wlt_getPatients(count, first_name, last_name){
+//    $.ajax({
+//            url: "http://52.11.104.178:8080/Patient",
+//            beforeSend: function(shr) {
+//                xhr.setRequestHeader("Authorization", "Basic Y2xpZWS0QnNlY3Jlda==");
+//            },
+//            dataType: 'json',
+//            contentType: 'application/json',
+//            data:{
+//                _count: count ? count : 25,
+//                _skip: $('.patient_card').length
+//            },
+//            success: function (data) {
+//                globData = data;
+//                parseData(data);                     
+//            }
+//        });
+//    }
+                            
+
+//    $.ajax({
+//            url: "http://52.11.104.178:8080/Patient",
+//            dataType: 'json',
+//            contentType: 'application/json',
+//            data:{
+//                _count: 25,
+//            },
+//            success: function (data) {
+//                globData=data;                   
+//            }
+//        });
+//
+//    $.ajax({
+//            url: "http://52.11.104.178:8080/Patient",
+//            dataType: 'json',
+//            contentType: 'application/json',
+//            data:{
+//                _count: 25,
+//            },
+//            success: function (data) {
+//                globData=data;                   
+//            }
+//        });
+//        
+//        
+//        $.ajax({
+//        url: "https://api.fda.gov/drug/event.json?search=patient.drug.openfda.pharm_class_epc:\"nonsteroidal+anti-inflammatory+drug\"&count=patient.reaction.reactionmeddrapt.exact",
+//        dataType: 'json',
+//        contentType: 'application/json',
+//        success: function (data) {
+//            globData=data;                   
+//        }
+//        });
+//        
+//        //This works
+//        $.ajax({
+//        url: "https://api.fda.gov/drug/label.json?api_key=BVwl0V7hfVYHDw5SwEg8DZ75q9SHzCRqD5ibjY7Q&search=openfda.rxcui:+239191",
+//        success: function (data) {
+//            globData=data;                   
+//        }
+//        });
+//        
+//        
+//        https://api.fda.gov/drug/label.json?api_key=BVwl0V7hfVYHDw5SwEg8DZ75q9SHzCRqD5ibjY7Q&search=openfda.rxcui:+239191
