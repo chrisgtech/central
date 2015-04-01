@@ -1,13 +1,16 @@
-
+//GLOBAL VARIABLES AND INITIALIZATIONS
 //set up the time variables for the appointments
 var time = new Date();
 var inc_time = 30 * 60000; 
-//inc_time.setHours(0,15,0);
 time.setHours(8,0,0);
+
+var globData;
+
 
 $(document).ready(function () {
     debugger;
     //binding [loadPatientDetails()] to dynamically added patient cards
+    openFDAtest();
     $('body').on('click', '.patient_card', function (x) {
         /*Need to clear out the Detail Screen first*/
         //TODO: clearDetailScreen()
@@ -46,7 +49,6 @@ $(document).ready(function () {
             }
        });
     });*/
-    
 });
 
 /*
@@ -82,12 +84,8 @@ function patientSearch() {
  */
 
 function parsePatientData(data) {
-    
-    //set up the time variables for the appointments
-    
-    var inc_time = 30 * 60000; // appointments are spaced 30 minutes apart 
 
-    var options = {hour: "numeric", minute: "numeric"};
+    var options = {hour: "numeric", minute: "numeric"}; //options for time 
     
     //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
@@ -127,7 +125,7 @@ function parsePatientData(data) {
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
         reason_for_visit.innerHTML = reasonForVisit;
         
-        //var newtime = new Intl.DateTimeFormat("en-US", options).format(appointStartTime);
+        var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
         //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT

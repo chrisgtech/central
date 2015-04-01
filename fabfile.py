@@ -71,8 +71,9 @@ def install_libs():
     # Install these on your client side too
     sudo('pip install fake-factory')
     sudo('pip install fhir')
+    #sudo('pip install python-dateutil')
     #sudo('pip install lxml') #WLT these were causing issues with fab create
-    #sudo('pip install yaml')
+    #sudo('pip install PyYaml')
 
 def configure_nginx():
     """
