@@ -19,7 +19,10 @@ function loadPatientMedicationPrescriptions(MedicationData){
     }
     else {
         var today = new Date();
-        MedicationData = $.grep(MedicationData, function(rx) { return rx.content.dateWritten < today;});
+         $.each(MedicationData, function(i, item) {
+                item.content.dateWritten = new Date(item.content.dateWritten);
+                 });
+        MedicationData = $.grep(MedicationData, function(rx) { return rx.content.dateWritten < today;}); 
         MedicationData.sort(function(a, b) {
             var a = a.content.dateWritten;
             var b = b.content.dateWritten; 
@@ -27,7 +30,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
         });
         var threeMonthsAgo = new Date();
         threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-        $.each($.grep(MedicationData, function(rx) { return rx.content.dateWritten > threeMonthsAgo;}), function(i, item) { 
+        $.each($.grep(MedicationData, function(rx) {return rx.content.dateWritten > threeMonthsAgo; }), function(i, item) { 
 
             var medId = item.content.medication.reference.split('/')[1];
 
@@ -35,7 +38,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
             el.className = "col-sm-12 drug_card";
             el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
 
-            el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString()
+            el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString() 
                     + "</div><div class='col-sm-8 rxnorm " + medId + "'>&nbsp;</div>";
 
             el.innerHTML += "<div class='col-sm-4'>" + ( item.content.dispense.expectedSupplyDuration ? "Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
