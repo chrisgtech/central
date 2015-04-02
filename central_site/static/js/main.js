@@ -238,14 +238,6 @@ function loadPatientDetails(card) {
                 getPatientData(option, param, processDrugs);
             } else {
                 $(card).data(option + 'Data', array);
-                //HotFix for old medication dates
-                if(option === 'MedicationPrescription'){
-                    //Adding 5 years to Dates and order by desc
-//                    $.each(array, function(i, item) {
-//                        var temp = new Date(item.content.dateWritten);
-//                        //array[i].content.dateWritten  = new Date(temp.setFullYear(temp.getFullYear() + 5));
-//                    });
-                }
                 dataSwitch(option, array);
             }
         };

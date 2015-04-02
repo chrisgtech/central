@@ -19,8 +19,10 @@ function loadPatientMedicationPrescriptions(MedicationData){
     }
     else {
         var today = new Date();
-        //WLT - I commented out the below value because all med data was getting clobbered due to comparing Unix time to a string.
-        //MedicationData = $.grep(MedicationData, function(rx) { return rx.content.dateWritten < today;});
+         $.each(MedicationData, function(i, item) {
+                item.content.dateWritten = new Date(item.content.dateWritten);
+                 });
+        MedicationData = $.grep(MedicationData, function(rx) { return rx.content.dateWritten < today;}); 
         MedicationData.sort(function(a, b) {
             var a = a.content.dateWritten;
             var b = b.content.dateWritten; 
@@ -28,15 +30,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
         });
         var threeMonthsAgo = new Date();
         threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-        $.each($.grep(MedicationData, function(rx) { 
-            //WLT - I added the below lines to test just the year for 2015 (roughly 3 months)
-            //I wasn't sure why you were comparing strings to Date() variables.
-            //var temp = rx.content.dateWritten;
-            //var temp2 = temp.split("-")[0]
-            if (rx.content.dateWritten.split("-")[0] === "2015"){
-                return rx.content.dateWritten;// > threeMonthsAgo;  //WLT -I left the threeMonthsAgo in as a placeholder to what you had before.
-            }
-            }), function(i, item) { 
+        $.each($.grep(MedicationData, function(rx) {return rx.content.dateWritten > threeMonthsAgo; }), function(i, item) { 
 
             var medId = item.content.medication.reference.split('/')[1];
 
@@ -44,7 +38,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
             el.className = "col-sm-12 drug_card";
             el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
 
-            el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten    //.toLocaleDateString() //WLT - I left this as a placeholder to what you had before
+            el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString() 
                     + "</div><div class='col-sm-8 rxnorm " + medId + "'>&nbsp;</div>";
 
             el.innerHTML += "<div class='col-sm-4'>" + ( item.content.dispense.expectedSupplyDuration ? "Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
