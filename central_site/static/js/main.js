@@ -8,15 +8,11 @@ var globData;
 
 
 $(document).ready(function () {
-    debugger;
     //binding [loadPatientDetails()] to dynamically added patient cards
-    openFDAtest();
+    //openFDAtest();
     $('body').on('click', '.patient_card', function (x) {
-        /*Need to clear out the Detail Screen first*/
-        //TODO: clearDetailScreen()
-           
         loadPatientDetails(this);
-        //.modal is the 
+        //.modal is the popup screen
         $('#PatientDetailScreen').modal();
     });
     $('#drugStore').data("inventory", {});
@@ -27,28 +23,32 @@ $(document).ready(function () {
         onConfirm : checkPatientOut
     });
     
-    /*
-    var num_of_patients = parseInt(Math.random()*100%15);
+    //Picks a random number of patients between 5-20 count
+    // and adds a random index of the patient to an array
+    var num_of_patients = parseInt(Math.random()*100%15) + 5;
     var patient_index = [];
     while(patient_index.length < num_of_patients){
-        var index = parseInt(Math.random()*100%100) + 4;
+        var index = parseInt(Math.random()*100%100);
         if(patient_index.indexOf(index) === -1) {
             patient_index.push(index);
         }
-    } */
-    getPatientData('Patient' , { _count: 15,
+    }
+    //Uses the randomly generated array of patient indicies to fetch
+    $.each(patient_index, function(i, index){
+       getPatientData('Patient' , { _count : 1, _skip: index }, function(data){
+           if(data.totalResults > 0) {
+                parsePatientData(data);
+            }
+       });
+    });
+    
+    
+    /*getPatientData('Patient' , { _count: 15,
         _skip : 4 }, function(data){
            if(data.totalResults > 0) {
                 parsePatientData(data);
             }
-       });
-    /*$.each(PresentationPatients, function(p, patient){
-       getPatientData('Patient' , { _id : patient.split('/')[1] }, function(data){
-           if(data.totalResults > 0) {
-                parsePatientData(data);
-            }
-       });
-    });*/
+       });*/
 });
 
 /*
@@ -84,6 +84,7 @@ function patientSearch() {
  */
 
 function parsePatientData(data) {
+    globda = data;
 
     var options = {hour: "numeric", minute: "numeric"}; //options for time 
     
@@ -307,20 +308,6 @@ function loadMedicationDetails(medId){
 }
 
 
-/*
- * Author: Michael
- * Date: 03/18/2015
- * Purpose: Open and clear out the Check In Screen
- */
-function openCheckInScreen() {
-    clearCheckInScreen();
-    $('#CheckInScreen').modal();
-}/*
- * Clears the Check In Screen
- */
-function clearCheckInScreen() {
-    $('#CheckInScreen input, #CheckInScreen textarea').val('');
-}
 
 function openPlotScreen() {
     $('#PatientDetailScreen #observations').empty();

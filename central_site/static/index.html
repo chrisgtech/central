@@ -94,7 +94,9 @@
     <!--Check In Screen -->
     <div id="CheckInScreen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg patient_data_container"">
+            <img id="checkin_search_loading" style="position: fixed; z-index: 10; left: 0; right: 0; display: none;" class='patient_detail_loading' src='img/loading.gif' alt='Loading'/>
             <div class="modal-content patient_data">
+                <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer;" onclick="$('#CheckInScreen').modal('hide');"></span>
                 <div class="row">
                     <div class="col-sm-8">
                         <h4>Check In</h4>
@@ -166,8 +168,8 @@
                     <textarea class="col-sm-9" rows="4"></textarea>
                 </div>
                 <div class="row" style="margin: 40px 0px;">
-                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3">Check In</button>
-                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-2">Clear</button>
+                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3" onclick="checkPatientIn()">Check In</button>
+                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-2" onclick="clearCheckInScreen();">Clear</button>
                 </div>
             </div>
         </div>
@@ -230,16 +232,21 @@
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active"><a href="#conditions" aria-controls="vitals" role="tab" data-toggle="tab">Conditions</a></li>
-                            <li role="presentation"><a href="#medications" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
+                            <li role="presentation"><a href="#medication_container" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
                             <li role="presentation"><a href="#observations" aria-controls="labs" role="tab" data-toggle="tab">Observations</a></li>
                         </ul>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="conditions">Conditions coming soon...
-                            <canvas id='myChart' width='725' height='400'></canvas>
+                                
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="medications">Medications coming soon...</div>
+                            <div role="tabpanel" class="tab-pane" id="medication_container" >
+                                <div id="medications" class="panel-group"  role="tablist" aria-multiselectable="true">
+                                    
+                                </div>
+                            </div>
+
                             <div role="tabpanel" class="tab-pane" id="observations">Observations coming soon...</div>
                         </div>
 
