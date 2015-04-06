@@ -50,7 +50,8 @@ function loadPatientObservations(ObservationData){
     });
     //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
     
-    $('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='myChart'></div></div>");
+    $('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='sysDia'></div><div id='weightData'></div></div>");
+    //$('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='weightData'></div></div>");
     
 }
 
@@ -59,9 +60,12 @@ function plotScreenToggle(btn){
     if(container === 'plot'){
         $('#observation_data').hide();
         $('#plot_data').show();
-        if($('#myChart').html() === ''){
+        if($('#sysDia').html() === ''){
             plotChart();
         }
+//        if($('#weight').html() === ''){
+//            plotChart();
+//        }
     } else {
         $('#observation_data').show();
         $('#plot_data').hide();
@@ -75,38 +79,41 @@ function plotChart(){
     var obs = $('.patient_card[patient_id="' + patientID + '"]').data("ObservationData");
     
     //Create our 'Store' to hold all our organized data;
-    var graphableObsStore = {
-        'interpretation' : [],
-        'types_of_observations' : []
-    };
+//    var graphableObsStore = {
+//        'interpretation' : [],
+//        'types_of_observations' : []
+//    };
+    var wgtData = [];
     var sysData = [];
     var diaData = [];
-    var singleSysData = [];
-    var title1;
-    var title2;
-    var units;
+    var singleData = [];
+    var systitle;
+    var diatitle;
+    var sysunits;
+    var wgtUnits;
+    var wgtTitle;
     $.each(obs, function(o, observation) {
         //if observation has an interpretation, push it in the interpretation member
         if(typeof observation.content.interpretation !== 'undefined')  {
-            graphableObsStore['interpretation'].push(observation);
+//            graphableObsStore['interpretation'].push(observation);
         } 
         else if (observation.content.name.coding[0].display === "Systolic Blood Pressure")
         {
             //Grab the obersvation display name (lower casing to prevent case sensitive errors)
             var display = observation.content.name.coding[0].display.toLowerCase();
             //If this display is not in our array of types, add it and create a new empty array member in the 'Store'
-            if(graphableObsStore['types_of_observations'].indexOf(display) === -1){
-                  graphableObsStore['types_of_observations'].push(display);
-                  graphableObsStore[display] = [];
-            }
-            singleSysData.push(observation.content.issued.valueOf());
-            singleSysData.push(observation.content.valueQuantity.value);
+//            if(graphableObsStore['types_of_observations'].indexOf(display) === -1){
+//                  graphableObsStore['types_of_observations'].push(display);
+//                  graphableObsStore[display] = [];
+//            }
+            singleData.push(observation.content.issued.valueOf());
+            singleData.push(observation.content.valueQuantity.value);
             //Push the observation in the appropriate member array
-            sysData.push(singleSysData);
-            singleSysData = [];
-            graphableObsStore[display].push(observation);
-            title1 = observation.content.name.coding[0].display;
-            units = observation.content.valueQuantity.units;
+            sysData.push(singleData);
+            singleData = [];
+            //graphableObsStore[display].push(observation);
+            systitle = observation.content.name.coding[0].display;
+            sysunits = observation.content.valueQuantity.units;
             
         }
         else if (observation.content.name.coding[0].display === "Diastolic Blood Pressure")
@@ -114,38 +121,60 @@ function plotChart(){
             //Grab the obersvation display name (lower casing to prevent case sensitive errors)
             var display = observation.content.name.coding[0].display.toLowerCase();
             //If this display is not in our array of types, add it and create a new empty array member in the 'Store'
-            if(graphableObsStore['types_of_observations'].indexOf(display) === -1){
-                  graphableObsStore['types_of_observations'].push(display);
-                  graphableObsStore[display] = [];
-            }
+//            if(graphableObsStore['types_of_observations'].indexOf(display) === -1){
+//                  graphableObsStore['types_of_observations'].push(display);
+//                  graphableObsStore[display] = [];
+//            }
             //var d = new Date();
             //d = observation.content.issued;
-            singleSysData.push(observation.content.issued.valueOf());
-            singleSysData.push(observation.content.valueQuantity.value);
+            singleData.push(observation.content.issued.valueOf());
+            singleData.push(observation.content.valueQuantity.value);
             //Push the observation in the appropriate member array
-            diaData.push(singleSysData);
-            singleSysData = [];
-            graphableObsStore[display].push(observation);
-            title2 = observation.content.name.coding[0].display;
-            units = observation.content.valueQuantity.units;
+            diaData.push(singleData);
+            singleData = [];
+            //graphableObsStore[display].push(observation);
+            diatitle = observation.content.name.coding[0].display;
+            
             
         }
+        else if (observation.content.name.coding[0].display === "Weight")
+        {
+
+            singleData.push(observation.content.issued.valueOf());
+            singleData.push(observation.content.valueQuantity.value);
+            //Push the observation in the appropriate member array
+            wgtData.push(singleData);
+            singleData = [];
+            //graphableObsStore[display].push(observation);
+            wgtTitle = observation.content.name.coding[0].display;
+            wgtUnits = observation.content.valueQuantity.units;
+            
+        }
+//
        
     });
     //sysData = [[Date.UTC(2010,1,4),100],[Date.UTC(2010,1,5),110]];
     //sysData = [[Date.UTC(2010,1,4),123],[Date.UTC(2010,1,5),115]];
-    graphit(title1,title2,units,sysData,diaData);
+    graphit("#sysDia", systitle,diatitle,sysunits,sysData,diaData);
+    graphit("#weightData",wgtTitle,"",wgtUnits,wgtData,"");
     
 }
     
-function graphit(title1,title2,units,sysData,diaData)
+function graphit(jclass,title1,title2,units,sysData,diaData)
 {
-    $('#myChart').highcharts({
+    var fulltitle;
+    if (title2 !== ""){
+        fulltitle = title1 + " and " + title2;
+    }
+    else{
+        fulltitle = title1;
+    }
+    $(jclass).highcharts({
                 chart: {
                     type: 'spline'
                 },
                 title: {
-                    text: title1 + " and " + title2 
+                    text: fulltitle 
                 },
                 //subtitle: {
                 //    text: 'Irregular time data in Highcharts JS'

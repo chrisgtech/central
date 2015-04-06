@@ -322,10 +322,8 @@ function openPlotScreen() {
     
     var el = document.createElement("div");
     el.className = "col-sm-12";
-    el.innerHTML +="<row></row>";
-    //el.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";  
+    el.innerHTML +="<row></row>";  
     $('#PatientDetailScreen #observations').append(el);
-    //createChart();
 }
 
 function dummyLoadPatientObservations(){
