@@ -168,7 +168,7 @@ function graphit(title1,title2,units,sysData,diaData)
                 },
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%e. %b %Y}: {point.y:.2f} m'
+                    pointFormat: '{point.x:%e. %b %Y}: {point.y:.2f}'
                 },
                 plotOptions: {
                     spline: {
