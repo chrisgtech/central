@@ -49,7 +49,7 @@ function loadPatientObservations(ObservationData){
     });
     //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
     
-    $('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='sysDia'></div><div id='weightData'></div></div>");
+    $('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='sysDia'></div><div id='weightData'></div><div id='fat'></div></div>");
     //$('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='weightData'></div></div>");
     
     printObservationData(ObservationData);
@@ -83,35 +83,48 @@ function plotChart(){
 //        'interpretation' : [],
 //        'types_of_observations' : []
 //    };
-    var wgtData = [];
-    var sysData = [];
-    var diaData = [];
+    
+    
+    
     var singleData = [];
+
     var systitle;
-    var diatitle;
     var sysunits;
-    var wgtUnits;
+    var sysData = [];
+
+    var diatitle;
+    var diaData = [];
+    
     var wgtTitle;
+    var wgtUnits;
+    var wgtData = [];
+
+    var triTitle;
+    var triUnits;
+    var triData = [];
+
+    var choTitle;
+    var choData = [];
+
+    var ldlTitle;
+    var ldlData = [];
+
+    var hdlTitle;
+    var hdlData = [];
+    //start to separate out the graphable functions
     $.each(obs, function(o, observation) {
-        //if observation has an interpretation, push it in the interpretation member
+        //we will have to take care of the interpreted tests.
         if(typeof observation.content.interpretation !== 'undefined')  {
 //            graphableObsStore['interpretation'].push(observation);
         } 
+        //this begins the graphable vitals and tests.
         else if (observation.content.name.coding[0].display === "Systolic Blood Pressure")
         {
-            //Grab the obersvation display name (lower casing to prevent case sensitive errors)
             var display = observation.content.name.coding[0].display.toLowerCase();
-            //If this display is not in our array of types, add it and create a new empty array member in the 'Store'
-//            if(graphableObsStore['types_of_observations'].indexOf(display) === -1){
-//                  graphableObsStore['types_of_observations'].push(display);
-//                  graphableObsStore[display] = [];
-//            }
             singleData.push(observation.content.issued.valueOf());
             singleData.push(observation.content.valueQuantity.value);
-            //Push the observation in the appropriate member array
             sysData.push(singleData);
             singleData = [];
-            //graphableObsStore[display].push(observation);
             systitle = observation.content.name.coding[0].display;
             sysunits = observation.content.valueQuantity.units;
             
@@ -124,29 +137,59 @@ function plotChart(){
             diaData.push(singleData);
             singleData = [];
             diatitle = observation.content.name.coding[0].display;
-            
-            
         }
         else if (observation.content.name.coding[0].display === "Weight")
         {
-
             singleData.push(observation.content.issued.valueOf());
             singleData.push(observation.content.valueQuantity.value);
             wgtData.push(singleData);
             singleData = [];
             wgtTitle = observation.content.name.coding[0].display;
             wgtUnits = observation.content.valueQuantity.units;
-            
         }
-//
+        else if (observation.content.name.coding[0].display === "Triglyceride")
+        {
+            singleData.push(observation.content.issued.valueOf());
+            singleData.push(observation.content.valueQuantity.value);
+            triData.push(singleData);
+            singleData = [];
+            triTitle = observation.content.name.coding[0].display;
+            triUnits = observation.content.valueQuantity.units;
+        }
+        else if (observation.content.name.coding[0].display === "Total cholesterol")
+        {
+            singleData.push(observation.content.issued.valueOf());
+            singleData.push(observation.content.valueQuantity.value);
+            choData.push(singleData);
+            singleData = [];
+            choTitle = observation.content.name.coding[0].display;
+        }
+        else if (observation.content.name.coding[0].display === "LDL")
+        {
+            singleData.push(observation.content.issued.valueOf());
+            singleData.push(observation.content.valueQuantity.value);
+            ldlData.push(singleData);
+            singleData = [];
+            ldlTitle = observation.content.name.coding[0].display;
+        }
+        else if (observation.content.name.coding[0].display === "HDL")
+        {
+            singleData.push(observation.content.issued.valueOf());
+            singleData.push(observation.content.valueQuantity.value);
+            hdlData.push(singleData);
+            singleData = [];
+            hdlTitle = observation.content.name.coding[0].display;
+        }
+
        
     });
-    graphit("#sysDia", systitle,sysData,sysunits,diatitle,diaData,"","");
-    graphit("#weightData",wgtTitle,wgtData,wgtUnits,"","","","");
+    graphit("#sysDia",      systitle,   sysData,    sysunits,   diatitle,   diaData,    "",         "",         "",         "");
+    graphit("#weightData",  wgtTitle,   wgtData,    wgtUnits,   "",         "",         "",         "",         "",         "");
+    graphit("#fat",         triTitle,   triData,    triUnits,choTitle,      choData,    ldlTitle,   ldlData,    hdlTitle,   hdlData);
     
 }
     
-function graphit(jclass,title1,Data1,units,title2,Data2,title3,Data3)
+function graphit(jclass,title1,Data1,units,title2,Data2,title3,Data3,title4,Data4)
 {
     var fulltitle;
     if (title2 !== ""){
@@ -156,6 +199,7 @@ function graphit(jclass,title1,Data1,units,title2,Data2,title3,Data3)
         fulltitle = title1;
     }
 
+//create the series object (up to 4 series on the same graph)
 var allSeries=[];
 
 function dataset() {
@@ -183,6 +227,14 @@ if (title3 !== "")
     dataset3.name = title3;
     dataset3.data = Data3;
     allSeries.push(dataset3);
+}
+
+if (title4 !== "")
+{
+    var dataset4 = new dataset();
+    dataset4.name = title4;
+    dataset4.data = Data4;
+    allSeries.push(dataset4);
 }
 
 
@@ -228,15 +280,5 @@ if (title3 !== "")
                     }
                 },
                 series: allSeries
-//                 [{
-//                     name: title1,
-//                     // Define the data points. All series have a dummy year
-//                     // of 1970/71 in order to be compared on the same x axis. Note
-//                     // that in JavaScript, months start at 0 for January, 1 for February etc.
-//                     data: sysData
-//                 }, {
-//                     name: title2,
-//                     data: diaData
-//                 }]
             });
 }
