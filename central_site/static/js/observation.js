@@ -18,7 +18,6 @@ function loadPatientObservations(ObservationData){
     var nav1 = document.createElement("div");
     nav1.className = "col-sm-12 Observ_btn";
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
-    
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='plot' class='btn Observ_btn '>Plot</button>";
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='observation' class='btn Observ_btn '>Raw</button>";
     $('#PatientDetailScreen #observations').append(nav1);
@@ -53,6 +52,7 @@ function loadPatientObservations(ObservationData){
     $('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='sysDia'></div><div id='weightData'></div></div>");
     //$('#PatientDetailScreen #observations').append("<div style='display: none;' id='plot_data' class='observation_container'><div id='weightData'></div></div>");
     
+    printObservationData(ObservationData);
 }
 
 function plotScreenToggle(btn){
@@ -118,21 +118,11 @@ function plotChart(){
         }
         else if (observation.content.name.coding[0].display === "Diastolic Blood Pressure")
         {
-            //Grab the obersvation display name (lower casing to prevent case sensitive errors)
             var display = observation.content.name.coding[0].display.toLowerCase();
-            //If this display is not in our array of types, add it and create a new empty array member in the 'Store'
-//            if(graphableObsStore['types_of_observations'].indexOf(display) === -1){
-//                  graphableObsStore['types_of_observations'].push(display);
-//                  graphableObsStore[display] = [];
-//            }
-            //var d = new Date();
-            //d = observation.content.issued;
             singleData.push(observation.content.issued.valueOf());
             singleData.push(observation.content.valueQuantity.value);
-            //Push the observation in the appropriate member array
             diaData.push(singleData);
             singleData = [];
-            //graphableObsStore[display].push(observation);
             diatitle = observation.content.name.coding[0].display;
             
             
@@ -142,10 +132,8 @@ function plotChart(){
 
             singleData.push(observation.content.issued.valueOf());
             singleData.push(observation.content.valueQuantity.value);
-            //Push the observation in the appropriate member array
             wgtData.push(singleData);
             singleData = [];
-            //graphableObsStore[display].push(observation);
             wgtTitle = observation.content.name.coding[0].display;
             wgtUnits = observation.content.valueQuantity.units;
             
@@ -153,14 +141,12 @@ function plotChart(){
 //
        
     });
-    //sysData = [[Date.UTC(2010,1,4),100],[Date.UTC(2010,1,5),110]];
-    //sysData = [[Date.UTC(2010,1,4),123],[Date.UTC(2010,1,5),115]];
-    graphit("#sysDia", systitle,diatitle,sysunits,sysData,diaData);
-    graphit("#weightData",wgtTitle,"",wgtUnits,wgtData,"");
+    graphit("#sysDia", systitle,sysData,sysunits,diatitle,diaData,"","");
+    graphit("#weightData",wgtTitle,wgtData,wgtUnits,"","","","");
     
 }
     
-function graphit(jclass,title1,title2,units,sysData,diaData)
+function graphit(jclass,title1,Data1,units,title2,Data2,title3,Data3)
 {
     var fulltitle;
     if (title2 !== ""){
@@ -169,6 +155,41 @@ function graphit(jclass,title1,title2,units,sysData,diaData)
     else{
         fulltitle = title1;
     }
+
+var allSeries=[];
+
+function dataset() {
+    this.name = "";
+    this.data =[];
+};
+
+
+var dataset1 = new dataset();
+dataset1.name = title1;
+dataset1.data = Data1;
+allSeries.push(dataset1);
+
+if (title2 !== "")
+{
+    var dataset2 = new dataset();
+    dataset2.name = title2;
+    dataset2.data = Data2;
+    allSeries.push(dataset2);
+}
+
+if (title3 !== "")
+{
+    var dataset3 = new dataset();
+    dataset3.name = title3;
+    dataset3.data = Data3;
+    allSeries.push(dataset3);
+}
+
+
+
+
+
+
     $(jclass).highcharts({
                 chart: {
                     type: 'spline'
@@ -206,15 +227,16 @@ function graphit(jclass,title1,title2,units,sysData,diaData)
                         }
                     }
                 },
-                series: [{
-                    name: title1,
-                    // Define the data points. All series have a dummy year
-                    // of 1970/71 in order to be compared on the same x axis. Note
-                    // that in JavaScript, months start at 0 for January, 1 for February etc.
-                    data: sysData
-                }, {
-                    name: title2,
-                    data: diaData
-                }]
+                series: allSeries
+//                 [{
+//                     name: title1,
+//                     // Define the data points. All series have a dummy year
+//                     // of 1970/71 in order to be compared on the same x axis. Note
+//                     // that in JavaScript, months start at 0 for January, 1 for February etc.
+//                     data: sysData
+//                 }, {
+//                     name: title2,
+//                     data: diaData
+//                 }]
             });
 }

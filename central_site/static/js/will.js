@@ -20,18 +20,18 @@ function printObservationData(ObservationData){
     function(e,Data){
            console.log("arrayvalue:"+e);
            console.log("    "+Data.content.resourceType);
-           console.log("        "+Data.content.issued);
-           console.log("             "+Data.content.name.coding[0].display);
-           console.log("                 "+Data.content.name.coding[0].code);
+           console.log("    "+Data.content.issued);
+           console.log("    "+Data.content.name.coding[0].display);
+           console.log("    "+Data.content.name.coding[0].code);
        try{
-           console.log("                    "+Data.content.valueQuantity.value);
-           console.log("                        "+Data.content.valueQuantity.units);
-           console.log("                            "+Data.content.valueQuantity.interpretation)
+           console.log("    "+Data.content.valueQuantity.value);
+           console.log("    "+Data.content.valueQuantity.units);
+           console.log("    "+Data.content.valueQuantity.interpretation)
        }
        catch(e)
        {
-           console.log("                    "+"NOVALUE");
-           console.log("                        "+"NODATA");
+           console.log("    "+"NOVALUE");
+           console.log("    "+"NODATA");
        }
        });
 }
