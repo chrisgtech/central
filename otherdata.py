@@ -55,10 +55,62 @@ def loadlabs(labsfile):
             labs[patientid].append(summary)
             
     return labs
-        
+    
+def addfakelabs(vitals, labs):
+    for id in vitals:
+        patient = vitals[id]
+        if not patient:
+            continue
+        trends = []
+        dates = {}
+        for vital in patient:
+            weight = float(vital['Weight'])
+            date = vital['Encounter_Date']
+            trends.append(weight)
+            dates[date] = weight
+        avg = sum(trends) / float(len(trends))
+        #range = max(trends) - min(trends)
+        #print range
+        datediffs = {}
+        for date, weight in dates.items():
+            weightmod = weight / avg
+            if weightmod > 1:
+                weightmod *= 1.05
+            else:
+                weightmod *= 0.95
+            datediffs[date] = weightmod
+            
+        patient = labs.get(id)
+        reallabs = {}
+        for lab in patient:
+            type = lab['Result_Name']
+            if not type == 'HDL' and not type == 'LDL' and not type == 'Triglyceride' and not type == 'Total cholesterol':
+                continue
+            if not type in reallabs:
+                reallabs[type] = []
+            reallabs[type].append(lab)
+            
+        fakes = []
+        for type, reals in reallabs.items():
+            for date, diff in datediffs.items():
+                real = random.choice(reals)
+                realresult = float(real['Numeric_Result'])
+                fakeresult = realresult * diff
+                fake = dict(real)
+                fake['Date_Collected'] = date
+                fake['Date_Resulted'] = date
+                fake['Numeric_Result'] = int(fakeresult)
+                fakes.append(fake)
+                
+        for fake in fakes:
+            patient.append(fake)
+            
 def loadall():
     vitals = loadvitals('data/vital_sign.csv')
     labs = loadlabs('data/lab_results.csv')
+    
+    addfakelabs(vitals, labs)
+    
     allids = list(vitals.keys())
     for id in labs.keys():
         if not id in allids:
