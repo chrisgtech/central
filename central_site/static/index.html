@@ -62,18 +62,20 @@
                         </span>
                     </div><!-- /input-group -->
                 </div>
-                <span class="glyphicon glyphicon-question-sign" id="main-help" onclick="mainHelp();"></span>
+                <span class="glyphicon glyphicon-question-sign mainHelp" id="main-help" onclick="mainHelp();" data-bootstro-step="4" data-bootstro-placement="bottom"
+                      data-bootstro-content="You can always click the question mark to restart this section of the tutorial if you have any questions."></span>
             </div>
         </div>
 
-        <div id="patient_card_container">
+        <div id="patient_card_container" class="mainHelp" data-bootstro-step="3" data-bootstro-placement="left" data-bootstro-title="Patient Card" data-bootstro-content="Stuff about patient cards">
             <img id="dashboard_loading_img" src='img/ajax-loader.gif' alt='Loading...' />
             <div class="patient_card_scroll">
             </div>
         </div>
         <div class="dashboard_nav row" style="display: block;">
             <div class="btn-group btn-group-lg dropup col-sm-offset-1 col-sm-2">
-                <button type="button" class="btn btn-primary" onclick="openCheckInScreen();">Check In</button>
+                <button type="button" class="btn btn-primary mainHelp" onclick="openCheckInScreen();" data-bootstro-step="2" data-bootstro-placement="top" data-bootstro-title="Check In Button"
+                        data-bootstro-content="More text" data-bootstro-width="500px">Check In</button>
             </div>
             <div class="btn-group btn-group-lg dropup col-sm-2">
                 <button type="button" class="btn btn-primary" id="drugStore" onclick="openDrugScreen();" style="display:none;">Drugs</button>
@@ -216,7 +218,7 @@
         <div class="modal-dialog modal-lg patient_data_container">
             <div class="modal-content patient_data">
                 <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#PatientDetailScreen').modal('hide');"></span>
-                <span class="glyphicon glyphicon-question-sign" id="patient-detail-help" onclick="patientDetailHelp();"></span>
+                <span class="glyphicon glyphicon-question-sign patientHelp" id="patient-detail-help" onclick="patientDetailHelp();" data-bootstro-step="6" data-bootstro-placement="bottom" data-bootstro-content="Restart tutorial at any time"></span>
                 <div class="col-sm-2 patientHelp" style="height: 600px;" data-bootstro-step="0" data-bootstro-placement="right" data-bootstro-title="Title placeholder" data-bootstro-content="Content placeholder">
                     <!-- This section is the left side for Patient Demographics-->
                     <h5 class="col-sm-12" id="patient_detail_name">Patient Details</h5>
@@ -235,10 +237,10 @@
                     <div role="tabpanel">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#conditions" aria-controls="vitals" role="tab" data-toggle="tab">Conditions</a></li>
-                            <li role="presentation"><a href="#medication_container" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
-                            <li role="presentation"><a href="#observations" aria-controls="labs" role="tab" data-toggle="tab">Observations</a></li>
-                            <li role="presentation"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Contact Info</a></li>
+                            <li role="presentation" class="active patientHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-content="Conditions Label"><a href="#conditions" aria-controls="vitals" role="tab" data-toggle="tab">Conditions</a></li>
+                            <li role="presentation" class="patientHelp" data-bootstro-step="2" data-bootstro-placement="bottom" data-bootstro-content="Medications Label"><a href="#medication_container" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
+                            <li role="presentation" class="patientHelp" data-bootstro-step="3" data-bootstro-placement="bottom" data-bootstro-content="Observation Label"><a href="#observations" aria-controls="labs" role="tab" data-toggle="tab">Observations</a></li>
+                            <li role="presentation" class="patientHelp" data-bootstro-step="4" data-bootstro-placement="bottom" data-bootstro-content="Contact Label"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Contact Info</a></li>
                         </ul>
 
                         <!-- Tab panes -->
@@ -264,8 +266,8 @@
                         </div>
                     </div>
                 </div>
-                <a id="CheckOutButton" class="btn check_out" data-toggle="confirmation-popout" data-placement="top" data-original-title="" title="">
-                    <button type="button" class="btn btn-primary ">Discharge</button></a>
+                <a id="CheckOutButton" class="btn check_out patientHelp" data-toggle="confirmation-popout" data-placement="top" data-original-title="" title="" data-bootstro-step="5" data-bootstro-placement="top" data-bootstro-content="Quitting demo here activates the discharge button">
+                    <button type="button" class="btn btn-primary">Discharge</button></a>
             </div>
         </div>
     </div>
