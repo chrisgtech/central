@@ -215,29 +215,28 @@
             <div class="modal-content patient_data">
                 <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#PatientDetailScreen').modal('hide');"></span>
                 <span class="glyphicon glyphicon-question-sign" id="patient-detail-help" onclick="patientDetailHelp();"></span>
-                <div class="col-sm-3" style="height: 600px;">
+                <div class="col-sm-2" style="height: 600px;">
                     <!-- This section is the left side for Patient Demographics-->
-                    <h5 class="col-sm-8" id="patient_detail_name">Patient Details</h5>
-                    <h5 class="col-sm-4">Age: <label id="patient_detail_age"></label></h5>
+                    <h5 class="col-sm-12" id="patient_detail_name">Patient Details</h5>
+                    <h5 class="col-sm-12" style="display: none;">Age: <label id="patient_detail_age"></label></h5>
                     <img id="patient_detail_photo" src="img/no_photo.jpg"/> <br />
                     
                     <h4>Reason For Visit: </h4>
                     <div id="visit"></div>
                     
-                    <div style="position: absolute; bottom: 0px;">
-                    <span id="phone1_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone1"></label> <br/>
-                    <span id="phone2_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone2"></label> <br/>
-                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href=""><label style="cursor: pointer;" id="patient_detail_email"></label></a>
-                    </div>
+                    <label>Vitals</label>
+                    <label>Medications</label>
+                    <label>Observations</label>
 
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-10">
                     <div role="tabpanel">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active"><a href="#conditions" aria-controls="vitals" role="tab" data-toggle="tab">Conditions</a></li>
                             <li role="presentation"><a href="#medication_container" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
                             <li role="presentation"><a href="#observations" aria-controls="labs" role="tab" data-toggle="tab">Observations</a></li>
+                            <li role="presentation"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Contact Info</a></li>
                         </ul>
 
                         <!-- Tab panes -->
@@ -252,8 +251,15 @@
                             </div>
 
                             <div role="tabpanel" class="tab-pane" id="observations">Observations coming soon...</div>
+                            
+                            <div role="tabpanel" class="tab-pane" id="info">
+                                <div style="position: absolute; top: 70px; left: 45px;">
+                                    <span id="phone1_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone1"></label> <br/>
+                                    <span id="phone2_icon" class="glyphicon glyphicon-search" aria-hidden="true"></span> <label id="patient_detail_phone2"></label> <br/>
+                                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href=""><label style="cursor: pointer;" id="patient_detail_email"></label></a>
+                                </div>
+                            </div>
                         </div>
-
                     </div>
                 </div>
                 <a id="CheckOutButton" class="btn check_out" data-toggle="confirmation-popout" data-placement="top" data-original-title="" title="">
