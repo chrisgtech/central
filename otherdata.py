@@ -99,7 +99,7 @@ def addfakelabs(vitals, labs):
                 fake = dict(real)
                 fake['Date_Collected'] = date
                 fake['Date_Resulted'] = date
-                fake['Numeric_Result'] = int(fakeresult)
+                fake['Numeric_Result'] = str(int(fakeresult))
                 fakes.append(fake)
                 
         for fake in fakes:

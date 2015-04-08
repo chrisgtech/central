@@ -427,7 +427,7 @@ def createobservations(patient):
                 range['high'] = high = {}
                 low['units'] = subrecord['Units']
                 high['units'] = subrecord['Units']
-                print '%s: %s' % (coding['display'], quantity['value'])
+                #print '%s: %s' % (coding['display'], quantity['value'])
                 if coding['display'] == "Body Temperature":
                     low['value'] = 97.0
                     high['value'] = 99.0
@@ -466,6 +466,8 @@ def createobservations(patient):
                 elif coding['display'] == "Triglyceride":
                     low['value'] = 50.0
                     high['value'] = 200.0
+                else:
+                    observation.pop('referenceRange', None)
             else:
                 observation['interpretation'] = {'coding':[{}]}
                 interpretation = observation['interpretation']['coding'][0]
