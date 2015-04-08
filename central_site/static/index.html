@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/bootstro.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     </head>
@@ -49,12 +50,13 @@
             <div class="row">
                 <div class="col-sm-9">
                     <div class="user_card">
-                        <label style="color: #fff; font-size: 18px;">Welcome Dr. Frankenstein</label>
+                        <label style="color: #fff; font-size: 18px;" class="mainHelp" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-content="Content Test" data-bootstro-title="This is a title">Welcome Dr. Frankenstein</label>
                     </div>
                 </div>
                 <div class="search_block col-sm-3">
                     <div class="input-group">
-                        <input id="Patient_Search" type="text" class="form-control" placeholder="Search for...">
+                        <input id="Patient_Search" class="mainHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-content="Content placeholder" data-bootstro-title="Title placeholder"
+                               type="text" class="form-control" placeholder="Search for...">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
@@ -215,7 +217,7 @@
             <div class="modal-content patient_data">
                 <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#PatientDetailScreen').modal('hide');"></span>
                 <span class="glyphicon glyphicon-question-sign" id="patient-detail-help" onclick="patientDetailHelp();"></span>
-                <div class="col-sm-2" style="height: 600px;">
+                <div class="col-sm-2 patientHelp" style="height: 600px;" data-bootstro-step="0" data-bootstro-placement="right" data-bootstro-title="Title placeholder" data-bootstro-content="Content placeholder">
                     <!-- This section is the left side for Patient Demographics-->
                     <h5 class="col-sm-12" id="patient_detail_name">Patient Details</h5>
                     <h5 class="col-sm-12" style="display: none;">Age: <label id="patient_detail_age"></label></h5>
@@ -277,6 +279,7 @@
     <script src="js/vendor/jquery-1.11.1.min.js"></script>
     <script src="js/vendor/bootstrap.min.js"></script>
     <script src="js/vendor/bootstrap-confirmation.js"></script>
+    <script src="js/bootstro.js"></script>
     <script src="js/vendor/highcharts.js"></script>
     <script src="js/vendor/exporting.js"></script>
     <script src="js/test.js"></script>

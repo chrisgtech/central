@@ -6,7 +6,6 @@ time.setHours(8,0,0);
 
 var globData;
 
-
 $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
     //openFDAtest();
@@ -449,11 +448,11 @@ function getAllRecords(option, array){
 }
 
 function mainHelp() {
-    alert('Main help');
+    bootstro.start('.mainHelp');
 }
 
 function patientDetailHelp() {
-    alert('Patient Detail help');
+    bootstro.start('.patientHelp');
 }
 
 function checkInHelp() {
