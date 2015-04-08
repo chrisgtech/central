@@ -448,3 +448,14 @@ function getAllRecords(option, array){
     
 }
 
+function mainHelp() {
+    alert('Main help');
+}
+
+function patientDetailHelp() {
+    alert('Patient Detail help');
+}
+
+function checkInHelp() {
+    alert('Check In Help');
+}

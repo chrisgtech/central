@@ -60,6 +60,7 @@
                         </span>
                     </div><!-- /input-group -->
                 </div>
+                <span class="glyphicon glyphicon-question-sign" id="main-help" onclick="mainHelp();"></span>
             </div>
         </div>
 
@@ -96,9 +97,10 @@
         <div class="modal-dialog modal-lg patient_data_container"">
             <img id="checkin_search_loading" style="position: fixed; z-index: 10; left: 0; right: 0; display: none;" class='patient_detail_loading' src='img/loading.gif' alt='Loading'/>
             <div class="modal-content patient_data">
-                <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer;" onclick="$('#CheckInScreen').modal('hide');"></span>
+                <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#CheckInScreen').modal('hide');"></span>
+                <span class="glyphicon glyphicon-question-sign" style="float: right; cursor: pointer; font-size: 18px;" id="check-in-help" onclick="checkInHelp();"></span>
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <h4>Check In</h4>
                     </div>
                     <div class="search_block col-sm-4">
@@ -211,6 +213,8 @@
     <div id="PatientDetailScreen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg patient_data_container">
             <div class="modal-content patient_data">
+                <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#PatientDetailScreen').modal('hide');"></span>
+                <span class="glyphicon glyphicon-question-sign" id="patient-detail-help" onclick="patientDetailHelp();"></span>
                 <div class="col-sm-3" style="height: 600px;">
                     <!-- This section is the left side for Patient Demographics-->
                     <h5 class="col-sm-8" id="patient_detail_name">Patient Details</h5>

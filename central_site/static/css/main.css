@@ -151,6 +151,25 @@ body {
     cursor: pointer;
 }
 
+#main-help {
+  position: absolute;
+  top: -20px;
+  right: 10px;
+  color: #FFF;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#patient-detail-help {
+  position: absolute;
+  right: 35px;
+  top: 10px;
+  color: black;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+}
+
 /****************Patient Detail Section*****************/
 
 #patient_detail_photo {
