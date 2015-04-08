@@ -1,18 +1,18 @@
-
+//GLOBAL VARIABLES AND INITIALIZATIONS
 //set up the time variables for the appointments
 var time = new Date();
 var inc_time = 30 * 60000; 
-//inc_time.setHours(0,15,0);
 time.setHours(8,0,0);
+
+var globData;
+
 
 $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
+    //openFDAtest();
     $('body').on('click', '.patient_card', function (x) {
-        /*Need to clear out the Detail Screen first*/
-        //TODO: clearDetailScreen()
-           
         loadPatientDetails(this);
-        //.modal is the 
+        //.modal is the popup screen
         $('#PatientDetailScreen').modal();
     });
     $('#drugStore').data("inventory", {});
@@ -23,28 +23,32 @@ $(document).ready(function () {
         onConfirm : checkPatientOut
     });
     
-    /*
-    var num_of_patients = parseInt(Math.random()*100%15);
+    //Picks a random number of patients between 5-20 count
+    // and adds a random index of the patient to an array
+    var num_of_patients = parseInt(Math.random()*100%15) + 5;
     var patient_index = [];
     while(patient_index.length < num_of_patients){
-        var index = parseInt(Math.random()*100%100) + 4;
+        var index = parseInt(Math.random()*100%100);
         if(patient_index.indexOf(index) === -1) {
             patient_index.push(index);
         }
     }
-    getPatients({
-        _count: 15,
-        _skip : 4
-    });*/
-    appointStartTime.setHours(8,0,0); //appointments start at 8 am. (HH,MM,SS) 
-    $.each(PresentationPatients, function(p, patient){
-       getPatientData('Patient' , { _id : patient.split('/')[1] }, function(data){
+    //Uses the randomly generated array of patient indicies to fetch
+    $.each(patient_index, function(i, index){
+       getPatientData('Patient' , { _count : 1, _skip: index }, function(data){
            if(data.totalResults > 0) {
                 parsePatientData(data);
             }
        });
     });
     
+    
+    /*getPatientData('Patient' , { _count: 15,
+        _skip : 4 }, function(data){
+           if(data.totalResults > 0) {
+                parsePatientData(data);
+            }
+       });*/
 });
 
 /*
@@ -80,12 +84,9 @@ function patientSearch() {
  */
 
 function parsePatientData(data) {
-    
-    //set up the time variables for the appointments
-    
-    var inc_time = 30 * 60000; // appointments are spaced 30 minutes apart 
+    globda = data;
 
-    var options = {hour: "numeric", minute: "numeric"};
+    var options = {hour: "numeric", minute: "numeric"}; //options for time 
     
     //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
@@ -125,10 +126,10 @@ function parsePatientData(data) {
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
         reason_for_visit.innerHTML = reasonForVisit;
         
-        var newtime = new Intl.DateTimeFormat("en-US", options).format(appointStartTime);
+        var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
         time = new Date(time.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
@@ -238,14 +239,6 @@ function loadPatientDetails(card) {
                 getPatientData(option, param, processDrugs);
             } else {
                 $(card).data(option + 'Data', array);
-                //HotFix for old medication dates
-                if(option === 'MedicationPrescription'){
-                    //Adding 5 years to Dates and order by desc
-                    $.each(array, function(i, item) {
-                        var temp = new Date(item.content.dateWritten);
-                        array[i].content.dateWritten  = new Date(temp.setFullYear(temp.getFullYear() + 5));
-                    });
-                }
                 dataSwitch(option, array);
             }
         };
@@ -315,20 +308,6 @@ function loadMedicationDetails(medId){
 }
 
 
-/*
- * Author: Michael
- * Date: 03/18/2015
- * Purpose: Open and clear out the Check In Screen
- */
-function openCheckInScreen() {
-    clearCheckInScreen();
-    $('#CheckInScreen').modal();
-}/*
- * Clears the Check In Screen
- */
-function clearCheckInScreen() {
-    $('#CheckInScreen input, #CheckInScreen textarea').val('');
-}
 
 function openPlotScreen() {
     $('#PatientDetailScreen #observations').empty();
@@ -343,10 +322,8 @@ function openPlotScreen() {
     
     var el = document.createElement("div");
     el.className = "col-sm-12";
-    el.innerHTML +="<row></row>";
-    //el.innerHTML += "<canvas id='myChart' width='725' height='400'></canvas>";  
+    el.innerHTML +="<row></row>";  
     $('#PatientDetailScreen #observations').append(el);
-    createChart();
 }
 
 function dummyLoadPatientObservations(){
@@ -471,3 +448,14 @@ function getAllRecords(option, array){
     
 }
 
+function mainHelp() {
+    alert('Main help');
+}
+
+function patientDetailHelp() {
+    alert('Patient Detail help');
+}
+
+function checkInHelp() {
+    alert('Check In Help');
+}

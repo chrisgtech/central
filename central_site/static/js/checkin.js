@@ -10,13 +10,13 @@ function wlt_getPatient(psearch) {
         //TODO: Find out what all parameters we can send over
         success: function (data) {
             globData = data;
-            if (globData.totalResults > 0){
-            wlt_placeData(data);
+            $('#checkin_search_loading').hide();
+            if (data.totalResults > 0){
+                wlt_placeData(data);
             }
             else{
                 alert("No records were returned with that name");
-                clearPatient();
-                
+                clearCheckInScreen();
             }
             
         }
@@ -70,6 +70,7 @@ function checkSearchKeyPress(event){
     var key = event.keyCode;
     if (event.keyCode === 13) ///parseInt()
     {
+        $('#checkin_search_loading').show();
         wlt_searchClicked();
     }
     
@@ -77,6 +78,7 @@ function checkSearchKeyPress(event){
 
 function fillInSinglePatient(singlePatient)
 {
+    $('#CheckInScreen').data(singlePatient);
     $('#check_in_first_name').val(singlePatient.name[0].given[0]);
     $('#check_in_middle_name').val(singlePatient.name[0].given[1]);
     $('#check_in_last_name').val(singlePatient.name[0].family[0]);
@@ -113,24 +115,33 @@ function fillInSinglePatient(singlePatient)
     $('#check_in_gender').val(singlePatient.gender.coding[0].code);
 
     } 
-function clearPatient()
-{
-    $('#check_in_first_name').val("");
-    $('#check_in_middle_name').val("");
-    $('#check_in_last_name').val("");
-
-    $('#check_in_dob').val("");
-     
-    $('#check_in_street').val("");
-    $('#check_in_city').val("");
-    $('#check_in_state').val("");
-    $('#check_in_zip').val("");
     
-    $('#check_in_number_home').val("");
-    $('#check_in_number_mobile').val("");
-    $('#check_in_number_work').val("");
-    $('#check_in_email').val("");
-       
-     $('#check_in_gender').val('');
+  
+/*
+ * Author: Michael
+ * Date: 03/18/2015
+ * Purpose: Open and clear out the Check In Screen
+ */
+function openCheckInScreen() {
+    clearCheckInScreen();
+    $('#CheckInScreen').modal();
+}
 
-    }
+/*
+ * Author: Michael
+ * Date: 4-3-15
+ * Purpose: Checks a patient in and adds them to the scroll container
+ */
+function checkPatientIn(){
+    console.log({ entry : [ {content : $('#CheckInScreen').data()}]});
+    parsePatientData({ entry : [ {content : $('#CheckInScreen').data()}]});
+    $('#CheckInScreen').modal('hide');
+}
+
+
+/*
+ * Clears the Check In Screen
+ */
+function clearCheckInScreen() {
+    $('#CheckInScreen input, #CheckInScreen textarea').val('');
+}
