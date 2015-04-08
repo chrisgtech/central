@@ -456,5 +456,5 @@ function patientDetailHelp() {
 }
 
 function checkInHelp() {
-    alert('Check In Help');
+    bootstro.start('.checkInHelp');
 }

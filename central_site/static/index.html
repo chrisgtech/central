@@ -17,7 +17,7 @@
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     </head>
-    <body>
+    <body onload="mainHelp();">
     <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -102,12 +102,13 @@
             <img id="checkin_search_loading" style="position: fixed; z-index: 10; left: 0; right: 0; display: none;" class='patient_detail_loading' src='img/loading.gif' alt='Loading'/>
             <div class="modal-content patient_data">
                 <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#CheckInScreen').modal('hide');"></span>
-                <span class="glyphicon glyphicon-question-sign" style="float: right; cursor: pointer; font-size: 18px;" id="check-in-help" onclick="checkInHelp();"></span>
+                <span class="glyphicon glyphicon-question-sign checkInHelp" style="float: right; cursor: pointer; font-size: 18px;" id="check-in-help" onclick="checkInHelp();"
+                      data-bootstro-step="4" data-bootstro-placement="bottom" data-bootstro-content="You can restart this content tutorial at any time by clicking on the question mark."></span>
                 <div class="row">
-                    <div class="col-sm-7">
+                    <div class="col-sm-7 checkInHelp" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-title="CheckIn Tutorial" data-bootstro-content="General stuff about check in screen">
                         <h4>Check In</h4>
                     </div>
-                    <div class="search_block col-sm-4">
+                    <div class="search_block col-sm-4 checkInHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-content="Talk about how the search pulls records">
                         <div class="input-group">
                             <input id="Check_In_Patient_Search" onkeypress="checkSearchKeyPress(event)" type="text" class="form-control" placeholder="Search for...">
                             <span class="input-group-btn">
@@ -174,8 +175,9 @@
                     <textarea class="col-sm-9" rows="4"></textarea>
                 </div>
                 <div class="row" style="margin: 40px 0px;">
-                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3" onclick="checkPatientIn()">Check In</button>
-                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-2" onclick="clearCheckInScreen();">Clear</button>
+                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3 checkInHelp" onclick="checkPatientIn()" data-bootstro-step="2" data-bootstro-placement="top" data-bootstro-content="Check in button">Check In</button>
+                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-2 checkInHelp" onclick="clearCheckInScreen();" 
+                            data-bootstro-step="3" data-bootstro-placement="top" data-bootstro-content="Clear screen button">Clear</button>
                 </div>
             </div>
         </div>
