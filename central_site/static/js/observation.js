@@ -441,7 +441,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
             min: 0,
 
             plotBands: [{
-                color: '#E4F0E6',
+                color: '#C4F0C4',
                 from: lowVal1,
                 to: highVal1,
                 label: {
@@ -451,7 +451,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
                     y: -3
                 }
             }, {
-                color: '#E4F0E6',
+                color: '#C4F0C4',
                 from: lowVal2,
                 to: highVal2,
                 label: {
@@ -461,7 +461,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
                     y: -3
                 }
             }, {
-                color: '#E4F0E6',
+                color: '#C4F0C4',
                 from: lowVal3,
                 to: highVal3,
                 label: {
@@ -471,7 +471,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
                     y: -3
                 }
             }, {
-                color: '#E4F0E6',
+                color: '#C4F0C4',
                 from: lowVal4,
                 to: highVal4,
                 label: {
