@@ -295,12 +295,21 @@ function graphDataset() {
     
 function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDataset4)
 {
+    //set the title of the graph based on the number of passed variables
     var fulltitle;
-    if (graphDataset2){
+    if(graphDataset4){
+        fulltitle = graphDataset1.title + " and " + graphDataset2.title 
+                + " and " + graphDataset3.title + " and " + graphDataset4.title;
+    }
+    else if(graphDataset3){
+        fulltitle = graphDataset1.title + " and " + graphDataset2.title + " and " + graphDataset3.title;
+    }
+    
+    else if (graphDataset2){
         fulltitle = graphDataset1.title + " and " + graphDataset2.title;
     }
     else{
-        fulltitle = graphDataset.title;
+        fulltitle = graphDataset1.title;
     }
 
 //create the series object (up to 4 series on the same graph)
