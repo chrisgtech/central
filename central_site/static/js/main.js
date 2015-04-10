@@ -305,6 +305,7 @@ function loadMedicationDetails(medId){
     $('.' + medId + '.rxnorm').html("Rxnorm: " + drugObj.entry[0].content.code.coding[0].code);
     $('.' + medId + '.brand').html("Brand: " + (drugObj.entry[0].content.isBrand ? 'Y' : 'N'));
     $('.' + medId + '.form').html("Form: " + drugObj.entry[0].content.product.form.text);
+    $('.' + medId + '.fda').addClass(drugObj.entry[0].content.code.coding[0].code);
 }
 
 

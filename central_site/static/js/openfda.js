@@ -50,22 +50,25 @@ function continueToOpenFDAfetch(rxNorm) {
                 //Add the FDA data to Cheryl's store
                 $("#openfdalabeldrugStore").data("inventory")[rxNorm] = drug;
                 //Step 3b
-                parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm]);
+                parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
             }
         );
     } else {
         //Steb 3a
-        parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm]);
+        parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
     }
     
 }
 
-function parseMedationOpenFDA(data){
+var test = 0;
+function parseMedationOpenFDA(data, rxNorm){
     
     
     console.log("We gots some stuff!!!");
     console.log(data);
+    globFDA = data;
     
+    $('.fda.' + rxNorm).html("Hello Cheryl " + (test++));
     /*
      * 
      * 
