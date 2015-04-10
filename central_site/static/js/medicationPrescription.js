@@ -72,7 +72,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
                 anchor.setAttribute("aria-controls", "collapse" + i);
                 
                 var panel_collapse = document.createElement("div");
-                panel_collapse.className = "panel-collapse collapse " + (i === 0? "in": "");
+                panel_collapse.className = "panel-collapse collapse";
                 panel_collapse.setAttribute("id", "collapse" + i);
                 panel_collapse.setAttribute("role", "tabpanel");
                 panel_collapse.setAttribute("aria-labelledby", "heading" + i);

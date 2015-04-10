@@ -78,6 +78,7 @@ body {
     /*width: 125px;
     position: absolute;
     top: 15px;*/
+    max-width: 300px;
 }
 
 .card_demographic {
