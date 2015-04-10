@@ -136,7 +136,7 @@ body {
 }
 
 .dashboard_nav .btn-primary:not(.dropdown-toggle) {
-    min-width: 125px;
+    min-width: 0px; // originally set to 125px, James changed to accomodate erratic behavior on step 3 of mainHelp function.
 }
 
 .tab-content {
