@@ -15,6 +15,7 @@ $(document).ready(function () {
         $('#PatientDetailScreen').modal();
     });
     $('#drugStore').data("inventory", {});
+    $('#openfdalabeldrugStore').data("inventory", {});
     $('#Patient_Search').on('keyup', patientSearch);
     $('#CheckOutButton').confirmation(
     {

@@ -83,6 +83,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
                                 
                 var el = document.createElement("div");
                 el.className = "col-sm-12 drug_card";
+                el.setAttribute("onclick","loadMedicationOpenFDALabel('" + medId + "')");
                 el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
 
                 el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString() 
@@ -103,7 +104,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
                         function(drug){
                             $("#drugStore").data("inventory")[medId] = drug;
                             loadMedicationDetails(medId);
-                        });
+                    });
                 } else {
                     setTimeout(function() { loadMedicationDetails(medId);}, 500);
                 }
