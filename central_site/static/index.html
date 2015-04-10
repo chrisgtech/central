@@ -110,10 +110,12 @@
                 <span class="glyphicon glyphicon-question-sign checkInHelp" style="float: right; cursor: pointer; font-size: 18px;" id="check-in-help" onclick="checkInHelp();"
                       data-bootstro-step="4" data-bootstro-placement="bottom" data-bootstro-content="You can restart this content tutorial at any time by clicking on the question mark."></span>
                 <div class="row">
-                    <div class="col-sm-7 checkInHelp" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-title="CheckIn Tutorial" data-bootstro-content="General stuff about check in screen">
+                    <div class="col-sm-7 checkInHelp" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-title="Check In Tutorial" data-bootstro-content="The Check In screen provides you the ability to
+                         update an existing patient record and add it to your patient card list.">
                         <h4>Check In</h4>
                     </div>
-                    <div class="search_block col-sm-4 checkInHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-content="Talk about how the search pulls records">
+                    <div class="search_block col-sm-4 checkInHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-title="Search Box" data-bootstro-content="Enter a single letter to search for a patient
+                          record. Selecting a record will populate the screen with that patient's data.">
                         <div class="input-group">
                             <input id="Check_In_Patient_Search" onkeypress="checkSearchKeyPress(event)" type="text" class="form-control" placeholder="Search for...">
                             <span class="input-group-btn">
@@ -180,9 +182,11 @@
                     <textarea class="col-sm-9" rows="4"></textarea>
                 </div>
                 <div class="row" style="margin: 40px 0px;">
-                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3 checkInHelp" onclick="checkPatientIn()" data-bootstro-step="2" data-bootstro-placement="top" data-bootstro-content="Check in button">Check In</button>
+                    <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3 checkInHelp" onclick="checkPatientIn()" data-bootstro-step="2" 
+                            data-bootstro-placement="top" data-bootstro-title="Commit" data-bootstro-content="Clicking Check In will commit any updates to the patient data, and will insert the patient record into
+                            your patient card screen.">Check In</button>
                     <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-2 checkInHelp" onclick="clearCheckInScreen();" 
-                            data-bootstro-step="3" data-bootstro-placement="top" data-bootstro-content="Clear screen button">Clear</button>
+                            data-bootstro-step="3" data-bootstro-placement="top" data-bootstro-title="Clear fields" data-bootstro-content="You can clear the data fields without committing a patient record.">Clear</button>
                 </div>
             </div>
         </div>
@@ -226,7 +230,8 @@
             <div class="modal-content patient_data">
                 <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#PatientDetailScreen').modal('hide');"></span>
                 <span class="glyphicon glyphicon-question-sign patientHelp" id="patient-detail-help" onclick="patientDetailHelp();" data-bootstro-step="6" data-bootstro-placement="bottom" data-bootstro-content="Restart tutorial at any time"></span>
-                <div class="col-sm-2 patientHelp" style="height: 600px;" data-bootstro-step="0" data-bootstro-placement="right" data-bootstro-title="Title placeholder" data-bootstro-content="Content placeholder">
+                <div class="col-sm-2 patientHelp" style="height: 600px;" data-bootstro-step="0" data-bootstro-placement="right" data-bootstro-title="Reason for Visit" data-bootstro-content="This area gives a physician a
+                     quick glance of why the patient is visiting that day.">
                     <!-- This section is the left side for Patient Demographics-->
                     <h5 class="col-sm-12" id="patient_detail_name">Patient Details</h5>
                     <h5 class="col-sm-12" style="display: none;">Age: <label id="patient_detail_age"></label></h5>
@@ -244,10 +249,15 @@
                     <div role="tabpanel">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active patientHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-content="Conditions Label"><a href="#conditions" aria-controls="vitals" role="tab" data-toggle="tab">Conditions</a></li>
-                            <li role="presentation" class="patientHelp" data-bootstro-step="2" data-bootstro-placement="bottom" data-bootstro-content="Medications Label" id="openfdalabeldrugStore"><a href="#medication_container" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
-                            <li role="presentation" class="patientHelp" data-bootstro-step="3" data-bootstro-placement="bottom" data-bootstro-content="Observation Label"><a href="#observations" aria-controls="labs" role="tab" data-toggle="tab">Observations</a></li>
-                            <li role="presentation" class="patientHelp" data-bootstro-step="4" data-bootstro-placement="bottom" data-bootstro-content="Contact Label"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Contact Info</a></li>
+                            <li role="presentation" class="active patientHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-title="Current Conditions" 
+                                data-bootstro-content="The conditions tab gives you visibility to the patient's list of chronic conditions."><a href="#conditions" aria-controls="vitals" role="tab" data-toggle="tab">Conditions</a></li>
+                            <li role="presentation" class="patientHelp" data-bootstro-step="2" data-bootstro-placement="bottom" data-bootstro-title="Medications" 
+                                data-bootstro-content="Medications tab provides a view of the patient's prescription history, including additional FDA detail." id="openfdalabeldrugStore"><a href="#medication_container" aria-controls="labs" role="tab" data-toggle="tab">Medications</a></li>
+                            <li role="presentation" class="patientHelp" data-bootstro-step="3" data-bootstro-placement="bottom" data-bootstro-title="Observations" 
+                                data-bootstro-content="Observations tab provides a view of the patient's observation records. The initial view is a raw view of data, but
+                                clicking on the plot button will provide a visual representation of the data."><a href="#observations" aria-controls="labs" role="tab" data-toggle="tab">Observations</a></li>
+                            <li role="presentation" class="patientHelp" data-bootstro-step="4" data-bootstro-placement="bottom" data-bootstro-title="Contact Info" 
+                                data-bootstro-content="The Contact Info tab provides a quick summary of patient contact data."><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Contact Info</a></li>
                         </ul>
 
                         <!-- Tab panes -->
