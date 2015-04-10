@@ -50,58 +50,82 @@ function continueToOpenFDAfetch(rxNorm) {
                 //Add the FDA data to Cheryl's store
                 $("#openfdalabeldrugStore").data("inventory")[rxNorm] = drug;
                 //Step 3b
-                parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
+                parseMedicationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
             }
         );
     } else {
         //Steb 3a
-        parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
+        parseMedicationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
     }
     
 }
 
-var test = 0;
-function parseMedationOpenFDA(data, rxNorm){
-    
-    
-    console.log("We gots some stuff!!!");
-    console.log(data);
+var outhtml = "";
+function parseMedicationOpenFDA(data, rxNorm){
     globFDA = data;
-    
-    $('.fda.' + rxNorm).html("Hello Cheryl " + (test++));
-    /*
-     * 
-     * 
-     * 
-     */
-    
-    
-    
-    /*var drugObj = $('#openfdalabeldrugStore').data('inventory')[medId];
-    $('.' + medId + '.product_type').html("Product Type: " + drugObj.results[0].openfda.product_type);
-    $('.' + medId + '.manufacturer_name').html("Manufacturer: " + drugObj.results[0].openfda.manufacturer_name);
-    $('.' + medId + '.brand_name').html("Brand Name: " + drugObj.results[0].openfda.brand_name);
-    $('.' + medId + '.generic_name').html("Generic Name: " + drugObj.results[0].openfda.generic_name);
 
+    $('.fda.' + rxNorm).html(MedicationOpenFDAtoHTML(data,rxNorm));
+}    
     
-    var description_body = document.createElement("div");
-    description_body.className = "description-body";
-    description_body.innerHTML = drugObj.results[0].description;
-    var dosage_body = document.createElement("div");
-    dosage_body.className = "dosage-body";
-    dosage_body.innerHTML = drugObj.results[0].dosage_and_administration_table;
-    var warnings_body = document.createElement("div");
-    warnings_body.className = "warnings-body";
-    warnings_body.innerHTML = drugObj.results[0].warnings;
-    var genprecautions_body = document.createElement("div");
-    genprecautions_body.className = "genprecautions-body";
-    genprecautions_body.innerHTML = drugObj.results[0].general_precautions;
-    var druginteractions_body = document.createElement("div");
-    druginteractions_body.className = "druginteractions-body";
-    druginteractions_body.innerHTML = drugObj.results[0].drug_interactions;
-    var adversereactions_body = document.createElement("div");
-    adversereactions_body.className = "adversereactions-body";
-    adversereactions_body.innerHTML = drugObj.results[0].adverse_reactions;*/
+function MedicationOpenFDAtoHTML(data,rxNorm){
+	outhtml = "<div class='col-sm-4'>Brand Name: " + data.results[0].openfda.brand_name  + "</div>"; 
+	outhtml += "<div class='col-sm-4'>Generic Name: " + data.results[0].openfda.generic_name  + "</div>"; 
+	outhtml += "<div class='col-sm-4'>Manufacturer: " + data.results[0].openfda.manufacturer_name  + "</div>";
+	
+	outhtml += "<br><div class='accordion' id='openfda2'>";
+	outhtml += "<div class='accordion-group'>";
+	outhtml += "<div class='accordion-heading'>";
+	outhtml += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#openfda2' href='#collapseOne'>Description</a>";
+	outhtml += "</div><div id='collapseOne' class='accordion-body collapse in'>";
+	outhtml += "<div class='accordion-inner'><br>";
+	outhtml +=  data.results[0].description === undefined ? 'No Description Information' : data.results[0].description;
+	outhtml += "<br><br></div></div></div>";
+	
+	outhtml += "<div class='accordion-group'>";
+	outhtml += "<div class='accordion-heading'>";
+	outhtml += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#openfda2' href='#collapseTwo'>Dosage/Adminstration Table</a>";
+	outhtml += "</div><div id='collapseTwo' class='accordion-body collapse in'>";
+	outhtml += "<div class='accordion-inner'><br>";
+	outhtml +=  data.results[0].dosage_and_administration_table === undefined ? 'No Dosage/Administration Table Information' : data.results[0].dosage_and_administration_table;
+	outhtml += "<br><br></div></div></div>";
+
+	outhtml += "<div class='accordion-group'>";
+	outhtml += "<div class='accordion-heading'>";
+	outhtml += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#openfda2' href='#collapseThree'>Warnings</a>";
+	outhtml += "</div><div id='collapseThree' class='accordion-body collapse in'>";
+	outhtml += "<div class='accordion-inner'><br>";
+	outhtml +=  data.results[0].warnings === undefined ? 'No Warning Information' : data.results[0].warnings;
+	outhtml += "<br><br></div></div></div>";
+
+	outhtml += "<div class='accordion-group'>";
+	outhtml += "<div class='accordion-heading'>";
+	outhtml += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#openfda2' href='#collapseFour'>General Precautions</a>";
+	outhtml += "</div><div id='collapseFour' class='accordion-body collapse in'>";
+	outhtml += "<div class='accordion-inner'><br>";
+	outhtml +=  data.results[0].general_precautions === undefined ? 'No General Precaution Information' : data.results[0].general_precautions;
+	outhtml += "<br><br></div></div></div>";
+
+	outhtml += "<div class='accordion-group'>";
+	outhtml += "<div class='accordion-heading'>";
+	outhtml += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#openfda2' href='#collapseFive'>Drug Interactions</a>";
+	outhtml += "</div><div id='collapseFive' class='accordion-body collapse in'>";
+	outhtml += "<div class='accordion-inner'><br>";
+	outhtml +=  data.results[0].drug_interactions === undefined ? 'No Drug Interaction Information' : data.results[0].drug_interactions;
+	outhtml += "<br><br></div></div></div>";
+
+	outhtml += "<div class='accordion-group'>";
+	outhtml += "<div class='accordion-heading'>";
+	outhtml += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#openfda2' href='#collapseSix'>Adverse Reactions</a>";
+	outhtml += "</div><div id='collapseSix' class='accordion-body collapse in'>";
+	outhtml += "<div class='accordion-inner'><br>";
+	outhtml +=  data.results[0].adverse_reactions === undefined ? 'No Adverse Reaction Information' : data.results[0].adverse_reactions;
+	outhtml += "<br><br></div></div></div>";
+
+    outhtml += "</div>";
+	
+	return(outhtml);
+
+
 }
 
 
