@@ -286,7 +286,7 @@ function loadPatientConditions(ConditionData){
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>"; 
         el.innerHTML += "<div class='col-sm-4'>Onset Date: " + item.content.onsetDate  + "</div>";
         el.innerHTML += "<div class='col-sm-4'>Status: " + item.content.status  + "</div>";
-        el.innerHTML += "<div class='col-sm-4'>SNOMED Code: " + item.content.code.coding.code + "</div>";
+        el.innerHTML += "<div class='col-sm-4'>SNOMED Code: " + item.content.code.coding[0].code + "</div>";
         $(el).data(item);
         patientConditionCount++;  // jc test data
         $('#PatientDetailScreen #conditions').append(el);
