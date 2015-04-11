@@ -17,6 +17,8 @@ function loadPatientObservations(ObservationData) {
     nav1.className = "col-sm-12 Observ_btn";
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='plot' class='btn Observ_btn '>Plot</button>";
+    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='tests' class='btn Observ_btn '>Tests</button>";
+    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='screenings' class='btn Observ_btn '>Screenings</button>";
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='observation' class='btn Observ_btn '>Raw</button>";
     $('#PatientDetailScreen #observations').append(nav1);
 
@@ -54,6 +56,14 @@ function loadPatientObservations(ObservationData) {
                 <div id='fat'></div> \
                 <div id='cholesterol'></div> \
             </div>");
+    
+    $('#PatientDetailScreen #observations').append(
+        "<div style='display: none;' id='tests_data' class='observation_container'> \
+            </div>");
+    
+    $('#PatientDetailScreen #observations').append(
+        "<div style='display: none;' id='screenings_data' class='observation_container'> \
+            </div>");
 
 
     //printObservationData(ObservationData);
@@ -61,23 +71,39 @@ function loadPatientObservations(ObservationData) {
 
 function plotScreenToggle(btn) {
     var container = $(btn).attr('data-container');
-    if (container === 'plot') {
+
+    if (container === 'tests') {
+        $('#observation_data').hide();
+        $('#plot_data').hide();
+        $('#screenings_data').hide();
+        $('#tests_data').hide();
+        var tests = organizeObs("tests");
+        }
+        
+    else if (container === 'screenings') {
+        $('#observation_data').hide();
+        $('#plot_data').hide();
+        $('#screenings_data').hide();
+        $('#tests_data').hide();
+        var screenings = organizeObs("screenings");
+        } 
+     
+    else if (container === 'observation') {
+        $('#observation_data').show();
+        $('#plot_data').hide();
+    }
+    else {
         $('#observation_data').hide();
         $('#plot_data').show();
         if ($('#sysDia').html() === '') {
             plotChart();
         }
-        //        if($('#weight').html() === ''){
-        //            plotChart();
-        //        }
-    } else {
-        $('#observation_data').show();
-        $('#plot_data').hide();
     }
-    organizeObs();
+    
+    
 }
 
-function organizeObs() {
+function organizeObs(testType) {
     //This function organizes all of the observation data into a data dictionary
     //that uses the observation code as the key.  The value associated with the
     //key is an array of objects that specify a given test or screening.
