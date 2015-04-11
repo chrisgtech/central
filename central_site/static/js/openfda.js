@@ -76,7 +76,6 @@ function MedicationOpenFDAtoHTML(data,rxNorm){
 
 	grpnum = 1;
 	[].forEach.call( Object.keys( data.results[0] ), function( key ){    
-	    console.log( key , data.results[0][key][0] );
 	    if (data.results[0][key][0] !== undefined) {
 	    	
 			outhtml += "<div class='accordion-group'>";
