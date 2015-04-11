@@ -72,17 +72,17 @@ function MedicationOpenFDAtoHTML(data,rxNorm){
 	outhtml += "<div class='col-sm-4'>Generic Name: " + data.results[0].openfda.generic_name  + "</div>"; 
 	outhtml += "<div class='col-sm-4'>Manufacturer: " + data.results[0].openfda.manufacturer_name  + "</div>";
 	
-	outhtml += "<br/><br/><div class='accordion' id='openfda2'>";
+	outhtml += "<br/><br/><div class='accordion' id='openfda"+rxNorm+"'>";
 
 	grpnum = 1;
 	[].forEach.call( Object.keys( data.results[0] ), function( key ){    
 	    if (data.results[0][key][0] !== undefined) {
 	    	
-			outhtml += "<div class='accordion-group'>";
-			outhtml += "<div class='accordion-heading'>";
-			outhtml += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#openfda2' href='#collapse" + grpnum + "'>" + key + "</a>";
-			outhtml += "</div><div id='collapse" + grpnum + "' class='accordion-body collapse'>";
-			outhtml += "<div class='accordion-inner'><br>";
+			outhtml += "<div class='accordion-group"+rxNorm+"'>";
+			outhtml += "<div class='accordion-heading"+rxNorm+"'>";
+			outhtml += "<a class='accordion-toggle"+rxNorm+"' data-toggle='collapse' data-parent='#openfda"+rxNorm+"' href='#collapse" +rxNorm + grpnum + "'>" + key + "</a>";
+			outhtml += "</div><div id='collapse" + rxNorm+ grpnum + "' class='accordion-body"+rxNorm+" collapse'>";
+			outhtml += "<div class='accordion-inner"+rxNorm+"'><br>";
 			for (v in data.results[0][key]) {
 				outhtml +=  data.results[0][key][v];
 			}
