@@ -6,7 +6,6 @@ time.setHours(8,0,0);
 
 var globData;
 
-
 $(document).ready(function () {
     //binding [loadPatientDetails()] to dynamically added patient cards
     //openFDAtest();
@@ -16,6 +15,7 @@ $(document).ready(function () {
         $('#PatientDetailScreen').modal();
     });
     $('#drugStore').data("inventory", {});
+    $('#openfdalabeldrugStore').data("inventory", {});
     $('#Patient_Search').on('keyup', patientSearch);
     $('#CheckOutButton').confirmation(
     {
@@ -283,7 +283,10 @@ function loadPatientConditions(ConditionData){
     $.each(ConditionData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>"; 
+        el.innerHTML += "<div class='col-sm-4'>Onset Date: " + item.content.onsetDate  + "</div>";
+        el.innerHTML += "<div class='col-sm-4'>Status: " + item.content.status  + "</div>";
+        el.innerHTML += "<div class='col-sm-4'>SNOMED Code: " + item.content.code.coding[0].code + "</div>";
         $(el).data(item);
         patientConditionCount++;  // jc test data
         $('#PatientDetailScreen #conditions').append(el);
@@ -305,6 +308,7 @@ function loadMedicationDetails(medId){
     $('.' + medId + '.rxnorm').html("Rxnorm: " + drugObj.entry[0].content.code.coding[0].code);
     $('.' + medId + '.brand').html("Brand: " + (drugObj.entry[0].content.isBrand ? 'Y' : 'N'));
     $('.' + medId + '.form').html("Form: " + drugObj.entry[0].content.product.form.text);
+    $('.' + medId + '.fda').addClass(drugObj.entry[0].content.code.coding[0].code);
 }
 
 
@@ -449,13 +453,13 @@ function getAllRecords(option, array){
 }
 
 function mainHelp() {
-    alert('Main help');
+    bootstro.start('.mainHelp');
 }
 
 function patientDetailHelp() {
-    alert('Patient Detail help');
+    bootstro.start('.patientHelp');
 }
 
 function checkInHelp() {
-    alert('Check In Help');
+    bootstro.start('.checkInHelp');
 }

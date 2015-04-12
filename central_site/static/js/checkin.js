@@ -46,7 +46,7 @@ function wlt_placeData(data){
                     + " " + resultsContent.name[0].given[1] 
                     + " " + resultsContent.name[0].family[0]
                     + "</li>");
-            $('#MultplePatientSelection .modal-body .list-group li:last').data(resultsContent);
+            $('#MultplePatientSelection .modal-body .list-group li:last').data(entry);
         });
         
         $('#MultplePatientSelection').modal();
@@ -54,7 +54,7 @@ function wlt_placeData(data){
     }
     else
     {
-        fillInSinglePatient(data.entry[0].content)
+        fillInSinglePatient(data.entry[0]);
     }
 }
 
@@ -79,6 +79,7 @@ function checkSearchKeyPress(event){
 function fillInSinglePatient(singlePatient)
 {
     $('#CheckInScreen').data(singlePatient);
+    singlePatient = singlePatient.content;
     $('#check_in_first_name').val(singlePatient.name[0].given[0]);
     $('#check_in_middle_name').val(singlePatient.name[0].given[1]);
     $('#check_in_last_name').val(singlePatient.name[0].family[0]);
@@ -133,8 +134,15 @@ function openCheckInScreen() {
  * Purpose: Checks a patient in and adds them to the scroll container
  */
 function checkPatientIn(){
-    console.log({ entry : [ {content : $('#CheckInScreen').data()}]});
-    parsePatientData({ entry : [ {content : $('#CheckInScreen').data()}]});
+     console.log({ entry : [ {content : $('#CheckInScreen').data()}]});
+    parsePatientData({ 
+        entry : [ 
+            {
+                content : $('#CheckInScreen').data().content,
+                title: $('#CheckInScreen').data().title
+            }
+        ]}
+    );
     $('#CheckInScreen').modal('hide');
 }
 

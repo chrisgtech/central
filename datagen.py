@@ -111,6 +111,8 @@ def dateupdate(type, date):
 def createrecord(data):
     type = data['resourceType']
     jsonified = json.dumps(data)
+    if not utils.fileexists(type + '.json'):
+        utils.writetext(type + '.json', jsonified)
     #utils.writetext('temp.txt', jsonified)
     #exit()
     rest = RestfulFHIR(fabextras.FHIR_URLS[0])
@@ -419,6 +421,53 @@ def createobservations(patient):
                 observation['valueQuantity'] = quantity = {}
                 quantity['value'] = float(subrecord['Numeric_Result'].replace(',',''))
                 quantity['units'] = subrecord['Units']
+                observation['referenceRange'] = range = [{}]
+                range = range[0]
+                range['low'] = low = {}
+                range['high'] = high = {}
+                low['units'] = subrecord['Units']
+                high['units'] = subrecord['Units']
+                #print '%s: %s' % (coding['display'], quantity['value'])
+                if coding['display'] == "Body Temperature":
+                    low['value'] = 97.0
+                    high['value'] = 99.0
+                elif coding['display'] == "Pulse Rate":
+                    low['value'] = 60.0
+                    high['value'] = 100.0
+                elif coding['display'] == "Respiration Rate":
+                    low['value'] = 12.0
+                    high['value'] = 16.0
+                elif coding['display'] == "Systolic Blood Pressure":
+                    low['value'] = 90.0
+                    high['value'] = 120.0
+                elif coding['display'] == "Diastolic Blood Pressure":
+                    low['value'] = 60.0
+                    high['value'] = 80.0
+                elif coding['display'] == "Weight":
+                    height = float(vitalsorlab['Height'])
+                    idealbase = 110
+                    idealmod = 6
+                    if patient['profile']['gender']['coding'][0]['code'] == 'F':
+                        idealbase = 100
+                        idealmod = 5
+                    heightmod = height - 5 * 12
+                    ideal = idealbase + heightmod * idealmod
+                    low['value'] = int(ideal - 15)
+                    high['value'] = int(ideal + 15)
+                elif coding['display'] == "HDL":
+                    low['value'] = 40.0
+                    high['value'] = 100.0
+                elif coding['display'] == "LDL":
+                    low['value'] = 80.0
+                    high['value'] = 160.0
+                elif coding['display'] == "Total cholesterol":
+                    low['value'] = 100.0
+                    high['value'] = 240.0
+                elif coding['display'] == "Triglyceride":
+                    low['value'] = 50.0
+                    high['value'] = 200.0
+                else:
+                    observation.pop('referenceRange', None)
             else:
                 observation['interpretation'] = {'coding':[{}]}
                 interpretation = observation['interpretation']['coding'][0]
@@ -429,7 +478,9 @@ def createobservations(patient):
             fullname = '%s %s %s' % (fullname['given'][0], fullname['given'][1], fullname['family'][0])
             subject['display'] = fullname
             #utils.writetext('temp.txt', json.dumps(observation))
+            #utils.writetext('temp.txt', json.dumps(patient['profile']['gender']))
             url = None
+            #exit()
             url = createrecord(observation)
             if url:
                 urls.append(url)

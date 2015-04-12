@@ -78,6 +78,7 @@ body {
     /*width: 125px;
     position: absolute;
     top: 15px;*/
+    max-width: 300px;
 }
 
 .card_demographic {
@@ -136,12 +137,12 @@ body {
 }
 
 .dashboard_nav .btn-primary:not(.dropdown-toggle) {
-    min-width: 125px;
+    min-width: 0px; // originally set to 125px, James changed to accomodate erratic behavior on step 3 of mainHelp function.
 }
 
 .tab-content {
     padding: 5px;
-    height: 525px;
+    height: 495px;
     background-color: white;
     box-shadow: 0px 2px 3px #999;
     overflow-y: scroll;
@@ -173,7 +174,7 @@ body {
 /****************Patient Detail Section*****************/
 
 #patient_detail_photo {
-    max-width: 250px;
+    max-width: 150px;
     border: 1px solid #000;
 }
 

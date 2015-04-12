@@ -72,17 +72,18 @@ function loadPatientMedicationPrescriptions(MedicationData){
                 anchor.setAttribute("aria-controls", "collapse" + i);
                 
                 var panel_collapse = document.createElement("div");
-                panel_collapse.className = "panel-collapse collapse " + (i === 0? "in": "");
+                panel_collapse.className = "panel-collapse collapse";
                 panel_collapse.setAttribute("id", "collapse" + i);
                 panel_collapse.setAttribute("role", "tabpanel");
                 panel_collapse.setAttribute("aria-labelledby", "heading" + i);
                 
                 var panel_body = document.createElement("div");
-                panel_body.className = "panel-body";
-                panel_body.innerHTML = "Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.";
+                panel_body.className = "panel-body fda " + medId;
+                panel_body.innerHTML = "";
                                 
                 var el = document.createElement("div");
                 el.className = "col-sm-12 drug_card";
+                el.setAttribute("onclick","loadMedicationOpenFDALabel('" + medId + "')");
                 el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
 
                 el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString() 
@@ -103,7 +104,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
                         function(drug){
                             $("#drugStore").data("inventory")[medId] = drug;
                             loadMedicationDetails(medId);
-                        });
+                    });
                 } else {
                     setTimeout(function() { loadMedicationDetails(medId);}, 500);
                 }
