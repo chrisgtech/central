@@ -581,9 +581,6 @@ function loadscreenings(data) {
             panel_body.innerHTML += "<div class='col-sm-10'>" + testType[i].interpretation + "</div>";
         }
 
-
-
-
         anchor.appendChild(el);
         panel_title.appendChild(anchor);
         panel_heading.appendChild(panel_title);
@@ -596,44 +593,82 @@ function loadscreenings(data) {
     });
 }
 
-function loadtests(data){
-    var appendString = "";
-    for (var testType in data) {
-        var appendString = "";
-        appendString += "<div class='col-sm-12'><h3>"+ data[testType][0].name + "</h3></div>";
-        appendString += "<div class='col-sm-2'><u>Date of Test</u></div>";
-        appendString += "<div class='col-sm-2'><u>Lab Result</u></div>";
-        appendString += "<div class='col-sm-2'><u>Units</u></div>";
-        appendString += "<div class='col-sm-2'><u>Lower Range</u></div>";
-        appendString += "<div class='col-sm-2'><u>Upper Value</u></div>";
-            for (i = 0; i < data[testType].length; i++){
-                var high;
-                var low;
-                var style;
-                if(data[testType][i].low === ""){
-                    high = "None";
-                    low = "None";
-                } else {
-                    high = data[testType][i].high;
-                    low = data[testType][i].low;
-                }
-                if (high !== "None" && data[testType][i].value > high)
-                {
-                   style = "style='color:red' font-weight: bold";
-                }else{
-                   style = "style='color:black' font-weight: bold";
-                }
-                var issued = getFormattedDate(data[testType][i].date);
-                appendString += "<div class='col-sm-12'></div>";
-                appendString += "<div class='col-sm-2'>"+ issued +"</div>";
-                appendString += "<div class='col-sm-2' "+style+">"+ data[testType][i].value +"</div>";
-                appendString += "<div class='col-sm-2'>"+ data[testType][i].units +"</div>";
-                appendString += "<div class='col-sm-2'>"+ low +"</div>";
-                appendString += "<div class='col-sm-2'>"+ high +"</div>";
-            }
+function loadtests(data) {
+    var i = 0;
+    $.each(data, function(i, testType) {
+        var panel = document.createElement("div");
+        panel.className = "panel";
 
-        $('#tests_data').append(appendString);
-    };
+        var panel_heading = document.createElement("div");
+        panel_heading.className = "";
+        panel_heading.setAttribute('id', 'heading' + i);
+        panel_heading.setAttribute('role', 'tab');
+
+        var panel_title = document.createElement("h4");
+        panel_title.className = "panel-title";
+
+        var anchor = document.createElement("a");
+        anchor.setAttribute("data-toggle", "collapse");
+        anchor.setAttribute("data-parent", "#accordion");
+        anchor.setAttribute("href", "#collapse" + i);
+        anchor.setAttribute("aria-expanded", "true");
+        anchor.setAttribute("aria-controls", "collapse" + i);
+
+        var panel_collapse = document.createElement("div");
+        panel_collapse.className = "panel-collapse collapse";
+        panel_collapse.setAttribute("id", "collapse" + i);
+        panel_collapse.setAttribute("role", "tabpanel");
+        panel_collapse.setAttribute("aria-labelledby", "heading" + i);
+
+        var panel_body = document.createElement("div");
+        panel_body.className = "panel-body fda ";
+        panel_body.innerHTML = "";
+
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + testType[0].name + "</div>";
+        el.innerHTML += "<div class='col-sm-4'></div>";
+        el.innerHTML += "<div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Date of Test</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Lab Result</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Units</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Lower Range</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Upper Value</u></div>";
+        for (i = 0; i < testType.length; i++) {
+            var high;
+            var low;
+            var style;
+            if (testType[i].low === "") {
+                high = "None";
+                low = "None";
+            } else {
+                high = testType[i].high;
+                low = testType[i].low;
+            }
+            if (high !== "None" && testType[i].value > high) {
+                style = "style='color:red' font-weight: bold";
+            } else {
+                style = "style='color:black' font-weight: bold";
+            }
+            var issued = getFormattedDate(testType[i].date);
+            panel_body.innerHTML += "<div class='col-sm-12'></div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + issued + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2' " + style + ">" + testType[i].value + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + testType[i].units + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + low + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + high + "</div>";
+        }
+        anchor.appendChild(el);
+        panel_title.appendChild(anchor);
+        panel_heading.appendChild(panel_title);
+        panel_collapse.appendChild(panel_body);
+
+        panel.appendChild(panel_heading);
+        panel.appendChild(panel_collapse);
+
+        $('#tests_data').append(panel);
+    });
 }
 
 function getFormattedDate(date) {
