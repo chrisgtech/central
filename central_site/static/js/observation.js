@@ -76,16 +76,18 @@ function plotScreenToggle(btn) {
         $('#observation_data').hide();
         $('#plot_data').hide();
         $('#screenings_data').hide();
-        $('#tests_data').hide();
+        $('#tests_data').show();
         var tests = organizeObs("tests");
+        loadtests(tests);
         }
         
     else if (container === 'screenings') {
         $('#observation_data').hide();
         $('#plot_data').hide();
-        $('#screenings_data').hide();
+        $('#screenings_data').show();
         $('#tests_data').hide();
         var screenings = organizeObs("screenings");
+        loadscreenings(screenings);
         } 
      
     else if (container === 'observation') {
@@ -523,4 +525,82 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
         },
         series: allSeries
     });
+}
+
+function loadscreenings(data){
+$('#screenings_data').append(
+
+                        );
+}
+
+function loadtests(data){
+$('#tests_data').append(
+"<div id='labs' class='panel'> \
+        Lab Results\
+        <!-- Nav tabs --> \
+        <!-- Tab panes --> \
+        <div class='tab-content'> \
+            <div role='tabpanel' class='tab-pane active' id='all_labs'> \
+ \
+                <ul class='resultsHeader'> \
+                    <li> \
+                    <span class='date'>Apr 26, 2013</span> \
+                    Pulse Ox \
+                        <ul class='results'> \
+                            <li class='header'> \
+                                <span class='lab-component'>Component</span> \
+                                <span class='lab-value'>Value</span> \
+                                <span class='lab-low'>Low</span> \
+                                <span class='lab-high'>High</span> \
+                            </li> \
+ \
+                            <li class='even'> \
+                                <span class='lab-component'>Pulse Ox</span> \
+                                <span class='lab-value lowResult'>84 %   (low) </span> \
+                                <span class='lab-low'>95 %</span> \
+                                <span class='lab-high'>100 %</span> \
+                            </li> \
+ \
+                        </ul> \
+                    </li> \
+ \
+ \
+ \
+                    <li> \
+                    <span class='date'>Apr 26, 2013</span> \
+                    Imaging \
+                        <ul class='results'> \
+                            <li class='header'> \
+                                <span class='lab-component'>Component</span> \
+                                <span class='lab-value'>Value</span> \
+                                <span class='lab-low'>Low</span> \
+                                <span class='lab-high'>High</span> \
+                            </li> \
+ \
+                            <li class='even'> \
+                                <span class='lab-component'>Chest X-ray</span> \
+                                <span class='lab-value highResult'>Mild-moderate LV enlargement <a href='/img/mildmoderate.jpg' class='image-popup'> View</a></span> \
+                                <span class='lab-low'></span> \
+                                <span class='lab-high'></span> \
+                            </li> \
+ \
+                            <li class='odd'> \
+                                <span class='lab-component'>ECG</span> \
+                                <span class='lab-value highResult'>Early LVH </span> \
+                                <span class='lab-low'></span> \
+                                <span class='lab-high'></span> \
+                            </li> \
+ \
+                            <li class='even'> \
+                                <span class='lab-component'>2D Echocardiogram</span> \
+                                <span class='lab-value highResult'>Mild LVH, Moderate Pulmonary Hypertension </span> \
+                                <span class='lab-low'></span> \
+                                <span class='lab-high'></span> \
+                            </li> \
+                        </ul> \
+                    </li> \
+                </ul> \
+            </div> \
+        </div> \
+    </div>");
 }
