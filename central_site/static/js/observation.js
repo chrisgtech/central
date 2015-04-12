@@ -65,8 +65,6 @@ function loadPatientObservations(ObservationData) {
         "<div style='display: none;' id='screenings_data' class='observation_container'> \
             </div>");
 
-
-    //printObservationData(ObservationData);
 }
 
 function plotScreenToggle(btn) {
@@ -540,18 +538,17 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
 }
 
 function loadscreenings(data){
-    var appendString = "";
-    for (var testType in data) {
-        appendString = "<h3><span>"+ data[testType][0].name + "</span></h3>";
-        appendString += "<ul class='results'>";
+    for (var testType in data) {    
+        var appendString = "";
+        appendString += "<div class='col-sm-12'><h3>"+ data[testType][0].name + "</h3></div>";
+        appendString += "<div class='col-sm-2'><u>Date of Test</u></div>";
+        appendString += "<div class='col-sm-2'><u>Screening Result</u></div>";
             for (i = 0; i < data[testType].length; i++){
+                appendString += "<div class='col-sm-12'></div>";
                 var issued = getFormattedDate(data[testType][i].date);
-                appendString += "<li class = 'header'>";
-                appendString += "<span class = 'lab'>"+ issued +":</span>";
-                appendString += "<span class = 'interpretation'>"+ data[testType][i].interpretation +"</span>";
-                appendString += "</li>";
+                appendString += "<div class='col-sm-2'>"+ issued +"</div>";
+                appendString += "<div class='col-sm-6'>"+ data[testType][i].interpretation +"</div>";
             }
-        appendString += "</ul>";
         $('#screenings_data').append(appendString);
     };
 }
@@ -559,19 +556,39 @@ function loadscreenings(data){
 function loadtests(data){
     var appendString = "";
     for (var testType in data) {
-        appendString = "<h3><span>"+ data[testType][0].name + "</span></h3>";
-        appendString += "<ul class='results'>";
+        var appendString = "";
+        appendString += "<div class='col-sm-12'><h3>"+ data[testType][0].name + "</h3></div>";
+        appendString += "<div class='col-sm-2'><u>Date of Test</u></div>";
+        appendString += "<div class='col-sm-2'><u>Lab Result</u></div>";
+        appendString += "<div class='col-sm-2'><u>Units</u></div>";
+        appendString += "<div class='col-sm-2'><u>Lower Range</u></div>";
+        appendString += "<div class='col-sm-2'><u>Upper Value</u></div>";
             for (i = 0; i < data[testType].length; i++){
+                var high;
+                var low;
+                var style;
+                if(data[testType][i].low === ""){
+                    high = "None";
+                    low = "None";
+                } else {
+                    high = data[testType][i].high;
+                    low = data[testType][i].low;
+                }
+                if (high !== "None" && data[testType][i].value > high)
+                {
+                   style = "style='color:red' font-weight: bold"
+                }else{
+                   style = "style='color:black' font-weight: normal"
+                }
                 var issued = getFormattedDate(data[testType][i].date);
-                appendString += "<li class = 'header'>";
-                appendString += "<span class = 'lab'>"+ issued +":</span>";
-                appendString += "<span class = 'value'>"+ data[testType][i].value +"</span>";
-                appendString += "<span class = 'units'>"+ data[testType][i].units +"</span>";
-                appendString += "<span class='lab-low'>"+ data [testType][i].low +"</span>";
-                appendString += "<span class='lab-high'>"+ data [testType][i].high +"</span>";
-                appendString += "</li>";
+                appendString += "<div class='col-sm-12'></div>";
+                appendString += "<div class='col-sm-2'>"+ issued +"</div>";
+                appendString += "<div class='col-sm-2' "+style+">"+ data[testType][i].value +"</div>";
+                appendString += "<div class='col-sm-2'>"+ data[testType][i].units +"</div>";
+                appendString += "<div class='col-sm-2'>"+ low +"</div>";
+                appendString += "<div class='col-sm-2'>"+ high +"</div>";
             }
-        appendString += "</ul>";
+
         $('#tests_data').append(appendString);
     };
 }
