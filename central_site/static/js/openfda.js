@@ -60,7 +60,6 @@ function continueToOpenFDAfetch(rxNorm) {
     
 }
 
-var outhtml = "";
 function parseMedicationOpenFDA(data, rxNorm){
     globFDA = data;
 
@@ -68,13 +67,14 @@ function parseMedicationOpenFDA(data, rxNorm){
 }    
     
 function MedicationOpenFDAtoHTML(data,rxNorm){
+        var outhtml = "";
 	outhtml = "<div class='col-sm-4'>Brand Name: " + data.results[0].openfda.brand_name  + "</div>"; 
 	outhtml += "<div class='col-sm-4'>Generic Name: " + data.results[0].openfda.generic_name  + "</div>"; 
 	outhtml += "<div class='col-sm-4'>Manufacturer: " + data.results[0].openfda.manufacturer_name  + "</div>";
 	
 	outhtml += "<br/><br/><div class='accordion' id='openfda"+rxNorm+"'>";
 
-	grpnum = 1;
+	var grpnum = 1;
 	[].forEach.call( Object.keys( data.results[0] ), function( key ){    
 	    if (data.results[0][key][0] !== undefined) {
 	    	
