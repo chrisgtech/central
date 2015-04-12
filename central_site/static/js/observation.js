@@ -136,11 +136,13 @@ function organizeObs(testType) {
                 code: "",
                 value: "",
                 units: "",
+                high: "",
+                low: "",
                 interpretation: "",
                 screen: false
             };
             var key = observation.content.name.coding[0].code;
-            obsInfo.date = observation.content.issued;
+            obsInfo.date = new Date(observation.content.issued);
             obsInfo.name = observation.content.name.coding[0].display;
             obsInfo.code = key;
             if (typeof observation.content.interpretation !== 'undefined') {
@@ -149,6 +151,10 @@ function organizeObs(testType) {
             } else {
                 obsInfo.value = observation.content.valueQuantity.value;
                 obsInfo.units = observation.content.valueQuantity.units;
+                if (typeof observation.content.referenceRange !== 'undefined'){
+                    obsInfo.high = observation.content.referenceRange[0].high.value;
+                    obsInfo.low = observation.content.referenceRange[0].low.value;
+                }
                 obsInfo.screen = false;
             }
             if (!(key in dict)) {
@@ -170,6 +176,12 @@ function organizeObs(testType) {
         } else {
             tests[index] = dict[index];
         }
+    }
+    if (testType === "tests"){
+        return tests;
+    }
+    if (testType === "screenings"){
+        return screenings;
     }
 }
 
@@ -528,79 +540,47 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
 }
 
 function loadscreenings(data){
-$('#screenings_data').append(
-
-                        );
+    var appendString = "";
+    for (var testType in data) {
+        appendString = "<h3><span>"+ data[testType][0].name + "</span></h3>";
+        appendString += "<ul class='results'>";
+            for (i = 0; i < data[testType].length; i++){
+                var issued = getFormattedDate(data[testType][i].date);
+                appendString += "<li class = 'header'>";
+                appendString += "<span class = 'lab'>"+ issued +":</span>";
+                appendString += "<span class = 'interpretation'>"+ data[testType][i].interpretation +"</span>";
+                appendString += "</li>";
+            }
+        appendString += "</ul>";
+        $('#screenings_data').append(appendString);
+    };
 }
 
 function loadtests(data){
-$('#tests_data').append(
-"<div id='labs' class='panel'> \
-        Lab Results\
-        <!-- Nav tabs --> \
-        <!-- Tab panes --> \
-        <div class='tab-content'> \
-            <div role='tabpanel' class='tab-pane active' id='all_labs'> \
- \
-                <ul class='resultsHeader'> \
-                    <li> \
-                    <span class='date'>Apr 26, 2013</span> \
-                    Pulse Ox \
-                        <ul class='results'> \
-                            <li class='header'> \
-                                <span class='lab-component'>Component</span> \
-                                <span class='lab-value'>Value</span> \
-                                <span class='lab-low'>Low</span> \
-                                <span class='lab-high'>High</span> \
-                            </li> \
- \
-                            <li class='even'> \
-                                <span class='lab-component'>Pulse Ox</span> \
-                                <span class='lab-value lowResult'>84 %   (low) </span> \
-                                <span class='lab-low'>95 %</span> \
-                                <span class='lab-high'>100 %</span> \
-                            </li> \
- \
-                        </ul> \
-                    </li> \
- \
- \
- \
-                    <li> \
-                    <span class='date'>Apr 26, 2013</span> \
-                    Imaging \
-                        <ul class='results'> \
-                            <li class='header'> \
-                                <span class='lab-component'>Component</span> \
-                                <span class='lab-value'>Value</span> \
-                                <span class='lab-low'>Low</span> \
-                                <span class='lab-high'>High</span> \
-                            </li> \
- \
-                            <li class='even'> \
-                                <span class='lab-component'>Chest X-ray</span> \
-                                <span class='lab-value highResult'>Mild-moderate LV enlargement <a href='/img/mildmoderate.jpg' class='image-popup'> View</a></span> \
-                                <span class='lab-low'></span> \
-                                <span class='lab-high'></span> \
-                            </li> \
- \
-                            <li class='odd'> \
-                                <span class='lab-component'>ECG</span> \
-                                <span class='lab-value highResult'>Early LVH </span> \
-                                <span class='lab-low'></span> \
-                                <span class='lab-high'></span> \
-                            </li> \
- \
-                            <li class='even'> \
-                                <span class='lab-component'>2D Echocardiogram</span> \
-                                <span class='lab-value highResult'>Mild LVH, Moderate Pulmonary Hypertension </span> \
-                                <span class='lab-low'></span> \
-                                <span class='lab-high'></span> \
-                            </li> \
-                        </ul> \
-                    </li> \
-                </ul> \
-            </div> \
-        </div> \
-    </div>");
+    var appendString = "";
+    for (var testType in data) {
+        appendString = "<h3><span>"+ data[testType][0].name + "</span></h3>";
+        appendString += "<ul class='results'>";
+            for (i = 0; i < data[testType].length; i++){
+                var issued = getFormattedDate(data[testType][i].date);
+                appendString += "<li class = 'header'>";
+                appendString += "<span class = 'lab'>"+ issued +":</span>";
+                appendString += "<span class = 'value'>"+ data[testType][i].value +"</span>";
+                appendString += "<span class = 'units'>"+ data[testType][i].units +"</span>";
+                appendString += "<span class='lab-low'>"+ data [testType][i].low +"</span>";
+                appendString += "<span class='lab-high'>"+ data [testType][i].high +"</span>";
+                appendString += "</li>";
+            }
+        appendString += "</ul>";
+        $('#tests_data').append(appendString);
+    };
+}
+
+function getFormattedDate(date) {
+  var year = date.getFullYear();
+  var month = (1 + date.getMonth()).toString();
+  month = month.length > 1 ? month : '0' + month;
+  var day = date.getDate().toString();
+  day = day.length > 1 ? day : '0' + day;
+  return  month + '/' + day  + '/' + year;
 }
