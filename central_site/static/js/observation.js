@@ -576,9 +576,9 @@ function loadtests(data){
                 }
                 if (high !== "None" && data[testType][i].value > high)
                 {
-                   style = "style='color:red' font-weight: bold"
+                   style = "style='color:red' font-weight: bold";
                 }else{
-                   style = "style='color:black' font-weight: normal"
+                   style = "style='color:black' font-weight: bold";
                 }
                 var issued = getFormattedDate(data[testType][i].date);
                 appendString += "<div class='col-sm-12'></div>";
