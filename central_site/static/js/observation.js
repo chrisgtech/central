@@ -537,20 +537,63 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
     });
 }
 
-function loadscreenings(data){
-    for (var testType in data) {    
-        var appendString = "";
-        appendString += "<div class='col-sm-12'><h3>"+ data[testType][0].name + "</h3></div>";
-        appendString += "<div class='col-sm-2'><u>Date of Test</u></div>";
-        appendString += "<div class='col-sm-2'><u>Screening Result</u></div>";
-            for (i = 0; i < data[testType].length; i++){
-                appendString += "<div class='col-sm-12'></div>";
-                var issued = getFormattedDate(data[testType][i].date);
-                appendString += "<div class='col-sm-2'>"+ issued +"</div>";
-                appendString += "<div class='col-sm-6'>"+ data[testType][i].interpretation +"</div>";
-            }
-        $('#screenings_data').append(appendString);
-    };
+function loadscreenings(data) {
+    var i = 0;
+    $.each(data, function(i, testType) {
+        var panel = document.createElement("div");
+        panel.className = "panel";
+
+        var panel_heading = document.createElement("div");
+        panel_heading.className = "";
+        panel_heading.setAttribute('id', 'heading' + i);
+        panel_heading.setAttribute('role', 'tab');
+
+        var panel_title = document.createElement("h4");
+        panel_title.className = "panel-title";
+
+        var anchor = document.createElement("a");
+        anchor.setAttribute("data-toggle", "collapse");
+        anchor.setAttribute("data-parent", "#accordion");
+        anchor.setAttribute("href", "#collapse" + i);
+        anchor.setAttribute("aria-expanded", "true");
+        anchor.setAttribute("aria-controls", "collapse" + i);
+
+        var panel_collapse = document.createElement("div");
+        panel_collapse.className = "panel-collapse collapse";
+        panel_collapse.setAttribute("id", "collapse" + i);
+        panel_collapse.setAttribute("role", "tabpanel");
+        panel_collapse.setAttribute("aria-labelledby", "heading" + i);
+
+        var panel_body = document.createElement("div");
+        panel_body.className = "panel-body fda ";
+        panel_body.innerHTML = "";
+
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + testType[0].name + "</div>";
+        el.innerHTML += "<div class='col-sm-4'></div>";
+        el.innerHTML += "<div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+
+        for (i = 0; i < testType.length; i++) {
+            panel_body.innerHTML += "<div class='col-sm-12'></div>";
+            var issued = getFormattedDate(testType[i].date);
+            panel_body.innerHTML += "<div class='col-sm-2'>" + issued + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-10'>" + testType[i].interpretation + "</div>";
+        }
+
+
+
+
+        anchor.appendChild(el);
+        panel_title.appendChild(anchor);
+        panel_heading.appendChild(panel_title);
+        panel_collapse.appendChild(panel_body);
+
+        panel.appendChild(panel_heading);
+        panel.appendChild(panel_collapse);
+
+        $('#screenings_data').append(panel);
+    });
 }
 
 function loadtests(data){
