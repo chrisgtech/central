@@ -47,7 +47,7 @@ function loadPatientObservations(ObservationData) {
         observationTotal++; // jc test data
         $('#PatientDetailScreen #observations #observation_data').append(el);
     });
-    //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
+    $('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 
     $('#PatientDetailScreen #observations').append(
         "<div style='display: none;' id='plot_data' class='observation_container'> \
@@ -71,18 +71,18 @@ function plotScreenToggle(btn) {
     var container = $(btn).attr('data-container');
 
     if (container === 'tests') {
+        $('#tests_data').show();
         $('#observation_data').hide();
         $('#plot_data').hide();
         $('#screenings_data').hide();
-        $('#tests_data').show();
         var tests = organizeObs("tests");
         loadtests(tests);
         }
         
     else if (container === 'screenings') {
+        $('#screenings_data').show();
         $('#observation_data').hide();
         $('#plot_data').hide();
-        $('#screenings_data').show();
         $('#tests_data').hide();
         var screenings = organizeObs("screenings");
         loadscreenings(screenings);
@@ -91,10 +91,14 @@ function plotScreenToggle(btn) {
     else if (container === 'observation') {
         $('#observation_data').show();
         $('#plot_data').hide();
+        $('#screenings_data').hide();
+        $('#tests_data').hide();
     }
     else {
-        $('#observation_data').hide();
         $('#plot_data').show();
+        $('#observation_data').hide();
+        $('#screenings_data').hide();
+        $('#tests_data').hide();
         if ($('#sysDia').html() === '') {
             plotChart();
         }
@@ -570,7 +574,7 @@ function loadscreenings(data) {
 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + testType[0].name + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
         el.innerHTML += "<div class='col-sm-4'></div>";
         el.innerHTML += "<div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
@@ -626,7 +630,7 @@ function loadtests(data) {
 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + testType[0].name + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
         el.innerHTML += "<div class='col-sm-4'></div>";
         el.innerHTML += "<div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
