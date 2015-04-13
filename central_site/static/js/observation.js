@@ -574,7 +574,8 @@ function loadscreenings(data) {
 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
+        el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
+        el.innerHTML += "<div class='col-sm-8' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
         el.innerHTML += "<div class='col-sm-4'></div>";
         el.innerHTML += "<div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
