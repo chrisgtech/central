@@ -633,7 +633,12 @@ function loadtests(data) {
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
-        el.innerHTML += "<div class='col-sm-4' style='font-weight: normal;'>latest result:" + testType[0].value + " "+ testType[0].units + "</div>";
+        if (testType[0].low !== "" &&(testType[0].value > testType[0].high || testType[0].value < testType[0].low))
+        {
+            el.innerHTML += "<div class='col-sm-4' style='font-weight: normal; color: red;'>latest result:" + testType[0].value + " "+ testType[0].units + "</div>";   
+        }else{
+            el.innerHTML += "<div class='col-sm-4' style='font-weight: normal; color: black;'>latest result:" + testType[0].value + " "+ testType[0].units + "</div>";
+        }
         if(testType[0].low === ""){
             el.innerHTML += "<div class='col-sm-4'>Range: None</div>";
         }else{
@@ -657,10 +662,10 @@ function loadtests(data) {
                 high = testType[i].high;
                 low = testType[i].low;
             }
-            if (high !== "None" && testType[i].value > high) {
-                style = "style='color:red' font-weight: bold";
+            if (high !== "None" && (testType[i].value > high || testType[i].value < low)) {
+                style = "style='color:red; font-weight: bold;'";
             } else {
-                style = "style='color:black' font-weight: bold";
+                style = "style='color:black; font-weight: bold;'" ;
             }
             var issued = getFormattedDate(testType[i].date);
             panel_body.innerHTML += "<div class='col-sm-12'></div>";
