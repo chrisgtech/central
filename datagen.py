@@ -143,6 +143,82 @@ def createrecord(data):
     print url
     #exit()
     return url
+    
+def findrecords(type, params={}, limit=None):
+    rest = RestfulFHIR(fabextras.FHIR_URLS[0], 'json')
+    records = {}
+    while True:
+        retries = 10
+        query = None
+        #query = rest.search(type, params)
+        while retries > 0:
+            try:
+                query = rest.search(type, params)
+                break
+            except:
+                print 'Retrying...'
+                retries -= 1
+                if retries < 1:
+                    raise
+                sleeptime = 15
+                if retries < 6:
+                    sleeptime = 120
+                time.sleep(sleeptime)
+                continue
+        if not query or query.status_code != 200:
+            print query
+            print query.text
+            return {}
+        jsontext = query.text
+        results = json.loads(jsontext)
+        totalresults = results['totalResults']
+        #print totalresults
+        if not 'entry' in results:
+            return {}
+        for entry in results['entry']:
+            id = entry['id']
+            id = id[id.rfind('/')+1:]
+            records[id] = entry['content']
+        #print len(records)
+        if len(records) >= totalresults:
+            break
+        if limit and len(records) > limit:
+            break
+        params['_skip'] = len(records)
+        #print results.keys()
+    return records
+    
+def updaterecord(id, data):
+    type = data['resourceType']
+    jsonified = json.dumps(data)
+    rest = RestfulFHIR(fabextras.FHIR_URLS[0])
+    #url = 'http://fhirtest.uhn.ca/baseDstu1/%s/17856/_history/1' % type
+    #print url
+    #return url
+    retries = 10
+    query = None
+    while retries > 0:
+        try:
+            query = rest.update(type, id, jsonified)
+            break
+        except:
+            print 'Retrying...'
+            retries -= 1
+            if retries < 1:
+                raise
+            sleeptime = 15
+            if retries < 6:
+                sleeptime = 120
+            time.sleep(sleeptime)
+            continue
+    if not query or query.status_code != 201:
+        print query
+        print query.text
+        return None
+    url = query.headers['location']
+    print url
+    #exit()
+    return url
         
 def findid(url):
     id = url[len(fabextras.FHIR_URLS[0]):]
@@ -419,7 +495,7 @@ def createobservations(patient):
                 coding['code'] = subrecord['Result_LOINC']
             if subrecord.get('Numeric_Result') and subrecord.get('Units'):
                 observation['valueQuantity'] = quantity = {}
-                quantity['value'] = float(subrecord['Numeric_Result'].replace(',',''))
+                quantity['value'] = value = float(subrecord['Numeric_Result'].replace(',',''))
                 quantity['units'] = subrecord['Units']
                 observation['referenceRange'] = range = [{}]
                 range = range[0]
@@ -436,7 +512,7 @@ def createobservations(patient):
                     high['value'] = 100.0
                 elif coding['display'] == "Respiration Rate":
                     low['value'] = 12.0
-                    high['value'] = 16.0
+                    high['value'] = 18.0
                 elif coding['display'] == "Systolic Blood Pressure":
                     low['value'] = 90.0
                     high['value'] = 120.0
@@ -467,7 +543,14 @@ def createobservations(patient):
                     low['value'] = 50.0
                     high['value'] = 200.0
                 else:
+                    low = None
+                    high = None
                     observation.pop('referenceRange', None)
+                    
+                #if low and low['value'] > value:
+                #    print 'Low %s (%s < %s)' % (subrecord['Result_Name'], value, low['value'])
+                #elif high and high['value'] < value:
+                #    print 'High %s (%s > %s)' % (subrecord['Result_Name'], value, high['value'])
             else:
                 observation['interpretation'] = {'coding':[{}]}
                 interpretation = observation['interpretation']['coding'][0]
@@ -505,6 +588,7 @@ def createall(rxlookup, rxinfo):
         medpatients[patientkey] = patient
     extrapatients = otherdata.loadall()
     for patient in medpatients.values()[:100]:
+        print 'Creating patient %s' % medpatients.values().index(patient)
         #print len(patient['pdes'])
         patientindex = medpatients.values().index(patient)
         extraindex = patientindex % len(extrapatients)
@@ -549,8 +633,105 @@ def convert_rxlookup():
     utils.dump('rxlookup-small.yaml', rxlookupsmall)
     utils.dump('rxinfo.yaml', rxinfo)
     return rxlookup, rxinfo
-
-def main(argv=None):
+    
+def updateall():
+    print 'Finding existing patients'
+    patients = findrecords('Patient')
+    print 'Found %s Patient records' % len(patients)
+    #medications = findrecords('Medication')
+    medications = {}
+    print 'Found %s Medication records' % len(medications)
+    for id, patient in patients.items():
+        print ''
+        name = ' '.join(patient['name'][0]['given'])
+        name += ' ' + patient['name'][0]['family'][0]
+        print 'Processing patient %s (%s)' % (name, id)
+        subject = {'subject':id}
+        patientid = {'patient._id':id}
+        conditions = findrecords('Condition', subject)
+        print 'Found %s conditions' % len(conditions)
+        observations = findrecords('Observation', subject)
+        print 'Found %s observations' % len(observations)
+        prescriptions = findrecords('MedicationPrescription', patientid)
+        print 'Found %s prescriptions' % len(prescriptions)
+        meds = {}
+        for prescription in prescriptions.values():
+            medid = prescription['medication']['reference']
+            medid = medid[medid.rfind('/')+1:]
+            if not medid in medications:
+                found = findrecords('Medication', {'_id': medid})
+                medications[medid] = found[medid]
+            meds[medid] = medications[medid]
+        print 'Found %s medications' % len(meds)
+        
+        notes = ''
+        observationnotes = ['Observation Notes: ']
+        for observation in observations.values():
+            if not 'referenceRange' in observation or not 'valueQuantity' in observation:
+                continue
+            year = int(observation['issued'][:4])
+            if year < 2011:
+                continue
+            high = float(observation['referenceRange'][0]['high']['value'])
+            low = float(observation['referenceRange'][0]['low']['value'])
+            value = float(observation['valueQuantity']['value'])
+            if low <= value <= high:
+                continue
+            name = observation['name']['coding'][0]['display']
+            highnote = 'High %s.' % name
+            lownote = 'Low %s.' % name
+            newnote = highnote
+            if value < low:
+                newnote = lownote
+            if lownote in observationnotes and newnote != lownote:
+                observationnotes.remove(lownote)
+            if not newnote in observationnotes:
+                observationnotes.append(newnote)
+                
+            #print '%s (%s-%s)' % (value, low, high)
+            
+        if len(observationnotes) > 1:
+            notes += '\n'.join(observationnotes)
+        
+        mednotes = ['Medication Notes: ']
+        recentmeds = []
+        for prescription in prescriptions.values():
+            year = int(prescription['dateWritten'][:4])
+            if year < 2015:
+                continue
+            name = prescription['medication']['display']
+            if not name in recentmeds:
+                recentmeds.append(name)
+        medcount = len(recentmeds)
+        if medcount > 4:
+            mednote = 'Large number of active medications (%s).' % medcount
+            mednotes.append(mednote)
+            
+        for medication in medications.values():
+            if 'History of Antidepressant use.' in mednotes:
+                break
+            antidepressants = ['prozac', 'luvox', 'zoloft', 'paxil', 'lexapro', 'celexa', 'wellbutrin', 'cymbalta', 'effexor', 'remeron', 'desyrel', 'elavil', 'anafranil', 'norpramin', 'sinequan', 'tofranil', 'pamelor', 'aventyl', 'vivactil', 'surmontil']
+            medname = medication['name'].lower()
+            for med in antidepressants:
+                if med.lower() in medname.lower():
+                    mednotes.append('History of Antidepressant use.')
+                    break
+            #print medication['name']
+            #print medication.keys()
+            #exit()
+            
+        if len(mednotes) > 1:
+            if len(notes) > 0:
+                notes += '\n\n'
+            notes += '\n'.join(mednotes)
+            
+        print notes
+        communication = patient['communication'] = [{'coding':[{}]}]
+        communication[0]['coding'][0]['display'] = notes
+        updaterecord(id, patient)
+        #exit()
+        
+def create():
     rxlookup = {}
     rxinfo = {}
     print 'Loading rxlookup'
@@ -566,8 +747,10 @@ def main(argv=None):
     
     print 'Creating records'
     createall(rxlookup, rxinfo)
-    #print dateranges
-    #print dateoffsets
+
+def main(argv=None):
+    create()
+    #updateall()
 
 if __name__ == "__main__":
     sys.exit(main())
