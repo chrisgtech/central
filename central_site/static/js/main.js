@@ -313,23 +313,6 @@ function loadMedicationDetails(medId){
 
 
 
-function openPlotScreen() {
-    $('#PatientDetailScreen #observations').empty();
-    var nav1 = document.createElement("div");
-    nav1.className = "col-sm-12 Observ_btn";
-    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
-    
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button>";
-    
-    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button>";
-    $('#PatientDetailScreen #observations').append(nav1);
-    
-    var el = document.createElement("div");
-    el.className = "col-sm-12";
-    el.innerHTML +="<row></row>";  
-    $('#PatientDetailScreen #observations').append(el);
-}
-
 function dummyLoadPatientObservations(){
     loadPatientObservations(globO);
 }
