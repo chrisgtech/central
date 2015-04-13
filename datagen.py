@@ -495,7 +495,7 @@ def createobservations(patient):
                 coding['code'] = subrecord['Result_LOINC']
             if subrecord.get('Numeric_Result') and subrecord.get('Units'):
                 observation['valueQuantity'] = quantity = {}
-                quantity['value'] = float(subrecord['Numeric_Result'].replace(',',''))
+                quantity['value'] = value = float(subrecord['Numeric_Result'].replace(',',''))
                 quantity['units'] = subrecord['Units']
                 observation['referenceRange'] = range = [{}]
                 range = range[0]
@@ -512,7 +512,7 @@ def createobservations(patient):
                     high['value'] = 100.0
                 elif coding['display'] == "Respiration Rate":
                     low['value'] = 12.0
-                    high['value'] = 16.0
+                    high['value'] = 18.0
                 elif coding['display'] == "Systolic Blood Pressure":
                     low['value'] = 90.0
                     high['value'] = 120.0
@@ -543,7 +543,14 @@ def createobservations(patient):
                     low['value'] = 50.0
                     high['value'] = 200.0
                 else:
+                    low = None
+                    high = None
                     observation.pop('referenceRange', None)
+                    
+                #if low and low['value'] > value:
+                #    print 'Low %s (%s < %s)' % (subrecord['Result_Name'], value, low['value'])
+                #elif high and high['value'] < value:
+                #    print 'High %s (%s > %s)' % (subrecord['Result_Name'], value, high['value'])
             else:
                 observation['interpretation'] = {'coding':[{}]}
                 interpretation = observation['interpretation']['coding'][0]
@@ -581,6 +588,7 @@ def createall(rxlookup, rxinfo):
         medpatients[patientkey] = patient
     extrapatients = otherdata.loadall()
     for patient in medpatients.values()[:100]:
+        print 'Creating patient %s' % medpatients.values().index(patient)
         #print len(patient['pdes'])
         patientindex = medpatients.values().index(patient)
         extraindex = patientindex % len(extrapatients)
@@ -741,8 +749,8 @@ def create():
     createall(rxlookup, rxinfo)
 
 def main(argv=None):
-    #create()
-    updateall()
+    create()
+    #updateall()
 
 if __name__ == "__main__":
     sys.exit(main())
