@@ -17,6 +17,8 @@ function loadPatientObservations(ObservationData) {
     nav1.className = "col-sm-12 Observ_btn";
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='plot' class='btn Observ_btn '>Plot</button>";
+    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='tests' class='btn Observ_btn '>Tests</button>";
+    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='screenings' class='btn Observ_btn '>Screenings</button>";
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='observation' class='btn Observ_btn '>Raw</button>";
     $('#PatientDetailScreen #observations').append(nav1);
 
@@ -45,7 +47,7 @@ function loadPatientObservations(ObservationData) {
         observationTotal++; // jc test data
         $('#PatientDetailScreen #observations #observation_data').append(el);
     });
-    //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
+    $('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 
     $('#PatientDetailScreen #observations').append(
         "<div style='display: none;' id='plot_data' class='observation_container'> \
@@ -54,30 +56,58 @@ function loadPatientObservations(ObservationData) {
                 <div id='fat'></div> \
                 <div id='cholesterol'></div> \
             </div>");
+    
+    $('#PatientDetailScreen #observations').append(
+        "<div style='display: none;' id='tests_data' class='observation_container'> \
+            </div>");
+    
+    $('#PatientDetailScreen #observations').append(
+        "<div style='display: none;' id='screenings_data' class='observation_container'> \
+            </div>");
 
-
-    //printObservationData(ObservationData);
 }
 
 function plotScreenToggle(btn) {
     var container = $(btn).attr('data-container');
-    if (container === 'plot') {
+
+    if (container === 'tests') {
+        $('#tests_data').show();
         $('#observation_data').hide();
+        $('#plot_data').hide();
+        $('#screenings_data').hide();
+        var tests = organizeObs("tests");
+        loadtests(tests);
+        }
+        
+    else if (container === 'screenings') {
+        $('#screenings_data').show();
+        $('#observation_data').hide();
+        $('#plot_data').hide();
+        $('#tests_data').hide();
+        var screenings = organizeObs("screenings");
+        loadscreenings(screenings);
+        } 
+     
+    else if (container === 'observation') {
+        $('#observation_data').show();
+        $('#plot_data').hide();
+        $('#screenings_data').hide();
+        $('#tests_data').hide();
+    }
+    else {
         $('#plot_data').show();
+        $('#observation_data').hide();
+        $('#screenings_data').hide();
+        $('#tests_data').hide();
         if ($('#sysDia').html() === '') {
             plotChart();
         }
-        //        if($('#weight').html() === ''){
-        //            plotChart();
-        //        }
-    } else {
-        $('#observation_data').show();
-        $('#plot_data').hide();
     }
-    organizeObs();
+    
+    
 }
 
-function organizeObs() {
+function organizeObs(testType) {
     //This function organizes all of the observation data into a data dictionary
     //that uses the observation code as the key.  The value associated with the
     //key is an array of objects that specify a given test or screening.
@@ -108,11 +138,13 @@ function organizeObs() {
                 code: "",
                 value: "",
                 units: "",
+                high: "",
+                low: "",
                 interpretation: "",
                 screen: false
             };
             var key = observation.content.name.coding[0].code;
-            obsInfo.date = observation.content.issued;
+            obsInfo.date = new Date(observation.content.issued);
             obsInfo.name = observation.content.name.coding[0].display;
             obsInfo.code = key;
             if (typeof observation.content.interpretation !== 'undefined') {
@@ -121,6 +153,10 @@ function organizeObs() {
             } else {
                 obsInfo.value = observation.content.valueQuantity.value;
                 obsInfo.units = observation.content.valueQuantity.units;
+                if (typeof observation.content.referenceRange !== 'undefined'){
+                    obsInfo.high = observation.content.referenceRange[0].high.value;
+                    obsInfo.low = observation.content.referenceRange[0].low.value;
+                }
                 obsInfo.screen = false;
             }
             if (!(key in dict)) {
@@ -142,6 +178,12 @@ function organizeObs() {
         } else {
             tests[index] = dict[index];
         }
+    }
+    if (testType === "tests"){
+        return tests;
+    }
+    if (testType === "screenings"){
+        return screenings;
     }
 }
 
@@ -497,4 +539,153 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
         },
         series: allSeries
     });
+}
+
+function loadscreenings(data) {
+    var i = 0;
+    $.each(data, function(i, testType) {
+        var panel = document.createElement("div");
+        panel.className = "panel";
+
+        var panel_heading = document.createElement("div");
+        panel_heading.className = "";
+        panel_heading.setAttribute('id', 'heading' + i);
+        panel_heading.setAttribute('role', 'tab');
+
+        var panel_title = document.createElement("h4");
+        panel_title.className = "panel-title";
+
+        var anchor = document.createElement("a");
+        anchor.setAttribute("data-toggle", "collapse");
+        anchor.setAttribute("data-parent", "#accordion");
+        anchor.setAttribute("href", "#collapse" + i);
+        anchor.setAttribute("aria-expanded", "true");
+        anchor.setAttribute("aria-controls", "collapse" + i);
+
+        var panel_collapse = document.createElement("div");
+        panel_collapse.className = "panel-collapse collapse";
+        panel_collapse.setAttribute("id", "collapse" + i);
+        panel_collapse.setAttribute("role", "tabpanel");
+        panel_collapse.setAttribute("aria-labelledby", "heading" + i);
+
+        var panel_body = document.createElement("div");
+        panel_body.className = "panel-body fda ";
+        panel_body.innerHTML = "";
+
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
+        el.innerHTML += "<div class='col-sm-8' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
+        el.innerHTML += "<div class='col-sm-4'></div>";
+        el.innerHTML += "<div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+
+        for (i = 0; i < testType.length; i++) {
+            panel_body.innerHTML += "<div class='col-sm-12'></div>";
+            var issued = getFormattedDate(testType[i].date);
+            panel_body.innerHTML += "<div class='col-sm-2'>" + issued + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-10'>" + testType[i].interpretation + "</div>";
+        }
+
+        anchor.appendChild(el);
+        panel_title.appendChild(anchor);
+        panel_heading.appendChild(panel_title);
+        panel_collapse.appendChild(panel_body);
+
+        panel.appendChild(panel_heading);
+        panel.appendChild(panel_collapse);
+
+        $('#screenings_data').append(panel);
+    });
+}
+
+function loadtests(data) {
+    var i = 0;
+    $.each(data, function(i, testType) {
+        var panel = document.createElement("div");
+        panel.className = "panel";
+
+        var panel_heading = document.createElement("div");
+        panel_heading.className = "";
+        panel_heading.setAttribute('id', 'heading' + i);
+        panel_heading.setAttribute('role', 'tab');
+
+        var panel_title = document.createElement("h4");
+        panel_title.className = "panel-title";
+
+        var anchor = document.createElement("a");
+        anchor.setAttribute("data-toggle", "collapse");
+        anchor.setAttribute("data-parent", "#accordion");
+        anchor.setAttribute("href", "#collapse" + i);
+        anchor.setAttribute("aria-expanded", "true");
+        anchor.setAttribute("aria-controls", "collapse" + i);
+
+        var panel_collapse = document.createElement("div");
+        panel_collapse.className = "panel-collapse collapse";
+        panel_collapse.setAttribute("id", "collapse" + i);
+        panel_collapse.setAttribute("role", "tabpanel");
+        panel_collapse.setAttribute("aria-labelledby", "heading" + i);
+
+        var panel_body = document.createElement("div");
+        panel_body.className = "panel-body fda ";
+        panel_body.innerHTML = "";
+
+        var el = document.createElement("div");
+        el.className = "col-sm-12 drug_card";
+        el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
+        el.innerHTML += "<div class='col-sm-4' style='font-weight: normal;'>latest result:" + testType[0].value + " "+ testType[0].units + "</div>";
+        if(testType[0].low === ""){
+            el.innerHTML += "<div class='col-sm-4'>Range: None</div>";
+        }else{
+            el.innerHTML += "<div class='col-sm-4'>Range: " + testType[0].low + "-" +testType[0].high+" "+testType[0].units+"</div>"; 
+        }
+        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Date of Test</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Lab Result</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Units</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Lower Range</u></div>";
+        panel_body.innerHTML += "<div class='col-sm-2'><u>Upper Value</u></div>";
+        for (i = 0; i < testType.length; i++) {
+            var high;
+            var low;
+            var style;
+            if (testType[i].low === "") {
+                high = "None";
+                low = "None";
+            } else {
+                high = testType[i].high;
+                low = testType[i].low;
+            }
+            if (high !== "None" && testType[i].value > high) {
+                style = "style='color:red' font-weight: bold";
+            } else {
+                style = "style='color:black' font-weight: bold";
+            }
+            var issued = getFormattedDate(testType[i].date);
+            panel_body.innerHTML += "<div class='col-sm-12'></div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + issued + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2' " + style + ">" + testType[i].value + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + testType[i].units + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + low + "</div>";
+            panel_body.innerHTML += "<div class='col-sm-2'>" + high + "</div>";
+        }
+        anchor.appendChild(el);
+        panel_title.appendChild(anchor);
+        panel_heading.appendChild(panel_title);
+        panel_collapse.appendChild(panel_body);
+
+        panel.appendChild(panel_heading);
+        panel.appendChild(panel_collapse);
+
+        $('#tests_data').append(panel);
+    });
+}
+
+function getFormattedDate(date) {
+  var year = date.getFullYear();
+  var month = (1 + date.getMonth()).toString();
+  month = month.length > 1 ? month : '0' + month;
+  var day = date.getDate().toString();
+  day = day.length > 1 ? day : '0' + day;
+  return  month + '/' + day  + '/' + year;
 }
