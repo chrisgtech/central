@@ -14,12 +14,13 @@ function loadPatientObservations(ObservationData) {
     $('#PatientDetailScreen #observations').empty();
     //Draw display buttons
     var nav1 = document.createElement("div");
-    nav1.className = "col-sm-12 Observ_btn";
-    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
-    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='plot' class='btn Observ_btn '>Plot</button>";
-    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='tests' class='btn Observ_btn '>Tests</button>";
-    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='screenings' class='btn Observ_btn '>Screenings</button>";
-    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='observation' class='btn Observ_btn '>Raw</button>";
+    //nav1.className = "col-sm-12 Observ_btn";
+    nav1.innerHTML += "<div class='col-sm-2' style='font-weight: bold;'>View:</div>";
+    nav1.innerHTML += "<div class='col-sm-2'><button type='button' onclick='plotScreenToggle(this);' data-container='plot' class='btn Observ_btn' style='width:120px'>Plot</button></div>";
+    nav1.innerHTML += "<div class='col-sm-2'><button type='button' onclick='plotScreenToggle(this);' data-container='tests' class='btn Observ_btn'style='width:120px'>Tests</button></div>";
+    nav1.innerHTML += "<div class='col-sm-2'><button type='button' onclick='plotScreenToggle(this);' data-container='screenings' class='btn Observ_btn'style='width:120px'>Screenings</button></div>";
+    nav1.innerHTML += "<div class='col-sm-2'><button type='button' onclick='plotScreenToggle(this);' data-container='observation' class='btn Observ_btn'style='width:120px'>Raw</button></div>";
+    nav1.innerHTML += "<div class='col-sm-2' style='font-weight: bold;'></div>";
     $('#PatientDetailScreen #observations').append(nav1);
 
     if (ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
@@ -44,10 +45,10 @@ function loadPatientObservations(ObservationData) {
             ": " + (item.content.valueQuantity ? item.content.valueQuantity.value +
                 " " + item.content.valueQuantity.units : item.content.interpretation.coding[0].display);
         $(el).data(item);
-        observationTotal++; // jc test data
-        $('#PatientDetailScreen #observations #observation_data').append(el);
+        //observationTotal++; // jc test data
+        $('#PatientDetailScreen #observations #observation_data').append(el);   // WLT: had  #observations #observation_data
     });
-    $('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
+    //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 
     $('#PatientDetailScreen #observations').append(
         "<div style='display: none;' id='plot_data' class='observation_container'> \
@@ -576,8 +577,8 @@ function loadscreenings(data) {
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
         el.innerHTML += "<div class='col-sm-8' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
-        el.innerHTML += "<div class='col-sm-4'></div>";
-        el.innerHTML += "<div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+        //el.innerHTML += "<div class='col-sm-4'></div>";
+        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
         for (i = 0; i < testType.length; i++) {
             panel_body.innerHTML += "<div class='col-sm-12'></div>";
