@@ -124,17 +124,22 @@ function parsePatientData(data) {
         
         var reason_for_visit = document.createElement("div");
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
-        reason_for_visit.innerHTML = reasonForVisit;
+        reason_for_visit.innerHTML = "Reason for visit:" + reasonForVisit;
+        
+        var dr_Communication = document.createElement("div");
+        dr_Communication.className = "card_reason_for_visit col-sm-12";
+        dr_Communication.innerHTML = patientContent.communication[0].coding[0].display
         
         var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; 
         time = new Date(time.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
+        patient_card.appendChild(dr_Communication);
         patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
