@@ -276,15 +276,26 @@ function dataSwitch(option, results) {
  * Purpose: Renders the Patient's Conditions on the Patient Detail Screen
  * @returns {undefined}
  */
+
 function loadPatientConditions(ConditionData){
     var patientConditionCount = 0; // jc test data
     $('#PatientDetailScreen #conditions').empty();
     if(ConditionData.length === 0) $('#PatientDetailScreen #conditions').append("No Condition Data");
+  //Convert Date strings to date objects
+    $.each(ConditionData, function(i, item) {
+        ConditionData[i].content.onsetDate = new Date(item.content.onsetDate);
+    });
+    ConditionData.sort(function(a, b) {
+        var a = a.content.onsetDate;
+        var b = b.content.onsetDate;
+        return ((b < a) ? -1 : ((b > a) ? 1 : 0));
+    });
+
     $.each(ConditionData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>"; 
-        el.innerHTML += "<div class='col-sm-4'>Onset Date: " + item.content.onsetDate  + "</div>";
+        el.innerHTML += "<div class='col-sm-4'>Onset Date: " + item.content.onsetDate.toLocaleDateString()  + "</div>";
         el.innerHTML += "<div class='col-sm-4'>Status: " + item.content.status  + "</div>";
         el.innerHTML += "<div class='col-sm-4'>SNOMED Code: " + item.content.code.coding[0].code + "</div>";
         $(el).data(item);
