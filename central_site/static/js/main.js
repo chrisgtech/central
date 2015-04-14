@@ -124,12 +124,17 @@ function parsePatientData(data) {
         
         var reason_for_visit = document.createElement("div");
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
-        reason_for_visit.innerHTML = "Reason for visit:" + reasonForVisit;
+        reason_for_visit.innerHTML = "Reason for visit: " + reasonForVisit;
         
         var dr_Communication = document.createElement("div");
         dr_Communication.className = "card_reason_for_visit col-sm-12";
-        dr_Communication.innerHTML = patientContent.communication[0].coding[0].display
-        
+        var temp = "";
+        temp = patientContent.communication[0].coding[0].display;
+        var allString = temp.split(/\n\n/mg);
+        dr_Communication.innerHTML = "";
+        for (i = 0; i < allString.length; i++){
+            dr_Communication.innerHTML += allString[i] + "<br><br>";
+        }
         var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
