@@ -66,6 +66,10 @@ function loadPatientObservations(ObservationData) {
         "<div style='display: none;' id='screenings_data' class='observation_container'> \
             </div>");
 
+        var tests = organizeObs("tests");
+        loadtests(tests);
+        $('#observation_data').hide();
+        $('#tests_data').show();
 }
 
 function plotScreenToggle(btn) {
@@ -576,9 +580,9 @@ function loadscreenings(data) {
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
-        el.innerHTML += "<div class='col-sm-8' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
+        el.innerHTML += "<div class='col-sm-7' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
         //el.innerHTML += "<div class='col-sm-4'></div>";
-        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+        el.innerHTML += "<div class='col-sm-1' style='text-align: right;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
         for (i = 0; i < testType.length; i++) {
             panel_body.innerHTML += "<div class='col-sm-12'></div>";
@@ -640,11 +644,11 @@ function loadtests(data) {
             el.innerHTML += "<div class='col-sm-4' style='font-weight: normal; color: black;'>latest result:" + testType[0].value + " "+ testType[0].units + "</div>";
         }
         if(testType[0].low === ""){
-            el.innerHTML += "<div class='col-sm-4'>Range: None</div>";
+            el.innerHTML += "<div class='col-sm-3'>Range: None</div>";
         }else{
-            el.innerHTML += "<div class='col-sm-4'>Range: " + testType[0].low + "-" +testType[0].high+" "+testType[0].units+"</div>"; 
+            el.innerHTML += "<div class='col-sm-3'>Range: " + testType[0].low + "-" +testType[0].high+" "+testType[0].units+"</div>"; 
         }
-        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+        el.innerHTML += "<div class='col-sm-1' style='text-align: right;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
         panel_body.innerHTML += "<div class='col-sm-2'><u>Date of Test</u></div>";
         panel_body.innerHTML += "<div class='col-sm-2'><u>Lab Result</u></div>";
