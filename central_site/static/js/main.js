@@ -187,7 +187,11 @@ function loadPatientDetails(card) {
     catch(e){
         $('#patient_detail_photo').attr("src", 'img/no_photo.jpg');
        }
-
+    var temp = "";
+    var temp = patient_data.content.communication[0].coding[0].display;
+    var allString = temp.split(/\n\n/mg);    
+    $('#Notes').text(allString[0].replace(/\n/mg, " "));
+    $('#Meds').text(allString[1].replace(/\n/mg, " "))
     $('#patient_detail_phone1, #patient_detail_phone2').text('');
     $.each(patient_data.content.telecom, function (t, type) {
         if (type.system === 'email') {
