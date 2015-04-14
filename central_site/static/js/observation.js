@@ -10,8 +10,8 @@
  * @returns {undefined}
  */
 function loadPatientObservations(ObservationData) {
-    var observationTotal = 0; // jc test count
-    $('#PatientDetailScreen #observations').empty();
+    var observationTotal = 0; // jc test count   
+    $('#PatientDetailScreen #observations').empty(); 
     //Draw display buttons
     var nav1 = document.createElement("div");
     //nav1.className = "col-sm-12 Observ_btn";
@@ -47,6 +47,8 @@ function loadPatientObservations(ObservationData) {
         $(el).data(item);
         //observationTotal++; // jc test data
         $('#PatientDetailScreen #observations #observation_data').append(el);   // WLT: had  #observations #observation_data
+    
+
     });
     //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 
@@ -65,7 +67,11 @@ function loadPatientObservations(ObservationData) {
     $('#PatientDetailScreen #observations').append(
         "<div style='display: none;' id='screenings_data' class='observation_container'> \
             </div>");
-
+  
+    $('#observation_data').hide();
+    $('#tests_data').show();
+    var tests = organizeObs("tests");
+    loadtests(tests);
 }
 
 function plotScreenToggle(btn) {
@@ -366,7 +372,7 @@ function plotChart() {
 
 function graphGen() {
     this.jclass = "";
-    this.units = ""
+    this.units = "";
 };
 
 function graphDataset() {
@@ -416,7 +422,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
     allSeries.push(dataset1);
     lowVal1 = graphDataset1.min;
     highVal1 = graphDataset1.max;
-    label1 = graphDataset1.title + " normal range"
+    label1 = graphDataset1.title + " normal range";
 
     if (graphDataset2) {
         var dataset2 = new dataset();
@@ -425,7 +431,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
         allSeries.push(dataset2);
         lowVal2 = graphDataset2.min;
         highVal2 = graphDataset2.max;
-        label2 = graphDataset2.title + " normal range"
+        label2 = graphDataset2.title + " normal range";
     }
 
     if (graphDataset3) {
@@ -435,7 +441,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
         allSeries.push(dataset3);
         lowVal3 = graphDataset3.min;
         highVal3 = graphDataset3.max;
-        label3 = graphDataset3.title + " normal range"
+        label3 = graphDataset3.title + " normal range";
     }
 
     if (graphDataset4) {
@@ -445,7 +451,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
         allSeries.push(dataset4);
         lowVal4 = graphDataset4.min;
         highVal4 = graphDataset4.max;
-        label4 = graphDataset4.title + " normal range"
+        label4 = graphDataset4.title + " normal range";
     }
 
     $(graphGen.jclass).highcharts({
@@ -456,8 +462,7 @@ function graphit(graphGen, graphDataset1, graphDataset2, graphDataset3, graphDat
             marginRight: 50,
             backgroundColor: '#eee',
             plotBackgroundColor: '#fff',
-            borderWidth: 1,
-
+            borderWidth: 1
 
         },
         title: {
@@ -576,9 +581,9 @@ function loadscreenings(data) {
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
-        el.innerHTML += "<div class='col-sm-8' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
+        el.innerHTML += "<div class='col-sm-7' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
         //el.innerHTML += "<div class='col-sm-4'></div>";
-        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+        el.innerHTML += "<div class='col-sm-1' style='text-align: right;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
         for (i = 0; i < testType.length; i++) {
             panel_body.innerHTML += "<div class='col-sm-12'></div>";
@@ -640,12 +645,12 @@ function loadtests(data) {
             el.innerHTML += "<div class='col-sm-4' style='font-weight: normal; color: black;'>latest result:" + testType[0].value + " "+ testType[0].units + "</div>";
         }
         if(testType[0].low === ""){
-            el.innerHTML += "<div class='col-sm-4'>Range: None</div>";
+            el.innerHTML += "<div class='col-sm-3'>Range: None</div>";
         }else{
-            el.innerHTML += "<div class='col-sm-4'>Range: " + testType[0].low + "-" +testType[0].high+" "+testType[0].units+"</div>"; 
+            el.innerHTML += "<div class='col-sm-3'>Range: " + testType[0].low + "-" +testType[0].high+" "+testType[0].units+"</div>"; 
         }
-        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
+        el.innerHTML += "<div class='col-sm-1' style='text-align: right;'><span class='glyphicon glyphicon-menu-down'></span></div>";
         panel_body.innerHTML += "<div class='col-sm-2'><u>Date of Test</u></div>";
         panel_body.innerHTML += "<div class='col-sm-2'><u>Lab Result</u></div>";
         panel_body.innerHTML += "<div class='col-sm-2'><u>Units</u></div>";
