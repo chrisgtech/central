@@ -10,8 +10,8 @@
  * @returns {undefined}
  */
 function loadPatientObservations(ObservationData) {
-    var observationTotal = 0; // jc test count
-    $('#PatientDetailScreen #observations').empty();
+    var observationTotal = 0; // jc test count   
+    $('#PatientDetailScreen #observations').empty(); 
     //Draw display buttons
     var nav1 = document.createElement("div");
     //nav1.className = "col-sm-12 Observ_btn";
@@ -47,6 +47,8 @@ function loadPatientObservations(ObservationData) {
         $(el).data(item);
         //observationTotal++; // jc test data
         $('#PatientDetailScreen #observations #observation_data').append(el);   // WLT: had  #observations #observation_data
+    
+
     });
     //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 
@@ -65,7 +67,11 @@ function loadPatientObservations(ObservationData) {
     $('#PatientDetailScreen #observations').append(
         "<div style='display: none;' id='screenings_data' class='observation_container'> \
             </div>");
-
+    
+    $('#observation_data').hide();
+    $('#tests_data').show();
+    var tests = organizeObs("tests");
+    loadtests(tests);
 }
 
 function plotScreenToggle(btn) {
@@ -577,8 +583,8 @@ function loadscreenings(data) {
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-4' style='font-weight: bold;'>" + toTitleCase(testType[0].name) + "</div>";
         el.innerHTML += "<div class='col-sm-8' style='font-weight: normal;'>latest screening result: " + testType[0].interpretation + "</div>";
-        //el.innerHTML += "<div class='col-sm-4'></div>";
-        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+        //el.innerHTML += "<div class='col-sm-10'></div>";
+        el.innerHTML += "<div class='col-sm-12' style='text-align: right;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
         for (i = 0; i < testType.length; i++) {
             panel_body.innerHTML += "<div class='col-sm-12'></div>";
@@ -644,7 +650,7 @@ function loadtests(data) {
         }else{
             el.innerHTML += "<div class='col-sm-4'>Range: " + testType[0].low + "-" +testType[0].high+" "+testType[0].units+"</div>"; 
         }
-        el.innerHTML += "<div class='col-sm-12' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span></div>";
+        el.innerHTML += "<div class='col-sm-12' style='text-align: right;'><span class='glyphicon glyphicon-menu-down'></span></div>";
 
         panel_body.innerHTML += "<div class='col-sm-2'><u>Date of Test</u></div>";
         panel_body.innerHTML += "<div class='col-sm-2'><u>Lab Result</u></div>";
