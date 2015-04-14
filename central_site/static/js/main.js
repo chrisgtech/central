@@ -124,17 +124,22 @@ function parsePatientData(data) {
         
         var reason_for_visit = document.createElement("div");
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
-        reason_for_visit.innerHTML = reasonForVisit;
+        reason_for_visit.innerHTML = "Reason for visit:" + reasonForVisit;
+        
+        var dr_Communication = document.createElement("div");
+        dr_Communication.className = "card_reason_for_visit col-sm-12";
+        dr_Communication.innerHTML = patientContent.communication[0].coding[0].display
         
         var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; 
         time = new Date(time.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
+        patient_card.appendChild(dr_Communication);
         patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
@@ -276,15 +281,26 @@ function dataSwitch(option, results) {
  * Purpose: Renders the Patient's Conditions on the Patient Detail Screen
  * @returns {undefined}
  */
+
 function loadPatientConditions(ConditionData){
     var patientConditionCount = 0; // jc test data
     $('#PatientDetailScreen #conditions').empty();
     if(ConditionData.length === 0) $('#PatientDetailScreen #conditions').append("No Condition Data");
+  //Convert Date strings to date objects
+    $.each(ConditionData, function(i, item) {
+        ConditionData[i].content.onsetDate = new Date(item.content.onsetDate);
+    });
+    ConditionData.sort(function(a, b) {
+        var a = a.content.onsetDate;
+        var b = b.content.onsetDate;
+        return ((b < a) ? -1 : ((b > a) ? 1 : 0));
+    });
+
     $.each(ConditionData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
         el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>"; 
-        el.innerHTML += "<div class='col-sm-4'>Onset Date: " + item.content.onsetDate  + "</div>";
+        el.innerHTML += "<div class='col-sm-4'>Onset Date: " + item.content.onsetDate.toLocaleDateString()  + "</div>";
         el.innerHTML += "<div class='col-sm-4'>Status: " + item.content.status  + "</div>";
         el.innerHTML += "<div class='col-sm-4'>SNOMED Code: " + item.content.code.coding[0].code + "</div>";
         $(el).data(item);
