@@ -144,7 +144,7 @@ function parsePatientData(data) {
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
-        patient_card.appendChild(dr_Communication);
+        //patient_card.appendChild(dr_Communication);  //WLT: Add this is you want it on the patient cards
         patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
