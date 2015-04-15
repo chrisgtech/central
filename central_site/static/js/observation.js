@@ -17,6 +17,8 @@ function loadPatientObservations(ObservationData) {
     nav1.className = "col-sm-12 Observ_btn";
     nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='plot' class='btn Observ_btn '>Plot</button>";
+    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='test' class='btn Observ_btn '>Test</button>";
+    nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='screening' class='btn Observ_btn '>Screening</button>";
     nav1.innerHTML += "<button type='button' onclick='plotScreenToggle(this);' data-container='observation' class='btn Observ_btn '>Raw</button>";
     $('#PatientDetailScreen #observations').append(nav1);
 
@@ -33,7 +35,29 @@ function loadPatientObservations(ObservationData) {
         return ((b < a) ? -1 : ((b > a) ? 1 : 0));
     });
 
-    $('#PatientDetailScreen #observations').append("<div id='observation_data' class='observation_container'></div>");
+   
+
+    $('#PatientDetailScreen #observations').append(
+        "<div' id='plot_data' class='observation_container'> \
+                <div id='sysDia'></div> \
+                <div id='weightData'></div> \
+                <div id='fat'></div> \
+                <div id='cholesterol'></div> \
+            </div>");
+
+    
+
+    $('#PatientDetailScreen #observations').append(
+        "<div' style='display: none;' id='test_data' class='observation_container'> \
+               test tab \
+        </div>");
+    
+    $('#PatientDetailScreen #observations').append(
+        "<div' style='display: none;' id='screening_data' class='observation_container'> \
+                screening tab\
+        </div>");
+
+    $('#PatientDetailScreen #observations').append("<div style='display: none;' id='observation_data' class='observation_container'></div>");
     $.each(ObservationData, function(i, item) {
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
@@ -47,33 +71,17 @@ function loadPatientObservations(ObservationData) {
     });
     //$('#PatientDetailScreen #observations').prepend('Observation Count: ' + observationTotal); // jc test data
 
-    $('#PatientDetailScreen #observations').append(
-        "<div style='display: none;' id='plot_data' class='observation_container'> \
-                <div id='sysDia'></div> \
-                <div id='weightData'></div> \
-                <div id='fat'></div> \
-                <div id='cholesterol'></div> \
-            </div>");
-
-
     //printObservationData(ObservationData);
 }
 
 function plotScreenToggle(btn) {
     var container = $(btn).attr('data-container');
-    if (container === 'plot') {
-        $('#observation_data').hide();
-        $('#plot_data').show();
-        if ($('#sysDia').html() === '') {
+    
+    $('#plot_data, #observation_data, #test_data, #screening_data').hide();
+    $('#' + $(btn).attr('data-container') + '_data').show();
+    if ($('#sysDia').html() === '') {
             plotChart();
         }
-        //        if($('#weight').html() === ''){
-        //            plotChart();
-        //        }
-    } else {
-        $('#observation_data').show();
-        $('#plot_data').hide();
-    }
     organizeObs();
 }
 
