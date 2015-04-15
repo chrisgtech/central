@@ -4,6 +4,8 @@ import csv, random
 
 import utils
 
+rand = random.Random()
+
 def loadvitals(vitalsfile):
     vitals = {}
     with open(vitalsfile) as vitalscsv:
@@ -57,6 +59,8 @@ def loadlabs(labsfile):
     return labs
     
 def addfakelabs(vitals, labs):
+    highmods = [1.05, 1.05, 1.0, 1.1, 1.8]
+    lowmods = [1.0, 0.95, 0.95, 1.0, 1.5]
     for id in vitals:
         patient = vitals[id]
         if not patient:
@@ -74,10 +78,6 @@ def addfakelabs(vitals, labs):
         datediffs = {}
         for date, weight in dates.items():
             weightmod = weight / avg
-            if weightmod > 1:
-                weightmod *= 1.05
-            else:
-                weightmod *= 0.95
             datediffs[date] = weightmod
             
         patient = labs.get(id)
@@ -92,15 +92,50 @@ def addfakelabs(vitals, labs):
             
         fakes = []
         for type, reals in reallabs.items():
+            #highmod = highmods[0]
+            highmod = rand.choice(highmods)
+            lowmod = lowmods[highmods.index(highmod)]
             for date, diff in datediffs.items():
-                real = random.choice(reals)
+                moddiff = diff
+                if moddiff > 1:
+                    moddiff *= highmod
+                else:
+                    moddiff *= lowmod
+                real = rand.choice(reals)
                 realresult = float(real['Numeric_Result'])
-                fakeresult = realresult * diff
+                fakeresult = realresult * moddiff
                 fake = dict(real)
                 fake['Date_Collected'] = date
                 fake['Date_Resulted'] = date
                 fake['Numeric_Result'] = str(int(fakeresult))
                 fakes.append(fake)
+                
+        for fake in fakes:
+            name = fake['Result_Name']
+            if name != 'Total cholesterol':
+                continue
+            samedates = []
+            for otherfake in fakes:
+                if otherfake == fake:
+                    continue
+                if otherfake['Date_Collected'] == fake['Date_Collected']:
+                    samedates.append(otherfake)
+            total = 0
+            #print ''
+            for samedate in samedates:
+                samename = samedate['Result_Name']
+                if samename == 'LDL':
+                    total += int(samedate['Numeric_Result'])
+                    #print total
+                elif samename == 'HDL':
+                    total += int(samedate['Numeric_Result'])
+                    #print total
+                
+            #print fake['Numeric_Result']
+            fake['Numeric_Result'] = str(total)
+            #print fake['Numeric_Result']
+            
+        #exit()
                 
         for fake in fakes:
             patient.append(fake)

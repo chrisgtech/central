@@ -3,7 +3,7 @@
 var time = new Date();
 var inc_time = 30 * 60000; 
 time.setHours(8,0,0);
-
+var appt_num = 1;
 var globData;
 
 $(document).ready(function () {
@@ -42,7 +42,7 @@ $(document).ready(function () {
        });
     });
     
-    
+    $('.modal-content.patient_data input:not("#Check_In_Patient_Search")').attr('readonly', 'readonly');
     /*getPatientData('Patient' , { _count: 15,
         _skip : 4 }, function(data){
            if(data.totalResults > 0) {
@@ -124,17 +124,27 @@ function parsePatientData(data) {
         
         var reason_for_visit = document.createElement("div");
         reason_for_visit.className = "card_reason_for_visit col-sm-12";
-        reason_for_visit.innerHTML = reasonForVisit;
+        reason_for_visit.innerHTML = "Reason for visit: " + reasonForVisit;
         
+        var dr_Communication = document.createElement("div");
+        dr_Communication.className = "card_reason_for_visit col-sm-12";
+        var temp = "";
+        temp = patientContent.communication[0].coding[0].display;
+        var allString = temp.split(/\n\n/mg);
+        dr_Communication.innerHTML = "";
+        for (i = 0; i < allString.length; i++){
+            dr_Communication.innerHTML += allString[i] + "<br><br>";
+        }
         var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; Scheduled: "+ newtime; //Why don't the (exaggerated) spaces show up on the screen? WLT
+        appointment_queue.innerHTML = "Appointment #" + (appt_num++) + " - " + time.toLocaleTimeString(); 
         time = new Date(time.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
+        patient_card.appendChild(dr_Communication);  //WLT: Add this is you want it on the patient cards
         patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
@@ -177,7 +187,12 @@ function loadPatientDetails(card) {
     catch(e){
         $('#patient_detail_photo').attr("src", 'img/no_photo.jpg');
        }
-
+    var temp = "";
+    var temp = patient_data.content.communication[0].coding[0].display;
+    var allString = temp.split(/\n\n/mg);    
+    $('#Notes').text(allString[0].replace(/\n/mg, " "));
+    $('#Notes').html($('#Notes').html().split(".").join("<br/>"));
+    $('#Meds').text(allString[1].replace(/\n/mg, " "));
     $('#patient_detail_phone1, #patient_detail_phone2').text('');
     $.each(patient_data.content.telecom, function (t, type) {
         if (type.system === 'email') {
@@ -276,14 +291,28 @@ function dataSwitch(option, results) {
  * Purpose: Renders the Patient's Conditions on the Patient Detail Screen
  * @returns {undefined}
  */
+
 function loadPatientConditions(ConditionData){
     var patientConditionCount = 0; // jc test data
     $('#PatientDetailScreen #conditions').empty();
     if(ConditionData.length === 0) $('#PatientDetailScreen #conditions').append("No Condition Data");
+  //Convert Date strings to date objects
+    $.each(ConditionData, function(i, item) {
+        ConditionData[i].content.onsetDate = new Date(item.content.onsetDate);
+    });
+    ConditionData.sort(function(a, b) {
+        var a = a.content.onsetDate;
+        var b = b.content.onsetDate;
+        return ((b < a) ? -1 : ((b > a) ? 1 : 0));
+    });
+
     $.each(ConditionData, function(i, item) { 
         var el = document.createElement("div");
         el.className = "col-sm-12 drug_card";
-        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>";
+        el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.code.text + "</div>"; 
+        el.innerHTML += "<div class='col-sm-4'>Onset Date: " + item.content.onsetDate.toLocaleDateString()  + "</div>";
+        el.innerHTML += "<div class='col-sm-4'>Status: " + item.content.status  + "</div>";
+        el.innerHTML += "<div class='col-sm-4'>SNOMED Code: " + item.content.code.coding[0].code + "</div>";
         $(el).data(item);
         patientConditionCount++;  // jc test data
         $('#PatientDetailScreen #conditions').append(el);
@@ -309,23 +338,6 @@ function loadMedicationDetails(medId){
 }
 
 
-
-function openPlotScreen() {
-    $('#PatientDetailScreen #observations').empty();
-    var nav1 = document.createElement("div");
-    nav1.className = "col-sm-12 Observ_btn";
-    nav1.innerHTML += "<div class='col-sm-1' style='font-weight: bold;'>View:</div>";
-    
-    nav1.innerHTML += "<button type='button' onclick='openPlotScreen();' class='btn Observ_btn '>Plot</button>";
-    
-    nav1.innerHTML += "<button type='button' onclick='dummyLoadPatientObservations();'class='btn Observ_btn '>Raw</button>";
-    $('#PatientDetailScreen #observations').append(nav1);
-    
-    var el = document.createElement("div");
-    el.className = "col-sm-12";
-    el.innerHTML +="<row></row>";  
-    $('#PatientDetailScreen #observations').append(el);
-}
 
 function dummyLoadPatientObservations(){
     loadPatientObservations(globO);
@@ -450,7 +462,11 @@ function getAllRecords(option, array){
 }
 
 function mainHelp() {
-    bootstro.start('.mainHelp');
+    bootstro.start('.mainHelp', {
+        onStep : function(a) {
+            console.log(a);
+        }
+    });
 }
 
 function patientDetailHelp() {

@@ -63,7 +63,7 @@ body {
 
 .patient_card {
     background-color: #19648E;
-    width: 325px;
+    width: 310px; //325px;
     margin: 40px 25px;
     padding: 15px;
     border-radius: 10px;
@@ -73,7 +73,6 @@ body {
     position: relative;
     cursor: pointer;
 }
-
 .card_photo_thumbnail {
     /*width: 125px;
     position: absolute;
@@ -121,7 +120,7 @@ body {
 }
 
 .check_out{
-    position: absolute;
+    position: absolute !important;
     bottom: 25px;
     right: 25px;
 }
@@ -171,6 +170,10 @@ body {
   z-index: 10;
 }
 
+.bootstro-highlight label {
+    color: #000 !important;
+}
+
 /****************Patient Detail Section*****************/
 
 #patient_detail_photo {
@@ -190,16 +193,21 @@ body {
 
 .drug_card {
   border: 1px solid #ccc;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   padding: 15px;
   background-color: #efefef;
 }
 
 .Observ_btn {
-  position: relative;
+  // position: relative;
   padding: 3px;
-  border: 1px solid #ccc;
-  background-color: #DAE5E8;
+  border: 2px solid #ccc;
+  background-color: #1784BD; //#DAE5E8 original color (WLT);
+  color: white; 
+  // width: 30px;
+  // margin-left: auto;
+  // margin-right: auto;
+  // display: block;
 }
 
 .patient_detail_loading {
@@ -229,6 +237,9 @@ body {
     padding: 0px;
 }
 
+.modal-content.patient_data .row:not(.shown) {
+    opacity: 0.8;
+}
 
 #num_of_patients{
     position: absolute; 

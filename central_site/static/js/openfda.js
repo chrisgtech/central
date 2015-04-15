@@ -50,64 +50,98 @@ function continueToOpenFDAfetch(rxNorm) {
                 //Add the FDA data to Cheryl's store
                 $("#openfdalabeldrugStore").data("inventory")[rxNorm] = drug;
                 //Step 3b
-                parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
+                parseMedicationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
             }
         );
     } else {
         //Steb 3a
-        parseMedationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
+        parseMedicationOpenFDA($("#openfdalabeldrugStore").data("inventory")[rxNorm], rxNorm);
     }
     
 }
 
-var test = 0;
-function parseMedationOpenFDA(data, rxNorm){
-    
-    
-    console.log("We gots some stuff!!!");
-    console.log(data);
+function parseMedicationOpenFDA(data, rxNorm){
     globFDA = data;
-    
-    $('.fda.' + rxNorm).html("Hello Cheryl " + (test++));
-    /*
-     * 
-     * 
-     * 
-     */
-    
-    
-    
-    /*var drugObj = $('#openfdalabeldrugStore').data('inventory')[medId];
-    $('.' + medId + '.product_type').html("Product Type: " + drugObj.results[0].openfda.product_type);
-    $('.' + medId + '.manufacturer_name').html("Manufacturer: " + drugObj.results[0].openfda.manufacturer_name);
-    $('.' + medId + '.brand_name').html("Brand Name: " + drugObj.results[0].openfda.brand_name);
-    $('.' + medId + '.generic_name').html("Generic Name: " + drugObj.results[0].openfda.generic_name);
 
-    
-    var description_body = document.createElement("div");
-    description_body.className = "description-body";
-    description_body.innerHTML = drugObj.results[0].description;
-    var dosage_body = document.createElement("div");
-    dosage_body.className = "dosage-body";
-    dosage_body.innerHTML = drugObj.results[0].dosage_and_administration_table;
-    var warnings_body = document.createElement("div");
-    warnings_body.className = "warnings-body";
-    warnings_body.innerHTML = drugObj.results[0].warnings;
-    var genprecautions_body = document.createElement("div");
-    genprecautions_body.className = "genprecautions-body";
-    genprecautions_body.innerHTML = drugObj.results[0].general_precautions;
-    var druginteractions_body = document.createElement("div");
-    druginteractions_body.className = "druginteractions-body";
-    druginteractions_body.innerHTML = drugObj.results[0].drug_interactions;
-    var adversereactions_body = document.createElement("div");
-    adversereactions_body.className = "adversereactions-body";
-    adversereactions_body.innerHTML = drugObj.results[0].adverse_reactions;*/
+    $('.fda.' + rxNorm).html(MedicationOpenFDAtoHTML(data,rxNorm));
+}    
+
+function onOpenFDABlackList(data){
+	var blacklist = ["version","id","set_id"];
+	for (var i = 0, l = blacklist.length; i < l ; i++){
+		if (data.toLowerCase() === blacklist[i].toLowerCase()) {
+			return 1
+		}
+	}
+	return 0
+}
+
+/**
+ * @param String str The text to be converted to titleCase.
+ * @param Array glue the words to leave in lowercase. 
+ */
+function toTitleCase(str, glue){
+    glue = (glue) ? glue : ['of', 'for', 'and', 'or', 'but', 'by'];
+    return str.replace(/(\w)(\w*)/g, function(_, i, r){
+        var j = i.toUpperCase() + (r != null ? r : "");
+        return (glue.indexOf(j.toLowerCase())<0)?j:j.toLowerCase();
+    });
+};
+
+function MedicationOpenFDAtoHTML(data,rxNorm){
+    var outhtml = "";
+    if (data.results === undefined) {
+    	outhtml = "<div class='col-sm-offset-4' style='font-weight: bold;'>No Open FDA Label Information Found</div><br/>";0 
+    }
+    else {
+		outhtml = "<div class='col-sm-offset-4' style='font-weight: bold;'>Open FDA Label Information</div><br/>"; 
+		outhtml += "<div class='col-sm-4'>Brand Name: " + data.results[0].openfda.brand_name  + "</div>"; 
+		outhtml += "<div class='col-sm-4'>Generic Name: " + data.results[0].openfda.generic_name  + "</div>"; 
+		outhtml += "<div class='col-sm-4'>Manufacturer: " + data.results[0].openfda.manufacturer_name  + "</div>";
+		
+		outhtml += "<br/><br/><div class='accordion' id='openfda"+rxNorm+"'>";
+	
+		var grpnum = 1;
+		[].forEach.call( Object.keys( data.results[0] ), function( key ){
+			if ( onOpenFDABlackList(key) === 0 ) {
+			    if (data.results[0][key][0] !== undefined) {
+			    	if ( typeof(data.results[0][key+"_table"]) !== "undefined") {
+			    		return;
+			    	}
+					var displaykey = toTitleCase((key.replace(/_/g," ").replace(/^spl/,"SPL")));
+			    	
+					outhtml += "<div class='accordion-group"+rxNorm+"'>";
+					outhtml += "<div class='accordion-heading"+rxNorm+"'>";
+					outhtml += "<a class='accordion-toggle"+rxNorm+"' data-toggle='collapse' data-parent='#openfda"+rxNorm+"' href='#collapse" +rxNorm + grpnum + "'>" + displaykey + "<span class='glyphicon glyphicon-menu-right'></span></a>";
+					outhtml += "</div><div id='collapse" + rxNorm+ grpnum + "' class='accordion-body"+rxNorm+" collapse'>";
+					outhtml += "<div class='accordion-inner"+rxNorm+"'><br>";
+					var isAry = $.isArray(data.results[0][key]);
+					if (isAry) {
+						for (var i = 0, l = data.results[0][key].length; i < l; i++ ) {
+							outhtml +=  data.results[0][key][i];
+						}
+					}
+					else {
+						outhtml +=  data.results[0][key];
+					}
+					outhtml += "<br><br></div></div></div>";
+					grpnum += 1;
+				}
+		    }
+		});
+		
+	    outhtml += "</div>";
+    }
+	return(outhtml);
+
+
 }
 
 
 function getOpenFDALabelData(rxNorm, process) {
     $.ajax({
         url: "https://api.fda.gov/drug/label.json?api_key=BVwl0V7hfVYHDw5SwEg8DZ75q9SHzCRqD5ibjY7Q&search=openfda.rxcui:" + rxNorm,
+        error: process,
         success: process
     });
 }

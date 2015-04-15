@@ -25,7 +25,7 @@ $(document).ready(function(){
             //nextButton : '<button class="btn btn-primary btn-xs bootstro-next-btn">Next &raquo;</button>',
             prevButtonText : '&laquo; Prev',
             //prevButton : '<button class="btn btn-primary btn-xs bootstro-prev-btn">&laquo; Prev</button>',
-            finishButtonText : '<i class="icon-ok"></i> Ok I got it, get back to the site',
+            finishButtonText : '<i class="icon-ok"></i> Exit',
             //finishButton : '<button class="btn btn-xs btn-success bootstro-finish-btn"><i class="icon-ok"></i> Ok I got it, get back to the site</button>',
             stopOnBackdropClick : true,
             stopOnEsc : true,
