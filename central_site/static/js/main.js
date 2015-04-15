@@ -3,7 +3,7 @@
 var time = new Date();
 var inc_time = 30 * 60000; 
 time.setHours(8,0,0);
-
+var appt_num = 1;
 var globData;
 
 $(document).ready(function () {
@@ -42,7 +42,7 @@ $(document).ready(function () {
        });
     });
     
-    
+    $('.modal-content.patient_data input:not("#Check_In_Patient_Search")').attr('readonly', 'readonly');
     /*getPatientData('Patient' , { _count: 15,
         _skip : 4 }, function(data){
            if(data.totalResults > 0) {
@@ -138,13 +138,13 @@ function parsePatientData(data) {
         var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
         var appointment_queue = document.createElement("div");
         appointment_queue.className = "card_appointment_queue col-sm-11";
-        //appointment_queue.innerHTML = "Appointment #" + ($('.patient_card').length + 1) + "&nbsp;&nbsp;&nbsp; 
+        appointment_queue.innerHTML = "Appointment #" + (appt_num++) + " - " + time.toLocaleTimeString(); 
         time = new Date(time.getTime() + inc_time);
         
         patient_card.appendChild(patient_img);
         patient_card.appendChild(patient_demographics);
         patient_card.appendChild(reason_for_visit);
-        //patient_card.appendChild(dr_Communication);  //WLT: Add this is you want it on the patient cards
+        patient_card.appendChild(dr_Communication);  //WLT: Add this is you want it on the patient cards
         patient_card.appendChild(appointment_queue);
         
         $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
@@ -191,7 +191,8 @@ function loadPatientDetails(card) {
     var temp = patient_data.content.communication[0].coding[0].display;
     var allString = temp.split(/\n\n/mg);    
     $('#Notes').text(allString[0].replace(/\n/mg, " "));
-    $('#Meds').text(allString[1].replace(/\n/mg, " "))
+    $('#Notes').html($('#Notes').html().split(".").join("<br/>"));
+    $('#Meds').text(allString[1].replace(/\n/mg, " "));
     $('#patient_detail_phone1, #patient_detail_phone2').text('');
     $.each(patient_data.content.telecom, function (t, type) {
         if (type.system === 'email') {
@@ -461,7 +462,11 @@ function getAllRecords(option, array){
 }
 
 function mainHelp() {
-    bootstro.start('.mainHelp');
+    bootstro.start('.mainHelp', {
+        onStep : function(a) {
+            console.log(a);
+        }
+    });
 }
 
 function patientDetailHelp() {

@@ -56,9 +56,12 @@
                 </div>
                 <div class="search_block col-sm-3">
                     <div class="input-group">
-                        <input id="Patient_Search" class="mainHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-content="Use this search bar to quickly filter your patient card view. Clear the search bar
+                        <input id="Patient_Search" class="mainHelp form-control" data-bootstro-step="1" 
+                               data-bootstro-placement="bottom" 
+                               data-bootstro-content="Use this search bar to quickly filter your patient card view. Clear the search bar
                                to restore your original view." data-bootstro-title="Filter Box"
-                               type="text" class="form-control" placeholder="Search for...">
+                               data-bootstro-width="300px"
+                               type="text" placeholder="Search for...">
                         <span class="input-group-btn" style="display: none;">
                             <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
@@ -70,7 +73,7 @@
             </div>
         </div>
 
-        <div id="patient_card_container" class="mainHelp" data-bootstro-step="3" data-bootstro-placement="left" data-bootstro-title="Patient Card" data-bootstro-content="This list of patients represents the workload for the day with
+        <div id="patient_card_container" class="mainHelp" data-bootstro-step="3" data-bootstro-placement="bottom" data-bootstro-title="Patient Card" data-bootstro-content="This list of patients represents the workload for the day with
              a quick view of presenting symptoms. Clicking on the individual patient card will take you a patient detail screen.">
             <img id="dashboard_loading_img" src='img/ajax-loader.gif' alt='Loading...' />
             <div class="patient_card_scroll">
@@ -109,21 +112,26 @@
                 <span class="glyphicon glyphicon-remove" style="float: right; cursor: pointer; font-size: 18px;" onclick="$('#CheckInScreen').modal('hide');"></span>
                 <span class="glyphicon glyphicon-question-sign checkInHelp" style="float: right; cursor: pointer; font-size: 18px;" id="check-in-help" onclick="checkInHelp();"
                       data-bootstro-step="4" data-bootstro-placement="bottom" data-bootstro-content="You can restart this content tutorial at any time by clicking on the question mark."></span>
-                <div class="row">
+                <div class="row shown">
                     <div class="col-sm-7 checkInHelp" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-title="Check In Tutorial" data-bootstro-content="The Check In screen provides you the ability to
                          update an existing patient record and add it to your patient card list.">
                         <h4>Check In</h4>
                     </div>
                     <div class="search_block col-sm-4 checkInHelp" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-title="Search Box" data-bootstro-content="Enter a single letter to search for a patient
                           record. Selecting a record will populate the screen with that patient's data.">
-                        <div class="input-group">
+                        
+                    </div>
+                </div>
+                <div class="row shown">
+                    <label class="col-sm-2"></label>
+                    <div class="input-group col-sm-5    ">
                             <input id="Check_In_Patient_Search" onkeypress="checkSearchKeyPress(event)" type="text" class="form-control" placeholder="Search for...">
                             <span class="input-group-btn">
                                 <button id="Check_In_Search_Btn" onclick="wlt_searchClicked();" class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                             </span>
                         </div>
-                    </div>
                 </div>
+                
                 <div class="row" style="margin: 40px 0px;">
                     <label class="col-sm-2">Name: </label>
                     <input id="check_in_first_name" type="text" class="col-sm-2" placeholder="First"/>
@@ -150,14 +158,14 @@
                     <input id="check_in_email" type="text" class="col-sm-5" placeholder="Email"/>
                     <label class="col-sm-1 col-sm-offset-1">Sex: </label>
                     <!--<input id="check_in_gender" type="text" class="col-sm-2" placeholder="Gender" /> -->
-                    <select id="check_in_gender" class="form-control" style="width: 175px;">
+                    <select id="check_in_gender" class="form-control" style="width: 175px;" disabled>
                         <option value="UN">Select</option>
                         <option value="F">Female</option>
                         <option value="M">Male</option>
                     </select>
                     
                 </div>
-                <div class="row" style="margin: 40px 0px;">
+                <div class="row" style="margin: 40px 0px; display: none;">
                     <label class="col-sm-2">Visit For: </label>
                     <div class="btn-group" data-toggle="buttons" class="col-sm-10">
                         <label class="btn btn-primary active">
@@ -178,10 +186,10 @@
                     </div>
                 </div>
                 <div class="row" style="margin: 40px 0px;">
-                    <label class="col-sm-2">Details: </label>
+                    <label class="col-sm-2">Reason For Visit: </label>
                     <textarea class="col-sm-9" rows="4"></textarea>
                 </div>
-                <div class="row" style="margin: 40px 0px;">
+                <div class="row shown" style="margin: 40px 0px;">
                     <button type="button" class="btn btn-primary col-sm-2 col-sm-offset-3 checkInHelp" onclick="checkPatientIn()" data-bootstro-step="2" 
                             data-bootstro-placement="top" data-bootstro-title="Commit" data-bootstro-content="Clicking Check In will commit any updates to the patient data, and will insert the patient record into
                             your patient card screen.">Check In</button>

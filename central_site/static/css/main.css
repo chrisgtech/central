@@ -63,7 +63,7 @@ body {
 
 .patient_card {
     background-color: #19648E;
-    width: 325px;
+    width: 310px; //325px;
     margin: 40px 25px;
     padding: 15px;
     border-radius: 10px;
@@ -73,7 +73,6 @@ body {
     position: relative;
     cursor: pointer;
 }
-
 .card_photo_thumbnail {
     /*width: 125px;
     position: absolute;
@@ -121,7 +120,7 @@ body {
 }
 
 .check_out{
-    position: absolute;
+    position: absolute !important;
     bottom: 25px;
     right: 25px;
 }
@@ -169,6 +168,10 @@ body {
   font-size: 20px;
   cursor: pointer;
   z-index: 10;
+}
+
+.bootstro-highlight label {
+    color: #000 !important;
 }
 
 /****************Patient Detail Section*****************/
@@ -234,6 +237,9 @@ body {
     padding: 0px;
 }
 
+.modal-content.patient_data .row:not(.shown) {
+    opacity: 0.8;
+}
 
 #num_of_patients{
     position: absolute; 
