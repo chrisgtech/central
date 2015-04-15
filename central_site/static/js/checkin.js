@@ -144,6 +144,7 @@ function checkPatientIn(){
         ]}
     );
     $('#CheckInScreen').modal('hide');
+    $('#patient_card_container').animate({scrollLeft: $('.patient_card_scroll:first').css('width')},1000);
 }
 
 

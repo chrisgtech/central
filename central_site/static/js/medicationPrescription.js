@@ -86,16 +86,16 @@ function loadPatientMedicationPrescriptions(MedicationData){
                 el.setAttribute("onclick","loadMedicationOpenFDALabel('" + medId + "')");
                 el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
 
-                el.innerHTML += "<div class='col-sm-4'>Date Written: " + item.content.dateWritten.toLocaleDateString() 
-                        + "</div><div class='col-sm-offset-4 col-sm-4 rxnorm " + medId + "'>&nbsp;</div>";
+                el.innerHTML += "<div class='col-sm-6'>Date Written: " + item.content.dateWritten.toLocaleDateString() 
+                        + "</div><div class='col-sm-6 rxnorm " + medId + "'>&nbsp;</div>";
 
-                el.innerHTML += "<div class='col-sm-4'>" + ( item.content.dispense.expectedSupplyDuration ? "Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
+                el.innerHTML += "<div class='col-sm-6'>" + ( item.content.dispense.expectedSupplyDuration ? "Supply Duration: " + item.content.dispense.expectedSupplyDuration .value
                             + " " + item.content.dispense.expectedSupplyDuration.units : "&nbsp;")
-                            + "</div><div class='col-sm-offset-4 col-sm-4 brand " + medId + "'>&nbsp;</div>";
+                            + "</div><div class='col-sm-5 brand " + medId + "'>&nbsp;</div>"
+                            + "</div><div class='col-sm-1' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span>";
 
-                el.innerHTML += "<div class='col-sm-4'>Quantity: " + item.content.dispense.quantity.value 
-                        + "</div><div class='col-sm-4' style='text-align: center;'><span class='glyphicon glyphicon-menu-down'></span>"
-                        + "</div><div class='col-sm-4 form " + medId + "'>&nbsp;</div>";
+                el.innerHTML += "<div class='col-sm-6'>Quantity: " + item.content.dispense.quantity.value 
+                        + "</div><div class='col-sm-6 form " + medId + "'>&nbsp;</div>";
 
                 $(el).data(item);
                 medicationCount++;  // jc test data
