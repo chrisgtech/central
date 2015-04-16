@@ -11,7 +11,7 @@
  * Purpose: Renders the Patient's Medication OpenFDA Label information 
  * @returns {undefined}
  */
-function loadMedicationOpenFDALabel(medId){
+function loadMedicationOpenFDALabel(medId, drug_card){
     /*
      *  1. Get the medications reference ID
      *  2. Check the drug store for its record
@@ -23,7 +23,14 @@ function loadMedicationOpenFDALabel(medId){
      *  4. Enjoy a beverage, you earned it
      *  
      */
-    
+    if($(drug_card).find('.glyphicon').hasClass('glyphicon-menu-down')) {
+        $(drug_card).find('.glyphicon').removeClass('glyphicon-menu-down');
+        $(drug_card).find('.glyphicon').addClass('glyphicon-menu-up');
+    } else {
+        
+        $(drug_card).find('.glyphicon').removeClass('glyphicon-menu-up');
+        $(drug_card).find('.glyphicon').addClass('glyphicon-menu-down');
+    }
     
     //Step 1 is passed in
     //Step 2

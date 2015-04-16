@@ -21,7 +21,7 @@ function loadPatientObservations(ObservationData) {
     nav1.innerHTML += "<div class='col-sm-2'><button type='button' onclick='plotScreenToggle(this);' data-container='screenings' class='btn Observ_btn'style='width:120px'>Screenings</button></div>";
     nav1.innerHTML += "<div class='col-sm-2'><button type='button' onclick='plotScreenToggle(this);' data-container='observation' class='btn Observ_btn'style='width:120px'>Raw</button></div>";
     nav1.innerHTML += "<div class='col-sm-2' style='font-weight: bold;'></div>";
-    $('#PatientDetailScreen #observations').append(nav1);
+    //$('#PatientDetailScreen #observations').append(nav1);
 
     if (ObservationData.length === 0) $('#PatientDetailScreen #observations').append("No Observation Data");
 
@@ -96,9 +96,23 @@ function loadPatientObservations(ObservationData) {
     loadtests(tests);
 }
 
+/*
+ * Author: Michael
+ * Date: 4-15-15
+ * Purpose: Toggle the Observation Nav menu for the Patient Detail Screen
+ */
+function showObsNav(show) {
+    if(show){
+        $('#obs_nav').show();
+    } else {
+        $('#obs_nav').hide();
+    }
+}
+
 function plotScreenToggle(btn) {
     var container = $(btn).attr('data-container');
-
+    $('#obs_nav .btn.active').removeClass('active')
+    $(btn).addClass('active');
     if (container === 'tests') {
         $('#tests_data').show();
         $('#observation_data').hide();

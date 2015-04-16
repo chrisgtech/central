@@ -83,7 +83,7 @@ function loadPatientMedicationPrescriptions(MedicationData){
                                 
                 var el = document.createElement("div");
                 el.className = "col-sm-12 drug_card";
-                el.setAttribute("onclick","loadMedicationOpenFDALabel('" + medId + "')");
+                el.setAttribute("onclick","loadMedicationOpenFDALabel('" + medId + "', this)");
                 el.innerHTML += "<div class='col-sm-12' style='font-weight: bold;'>" + item.content.medication.display + "</div>";
 
                 el.innerHTML += "<div class='col-sm-6'>Date Written: " + item.content.dateWritten.toLocaleDateString() 

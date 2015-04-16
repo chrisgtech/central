@@ -125,6 +125,7 @@ function fillInSinglePatient(singlePatient)
  */
 function openCheckInScreen() {
     clearCheckInScreen();
+    $('#next_appt_time').text(time.toLocaleTimeString());
     $('#CheckInScreen').modal();
 }
 
@@ -141,7 +142,8 @@ function checkPatientIn(){
                 content : $('#CheckInScreen').data().content,
                 title: $('#CheckInScreen').data().title
             }
-        ]}
+        ]} ,
+        ($('#checkIn_reason').val() !== "" ? $('#checkIn_reason').val() : null)
     );
     $('#CheckInScreen').modal('hide');
     $('#patient_card_container').animate({scrollLeft: $('.patient_card_scroll:first').css('width')},1000);

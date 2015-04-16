@@ -83,74 +83,76 @@ function patientSearch() {
  in the Scroll container
  */
 
-function parsePatientData(data) {
+function parsePatientData(data, checkInDetail) {
     globda = data;
 
     var options = {hour: "numeric", minute: "numeric"}; //options for time 
     
     //$.each([array], function(index, element) {});
     $.each(data.entry, function (e, entry) {
-        var reasonForVisit = ReasonsForVisit[parseInt(Math.random()*10%6)];
-        
-        var patientContent = entry.content;
-        
-        $('#dashboard_loading_img').hide();
-        var patient_card = document.createElement("div");
-        patient_card.className = "patient_card";
-        patient_card.setAttribute('patient_id', entry.title);
+        if($('[patient_id="' + entry.title + '"]').length === 0){
+            var reasonForVisit = checkInDetail ? checkInDetail : ReasonsForVisit[parseInt(Math.random()*10%6)];
 
-        // [condition] ? [true] : [false]
-        var patient_img = document.createElement("img");
-        patient_img.className = "card_photo_thumbnail col-sm-5";
-        var picture = "";
-        try{
-        var picture = patientContent.photo[0].data;
-        patient_img.setAttribute('src','data:image/jpg;base64,'+picture);
-        }
-        catch(e){
-        patient_img.setAttribute('src','img/no_photo.jpg');
-        }
-                patient_img.setAttribute('alt', 'no_photo');
+            var patientContent = entry.content;
 
-        var patient_demographics = document.createElement("div");
-        patient_demographics.className = "card_demographic col-sm-7";
-        //Patient Name
-        patient_demographics.innerHTML += patientContent.name[0].given[0] + " " + patientContent.name[0].family[0];
-        //Gender
-        patient_demographics.innerHTML += patientContent.gender ? '<br>' + patientContent.gender.coding[0].display : '';
-        //DOB
-        patient_demographics.innerHTML += '<br>DOB: ' + (patientContent.birthDate ? formatDate(patientContent.birthDate) : 'N/A');
-        //patient_demographics.innerHTML += '<br>Reason For Visit: ' + reasonForVisit;
-        
-        var reason_for_visit = document.createElement("div");
-        reason_for_visit.className = "card_reason_for_visit col-sm-12";
-        reason_for_visit.innerHTML = "Reason for visit: " + reasonForVisit;
-        
-        var dr_Communication = document.createElement("div");
-        dr_Communication.className = "card_reason_for_visit col-sm-12";
-        var temp = "";
-        temp = patientContent.communication[0].coding[0].display;
-        var allString = temp.split(/\n\n/mg);
-        dr_Communication.innerHTML = "";
-        for (i = 0; i < allString.length; i++){
-            dr_Communication.innerHTML += allString[i] + "<br><br>";
+            $('#dashboard_loading_img').hide();
+            var patient_card = document.createElement("div");
+            patient_card.className = "patient_card";
+            patient_card.setAttribute('patient_id', entry.title);
+
+            // [condition] ? [true] : [false]
+            var patient_img = document.createElement("img");
+            patient_img.className = "card_photo_thumbnail col-sm-5";
+            var picture = "";
+            try{
+            var picture = patientContent.photo[0].data;
+            patient_img.setAttribute('src','data:image/jpg;base64,'+picture);
+            }
+            catch(e){
+            patient_img.setAttribute('src','img/no_photo.jpg');
+            }
+                    patient_img.setAttribute('alt', 'no_photo');
+
+            var patient_demographics = document.createElement("div");
+            patient_demographics.className = "card_demographic col-sm-7";
+            //Patient Name
+            patient_demographics.innerHTML += patientContent.name[0].given[0] + " " + patientContent.name[0].family[0];
+            //Gender
+            patient_demographics.innerHTML += patientContent.gender ? '<br>' + patientContent.gender.coding[0].display : '';
+            //DOB
+            patient_demographics.innerHTML += '<br>DOB: ' + (patientContent.birthDate ? formatDate(patientContent.birthDate) : 'N/A');
+            //patient_demographics.innerHTML += '<br>Reason For Visit: ' + reasonForVisit;
+
+            var reason_for_visit = document.createElement("div");
+            reason_for_visit.className = "card_reason_for_visit col-sm-12";
+            reason_for_visit.innerHTML = "Reason for visit: " + reasonForVisit;
+
+            var dr_Communication = document.createElement("div");
+            dr_Communication.className = "card_reason_for_visit col-sm-12";
+            var temp = "";
+            temp = patientContent.communication[0].coding[0].display;
+            var allString = temp.split(/\n\n/mg);
+            dr_Communication.innerHTML = "";
+            for (i = 0; i < allString.length; i++){
+                dr_Communication.innerHTML += allString[i] + "<br><br>";
+            }
+            var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
+            var appointment_queue = document.createElement("div");
+            appointment_queue.className = "card_appointment_queue col-sm-11";
+            appointment_queue.innerHTML = "Appointment #" + (appt_num++) + " - " + time.toLocaleTimeString(); 
+            time = new Date(time.getTime() + inc_time);
+
+            patient_card.appendChild(patient_img);
+            patient_card.appendChild(patient_demographics);
+            patient_card.appendChild(reason_for_visit);
+            patient_card.appendChild(dr_Communication);  //WLT: Add this is you want it on the patient cards
+            patient_card.appendChild(appointment_queue);
+
+            $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
+            $('.patient_card_scroll').append(patient_card);
+
+            updateScrollContainerWidth();
         }
-        var newtime = new Intl.DateTimeFormat("en-US", options).format(time);
-        var appointment_queue = document.createElement("div");
-        appointment_queue.className = "card_appointment_queue col-sm-11";
-        appointment_queue.innerHTML = "Appointment #" + (appt_num++) + " - " + time.toLocaleTimeString(); 
-        time = new Date(time.getTime() + inc_time);
-        
-        patient_card.appendChild(patient_img);
-        patient_card.appendChild(patient_demographics);
-        patient_card.appendChild(reason_for_visit);
-        patient_card.appendChild(dr_Communication);  //WLT: Add this is you want it on the patient cards
-        patient_card.appendChild(appointment_queue);
-        
-        $(patient_card).data("PatientData", entry).data("ReasonForVisit", reasonForVisit);
-        $('.patient_card_scroll').append(patient_card);
-        
-        updateScrollContainerWidth();
     });
 }
 
@@ -192,7 +194,12 @@ function loadPatientDetails(card) {
     var allString = temp.split(/\n\n/mg);    
     $('#Notes').text(allString[0].replace(/\n/mg, " "));
     $('#Notes').html($('#Notes').html().split(".").join("<br/>"));
-    $('#Meds').text(allString[1].replace(/\n/mg, " "));
+    if(allString.length > 1) {
+        $('#Meds').text(allString[1].replace(/\n/mg, " "));
+    }
+    else {
+        $('#Meds').text(""); 
+    }
     $('#patient_detail_phone1, #patient_detail_phone2').text('');
     $.each(patient_data.content.telecom, function (t, type) {
         if (type.system === 'email') {
@@ -475,4 +482,20 @@ function patientDetailHelp() {
 
 function checkInHelp() {
     bootstro.start('.checkInHelp');
+}
+
+/*
+ * Author: Michael
+ * Date: 4-15-15
+ * Purpose: Get all patients
+ */
+function getAllPatients(btn) {
+    var count = 20
+    for(var i = 0; i < 100; i += count){
+        getPatientData('Patient' , { _count : count, _skip: i }, function(data){
+           if(data.totalResults > 0) {
+                parsePatientData(data);
+            }
+       });
+    }
 }

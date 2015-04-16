@@ -132,7 +132,10 @@ body {
 
 }
 
-.dashboard_nav .btn-group {
+#obs_nav {
+    position: absolute;
+    bottom: 32px;
+    width: 100%;
 }
 
 .dashboard_nav .btn-primary:not(.dropdown-toggle) {
